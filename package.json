@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "cgb-scripts start",
+    "start": "cgb-scripts start --mode dev",
     "build": "cgb-scripts build",
     "eject": "cgb-scripts eject"
   },
