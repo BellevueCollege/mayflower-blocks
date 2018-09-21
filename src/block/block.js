@@ -1,5 +1,5 @@
 /**
- * BLOCK: mayflower-blocks
+ * BLOCK: Child Pages
  *
  * Registering a basic block with Gutenberg.
  * Simple block, renders and saves the same content without any interactivity.
@@ -9,8 +9,15 @@
 import './style.scss';
 import './editor.scss';
 
+
+
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { registerBlockType, PlainText } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { RichText } = wp.editor;
+const { getCurrentPostId } = wp.data;
+const { ServerSideRender } = wp.components;
+
+
 
 /**
  * Register: aa Gutenberg Block.
@@ -25,16 +32,46 @@ const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.b
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-registerBlockType( 'cgb/block-mayflower-blocks', {
+
+
+registerBlockType( 'mayflower-blocks/child-pages', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
-	title: __( 'mayflower-blocks - CGB Block' ), // Block title.
+	title: __( 'Child Pages' ), // Block title.
 	icon: 'shield', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
-	keywords: [
-		__( 'mayflower-blocks — CGB Block' ),
-		__( 'CGB Example' ),
-		__( 'create-guten-block' ),
-	],
+
+	attributes: {
+		pageID: {
+			type: 'number',
+			default: 0
+		},
+	},
+
+	edit: function ({setAttributes, attributes}) {
+		// ensure the block attributes matches this plugin's name
+		return (
+			<div class="block-content">
+				<input 
+					type="number" 
+					value={attributes.pageID} 
+					onChange={(pageID) => {
+						
+						setAttributes({ pageID: pageID.target.value})
+						
+					}}
+				/>
+				<ServerSideRender
+					block="mayflower-blocks/child-pages"
+					attributes= { attributes }
+				/>
+			</div>
+		);
+	},
+
+	save() {
+		// Rendering in PHP
+		return null;
+	},
 
 	/**
 	 * The edit function describes the structure of your block in the context of the editor.
@@ -44,25 +81,36 @@ registerBlockType( 'cgb/block-mayflower-blocks', {
 	 *
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
-	edit: function( props ) {
+
+	 /*
+	attributes: {
+		content: {
+			type: 'string',
+			selector: 'div.content p',
+		},
+	},
+
+	edit: function ({ className, attributes, setAttributes } ) {
 		// Creates a <p class='wp-block-cgb-block-mayflower-blocks'></p>.
 		return (
-			<div className={ props.className }>
+			<div className={ className }>
 				<p>— Hello from the backend.</p>
 				<p>
 					CGB BLOCK: <code>mayflower-blocks</code> is a new Gutenberg block
 				</p>
 				<p>
-					It was created via{ ' ' }
-					<code>
-						<a href="https://github.com/ahmadawais/create-guten-block">
-							create-guten-block
-						</a>
-					</code>.
+					<RichText
+						tagName="p"
+						className={className}
+						value={attributes.content}
+						onChange={(content) => setAttributes({ content })}
+					/>
 				</p>
 			</div>
 		);
 	},
+	
+	*/
 
 	/**
 	 * The save function defines the way in which the different attributes should be combined
@@ -72,22 +120,39 @@ registerBlockType( 'cgb/block-mayflower-blocks', {
 	 *
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
-	save: function( props ) {
+
+	 /*
+	save: function( {attributes} ) {
 		return (
 			<div>
-				<p>— Hello from the frontend.</p>
-				<p>
-					CGB BLOCK: <code>mayflower-blocks</code> is a new Gutenberg block.
-				</p>
-				<p>
-					It was created via{ ' ' }
-					<code>
-						<a href="https://github.com/ahmadawais/create-guten-block">
-							create-guten-block
-						</a>
-					</code>.
-				</p>
+				<p>Welcome! This is preset text</p>
+				<div className="content">
+					<RichText.Content tagName="p" value={attributes.content} />
+				</div>
 			</div>
 		);
 	},
+
+	*/
+	/*
+	attributes: {
+		content: {
+			type: 'string',
+		},
+	},
+
+	edit({ className, attributes, setAttributes }) {
+		return (
+			<PlainText
+				className={className}
+				value={attributes.content}
+				onChange={(content) => setAttributes({ content })}
+			/>
+		);
+	},
+	save: props => (
+		<p>
+			{props.attributes.content}
+		</p>
+	),*/
 } );
