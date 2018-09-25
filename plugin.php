@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: mayflower-blocks — CGB Gutenberg Block Plugin
+ * Plugin Name: Mayflower Blocks
  * Plugin URI: https://github.com/ahmadawais/create-guten-block/
- * Description: mayflower-blocks — is a Gutenberg plugin created via create-guten-block.
- * Author: mrahmadawais, maedahbatool
- * Author URI: https://AhmadAwais.com/
- * Version: 1.0.0
+ * Description: Companion Gutenberg Blocks for BC Mayflower Theme
+ * Author: BC Integration (Thanks to mrahmadawais, maedahbatool)
+ * Author URI: https://www.bellevuecollege.edu
+ * Version: 0.0.0.1
  * License: GPL2+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  *
