@@ -12,10 +12,9 @@ import './editor.scss';
 
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType, PlainText } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { RichText } = wp.editor;
-const { getCurrentPostId } = wp.data;
-const { ServerSideRender } = wp.components;
+const { ServerSideRender, TextControl } = wp.components;
 
 
 
@@ -42,28 +41,31 @@ registerBlockType( 'mayflower-blocks/child-pages', {
 
 	attributes: {
 		pageID: {
-			type: 'number',
-			default: 0
+			type: 'string',
 		},
 	},
 
-	edit: function ({setAttributes, attributes}) {
+	edit: function ({ setAttributes, attributes, className}) {
 		// ensure the block attributes matches this plugin's name
-		return (
-			<div class="block-content">
-				<input 
-					type="number" 
-					value={attributes.pageID} 
-					onChange={(pageID) => {
-						
-						setAttributes({ pageID: pageID.target.value})
-						
-					}}
-				/>
+		let postID = wp.data.select('core/editor').getCurrentPostId();
+		setAttributes( { pageID: postID } );
+
+		let serverSideBlock;
+
+		if ( '' === attributes.pageID ) {
+			serverSideBlock = 'Loading';
+		} else {
+			serverSideBlock = (
 				<ServerSideRender
 					block="mayflower-blocks/child-pages"
-					attributes= { attributes }
+					attributes={attributes}
 				/>
+			)
+		}
+
+		return (
+			<div class={className}>
+				{serverSideBlock}
 			</div>
 		);
 	},

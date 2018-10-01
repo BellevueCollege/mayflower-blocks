@@ -12,6 +12,39 @@
  * CSS for just Backend enqueued after style.scss
  * which makes it higher in priority.
  */
+.wp-block-cgb-block-mayflower-blocks {
+  background: #bada55;
+  border: 0.2rem solid #292929;
+  color: #292929;
+  margin: 0 auto;
+  max-width: 740px;
+  padding: 2rem; }
+
+.wp-block-mayflower-blocks-child-pages {
+  pointer-events: none;
+  border: 1px solid #eee;
+  padding: 1rem; }
+
+.loading-msg {
+  background: #fff;
+  border: 3px solid #ccc;
+  border-radius: 10px;
+  padding: 1em;
+  text-align: center; }
+/**
+ * #.# Common SCSS
+ *
+ * Can include things like variables and mixins
+ * that are used across the project.
+*/
+/* Colors */
+/* Typography */
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
 .wp-block-mayflower-blocks-staff-list {
   pointer-events: none;
   border: 1px solid #eee;
