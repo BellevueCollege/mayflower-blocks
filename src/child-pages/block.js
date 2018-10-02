@@ -13,9 +13,9 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText } = wp.editor;
-const { ServerSideRender, TextControl } = wp.components;
-
+const { InspectorControls } = wp.editor;
+const { ServerSideRender, TextControl, RadioControl } = wp.components;
+//const {} = wp.api;
 
 
 /**
@@ -32,129 +32,73 @@ const { ServerSideRender, TextControl } = wp.components;
  *                             registered; otherwise `undefined`.
  */
 
+function ChildPage(props) {
+
+	return (
+		<div>
+			<div>content</div>
+		</div>
+		
+	);
+}
 
 registerBlockType( 'mayflower-blocks/child-pages', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Child Pages' ), // Block title.
-	icon: 'shield', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
+	icon: 'exerpt-view', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 
 	attributes: {
 		pageID: {
 			type: 'string',
 		},
+		template: {
+			type: 'string',
+			default: 'list'
+		}
 	},
 
 	edit: function ({ setAttributes, attributes, className}) {
-		// ensure the block attributes matches this plugin's name
+
+
+
+		// Get current post ID for display within the editor
 		let postID = wp.data.select('core/editor').getCurrentPostId();
+
+		let authors = wp.data.select('core').getAuthors();
 		setAttributes( { pageID: postID } );
 
-		let serverSideBlock;
+		let childPages = new wp.api.collections.Pages();
+		childPages.fetch({ 
+			data: { 
+				parent: postID
+			}
+		});
 
-		if ( '' === attributes.pageID ) {
-			serverSideBlock = 'Loading';
-		} else {
-			serverSideBlock = (
-				<ServerSideRender
-					block="mayflower-blocks/child-pages"
-					attributes={attributes}
+		return [
+			<InspectorControls>
+				<RadioControl
+					label="Child Page Template"
+					selected={attributes.template}
+					options={[
+						{ label: 'List of Pages', value: 'list' },
+						{ label: 'Simple Grid', value: 'grid' },
+						{ label: 'Fluid Grid', value: 'fluid-grid' },
+					]}
+					onChange={(template) => setAttributes({ template })}
 				/>
-			)
-		}
 
-		return (
+			</InspectorControls>
+			,
 			<div class={className}>
-				{serverSideBlock}
+			{console.log(childPages)}
+				
 			</div>
-		);
+		];
 	},
 
 	save() {
 		// Rendering in PHP
 		return null;
 	},
-
-	/**
-	 * The edit function describes the structure of your block in the context of the editor.
-	 * This represents what the editor will render when the block is used.
-	 *
-	 * The "edit" property must be a valid function.
-	 *
-	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
-	 */
-
-	 /*
-	attributes: {
-		content: {
-			type: 'string',
-			selector: 'div.content p',
-		},
-	},
-
-	edit: function ({ className, attributes, setAttributes } ) {
-		// Creates a <p class='wp-block-cgb-block-mayflower-blocks'></p>.
-		return (
-			<div className={ className }>
-				<p>— Hello from the backend.</p>
-				<p>
-					CGB BLOCK: <code>mayflower-blocks</code> is a new Gutenberg block
-				</p>
-				<p>
-					<RichText
-						tagName="p"
-						className={className}
-						value={attributes.content}
-						onChange={(content) => setAttributes({ content })}
-					/>
-				</p>
-			</div>
-		);
-	},
-	
-	*/
-
-	/**
-	 * The save function defines the way in which the different attributes should be combined
-	 * into the final markup, which is then serialized by Gutenberg into post_content.
-	 *
-	 * The "save" property must be specified and must be a valid function.
-	 *
-	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
-	 */
-
-	 /*
-	save: function( {attributes} ) {
-		return (
-			<div>
-				<p>Welcome! This is preset text</p>
-				<div className="content">
-					<RichText.Content tagName="p" value={attributes.content} />
-				</div>
-			</div>
-		);
-	},
-
-	*/
-	/*
-	attributes: {
-		content: {
-			type: 'string',
-		},
-	},
-
-	edit({ className, attributes, setAttributes }) {
-		return (
-			<PlainText
-				className={className}
-				value={attributes.content}
-				onChange={(content) => setAttributes({ content })}
-			/>
-		);
-	},
-	save: props => (
-		<p>
-			{props.attributes.content}
-		</p>
-	),*/
 } );
