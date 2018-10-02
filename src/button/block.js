@@ -166,7 +166,7 @@ registerBlockType( 'mayflower-blocks/button', {
 					buttonText: {
 						type: 'string',
 						shortcode: (attrs, { content }) => {
-							let rx = /(?<=\[\s*\s*button.*\]\s)(.*)(?=\s\[\s*\/\s*button\s*\])/gmi;
+							let rx = /(?<=\[\s*\s*button.*\])(.*)(?=\[\s*\/\s*button\s*\])/gmi;
 							let filtered = content.match(rx);
 							return filtered[0];
 						},
@@ -182,9 +182,6 @@ registerBlockType( 'mayflower-blocks/button', {
 						shortcode: ({ named: { type = 'type' } }) => {
 							return type;
 						},
-					},
-					buttonAlign: {
-						type: 'string'
 					},
 					buttonBlock: {
 						type: 'boolean',
