@@ -157,32 +157,44 @@ registerBlockType( 'mayflower-blocks/button', {
 		);
 	},
 
+	// Transform allows original shortcode to be transitioned to button block
 	transforms: {
 		from: [
 			{
 				type: 'shortcode',
 				tag: 'button',
 				attributes: {
+
+					// Button Text
 					buttonText: {
 						type: 'string',
 						shortcode: (attrs, { content }) => {
+							// Content returns the whole shortcode, so we need to match only shortcode content
 							let rx = /(?<=\[\s*\s*button.*\])(.*)(?=\[\s*\/\s*button\s*\])/gmi;
 							let filtered = content.match(rx);
-							return filtered[0];
+
+							// Return content at array[0] if there was a match, otherwise return blank string
+							return Array.isArray(filtered) ? filtered[0] : '';
 						},
 					},
+
+					// Target Link
 					buttonLink: {
 						type: 'string',
 						shortcode: ({ named: { link = 'link' } }) => {
 							return link;
 						},
 					},
+
+					// Button Type
 					buttonType: {
 						type: 'string',
 						shortcode: ({ named: { type = 'type' } }) => {
 							return type;
 						},
 					},
+
+					// Is Button Block formatted?
 					buttonBlock: {
 						type: 'boolean',
 						shortcode: ({ named: { block = 'block' } }) => {
@@ -192,6 +204,8 @@ registerBlockType( 'mayflower-blocks/button', {
 							return false;
 						},
 					},
+
+					// Button Size
 					buttonSize: {
 						type: 'string',
 						shortcode: ({ named: { size = 'size' } }) => {
