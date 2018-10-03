@@ -15,6 +15,8 @@ const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { InspectorControls } = wp.editor;
 const { ServerSideRender, TextControl, RadioControl } = wp.components;
+const { withSelect, select } = wp.data;
+const { decodeEntities } = wp.htmlEntities;
 //const {} = wp.api;
 
 
@@ -32,20 +34,43 @@ const { ServerSideRender, TextControl, RadioControl } = wp.components;
  *                             registered; otherwise `undefined`.
  */
 
-function ChildPage(props) {
+/**
+ * Get Child Pages
+ */
 
-	return (
-		<div>
-			<div>content</div>
-		</div>
-		
-	);
+function ChildPagesBase({ pages }) {
+	if ( Array.isArray( pages ) ) { 
+		return (
+			pages.map((page) => (
+				<div>
+					<h2>{decodeEntities(page.title.rendered.trim())}</h2>
+					<p>{decodeEntities(page.content.rendered) || __('(Untitled)')}</p>
+				</div>
+			))
+		);
+	} else {
+		return (
+			<p>Loading...</p>
+		)
+	}
+	
 }
+
+const ChildPages = withSelect((select) => ({
+	pages: select('core').getEntityRecords(
+		'postType',
+		'page',
+		{
+			parent: ( select('core/editor').getCurrentPostId() )
+		}
+	)
+}))(ChildPagesBase);
+
 
 registerBlockType( 'mayflower-blocks/child-pages', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Child Pages' ), // Block title.
-	icon: 'exerpt-view', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
+	icon: 'excerpt-view', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 
 	attributes: {
@@ -60,20 +85,14 @@ registerBlockType( 'mayflower-blocks/child-pages', {
 
 	edit: function ({ setAttributes, attributes, className}) {
 
-
-
-		// Get current post ID for display within the editor
-		let postID = wp.data.select('core/editor').getCurrentPostId();
-
-		let authors = wp.data.select('core').getAuthors();
-		setAttributes( { pageID: postID } );
-
+		/*
 		let childPages = new wp.api.collections.Pages();
 		childPages.fetch({ 
 			data: { 
 				parent: postID
 			}
 		});
+		*/
 
 		return [
 			<InspectorControls>
@@ -91,7 +110,7 @@ registerBlockType( 'mayflower-blocks/child-pages', {
 			</InspectorControls>
 			,
 			<div class={className}>
-			{console.log(childPages)}
+				<ChildPages />
 				
 			</div>
 		];
