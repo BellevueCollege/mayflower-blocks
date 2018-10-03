@@ -17,6 +17,8 @@ const { InspectorControls } = wp.editor;
 const { ServerSideRender, TextControl, RadioControl } = wp.components;
 const { withSelect, select } = wp.data;
 const { decodeEntities } = wp.htmlEntities;
+const { RawHTML } = wp.element;
+import {Fragment} from 'react';
 //const {} = wp.api;
 
 
@@ -42,10 +44,13 @@ function ChildPagesBase({ pages }) {
 	if ( Array.isArray( pages ) ) { 
 		return (
 			pages.map((page) => (
-				<div>
-					<h2>{decodeEntities(page.title.rendered.trim())}</h2>
-					<p>{decodeEntities(page.content.rendered) || __('(Untitled)')}</p>
-				</div>
+				<Fragment>
+					<h2><a href={page.link}>{page.title.rendered}</a></h2>
+					<RawHTML>{page.excerpt.rendered}</RawHTML>
+					<FeaturedImage
+						ID={page.featured_media}
+					/>
+				</Fragment>
 			))
 		);
 	} else {
@@ -65,6 +70,33 @@ const ChildPages = withSelect((select) => ({
 		}
 	)
 }))(ChildPagesBase);
+
+function FeaturedImageBase({ featured }) {
+	if ( featured ) {
+		return (
+			<Fragment>
+				<img
+					src={featured.source_url}
+					alt={featured.alt_text}
+				/>
+			</Fragment>
+		)
+	} else {
+		return (
+			<p>Image Loading</p>
+		)
+	}
+	
+}
+
+const FeaturedImage = withSelect((select, props) => ({
+	featured: select('core').getEntityRecord(
+		'postType',
+		'attachment',
+		props.ID
+	)
+}))(FeaturedImageBase);
+
 
 
 registerBlockType( 'mayflower-blocks/child-pages', {
