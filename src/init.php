@@ -67,3 +67,4 @@ add_action( 'enqueue_block_editor_assets', 'mayflower_blocks_cgb_editor_assets' 
 // Hook in PHP based block functionality
 //require_once plugin_dir_path( __FILE__ ) . 'block/block.php';
 require_once plugin_dir_path( __FILE__ ) . 'staff/block.php';
+require_once plugin_dir_path( __FILE__ ) . 'course/block.php';

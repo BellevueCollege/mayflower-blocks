@@ -86,3 +86,27 @@
       margin-bottom: 1em; }
     .wp-block-mayflower-blocks-staff-list .row.top-spacing15:last-child {
       margin-bottom: 1em; } }
+/**
+ * #.# Common SCSS
+ *
+ * Can include things like variables and mixins
+ * that are used across the project.
+*/
+/* Colors */
+/* Typography */
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
+.wp-block-mayflower-blocks-course .controls {
+  border: 1px solid black;
+  border-radius: 4px;
+  background: #eee;
+  display: -ms-flexbox;
+  display: flex; }
+  .wp-block-mayflower-blocks-course .controls > div {
+    -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+    margin: 1em; }
