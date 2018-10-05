@@ -100,13 +100,18 @@
  * CSS for just Backend enqueued after style.scss
  * which makes it higher in priority.
  */
-.wp-block-mayflower-blocks-course .controls {
-  border: 1px solid black;
-  border-radius: 4px;
-  background: #eee;
-  display: -ms-flexbox;
-  display: flex; }
-  .wp-block-mayflower-blocks-course .controls > div {
-    -ms-flex: 1 1 auto;
-        flex: 1 1 auto;
-    margin: 1em; }
+.wp-block-mayflower-blocks-course {
+  pointer-events: none; }
+  .wp-block-mayflower-blocks-course .editor-only {
+    display: block; }
+  .wp-block-mayflower-blocks-course .controls {
+    pointer-events: auto;
+    border: 1px solid black;
+    border-radius: 4px;
+    background: #eee;
+    display: -ms-flexbox;
+    display: flex; }
+    .wp-block-mayflower-blocks-course .controls > div {
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+      margin: 1em; }

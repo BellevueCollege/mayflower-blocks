@@ -1,117 +1,98 @@
 <?php
 
-
 class Mayflower_Blocks_Course {
+	private $base_url = 'http://www.bellevuecollege.edu/classes/All/';
+	private $subject;
+	private $number;
+	private $description;
+	private $data;
 
-	function __construct() {
-		
+	function __construct( $subject, $number, $description ) {
+		$this->subject = $subject;
+		$this->number = $number;
+		$this->description = $description;
 	}
-}
-/*
- * Ajax call to get courses
- * */
-function get_course_callback() {
-    $subject = $_POST['subject'];
-    $json_subjects_url = "http://www.bellevuecollege.edu/classes/All/".$subject."?format=json";
-    $json = wp_remote_get($json_subjects_url);
 
-    if(!empty($json) && !empty($json['body']))
-    {
-        echo $json['body'];
-    }
-    die();
-}
+	/**
+	 * Fetch JSON data from API
+	 */
+	private function fetch_json() {
 
-//function for rendering single course shortcode into HTML
-function coursedescription_func($atts)
-{
-      $subject = $atts["subject"];
-      $course = $atts["courseid"];// Attribute name should always read in lower case.
-    $description = $atts["description"];
-    if(!empty($course) && !empty($subject))
-    {
-        //error_log("course :".$course);
-        $course_split = explode(" ",$course);
-        $course_letter = $course_split[0];
-        $course_id = $course_split[1];
-        $subject = trim(html_entity_decode  ($subject));
-        $url = "http://www.bellevuecollege.edu/classes/All/".$subject."?format=json";
-        $json = wp_remote_get($url);
-        if(!empty($json) && !empty($json['body']))
-        {
-		    $html = decodejsonClassInfo($json['body'],$course_id,$description);
-            return $html;
-        }
-    }
-    return null;
-}
+		// Build request URL
+		$api_url = $this->base_url . $this->subject . '/' . $this->number . "?format=json";
 
-//process json returned by API call
-function decodejsonClassInfo($jsonString,$number = NULL,$description = NULL)
-{
-    $decodeJson = json_decode($jsonString,true);
-    $htmlString = "";
-    $courses = $decodeJson["Courses"];
-    $htmlString .= "<div class='classDescriptions'>";
-    if(count($courses)>0)
-    {
-        foreach($courses as $sections)
-        {
-            if($number!=null)
-            {
-                if($sections["Number"] == $number)
-                {
-                    $htmlString .= getHtmlForCourse($sections,$description);
-                }
-            }
-            else
-            {
-                $htmlString .= getHtmlForCourse($sections,$description);
-            }
-        }
-    }
-    $htmlString .= "</div>"; //classDescriptions
+		// Get raw data from API
+		$raw_data = wp_remote_get( $api_url );
 
-    return $htmlString;
-}
+		// Return JSON if successful, otherwise return false
+		return is_array( $raw_data ) ? json_decode( $raw_data['body'] ) : false;
+	}
 
-//process individual course for display
-function getHtmlForCourse($sections,$description = NULL)
-{
-    $htmlString = "";
-    $htmlString .= "<div class='class-info'>";
-    $htmlString .= "<h5 class='class-heading'>";
-        $courseUrl = CLASSESURL.$sections["Subject"];
-        if($sections["IsCommonCourse"])
-        {
-            $courseUrl .= "&";
-        }
-        $courseUrl .= "/".$sections["Number"];
+	/**
+	 * Load Course Information and Save to $data
+	 */
+	private function load_course() {
 
-        $htmlString .= "<a href='".$courseUrl."''>";
-        $htmlString .= "<span class='course-id'>".$sections["Descriptions"][0]["CourseID"]."</span>";
-        $htmlString .= " <span class='course-title'>".$sections["Title"]."</span>";
-        $htmlString .= "<span class='course-credits'> &#8226; ";
+		// Fetch JSON
+		$raw = $this->fetch_json();
 
-        if($sections["IsVariableCredits"])
-        {
-            $htmlString .= "V1-".$sections["Credits"]." <abbr title='variable credit'>Cr.</abbr>";
-        }
-        else
-        {
-            $htmlString .= $sections["Credits"]." <abbr title='credit(s)'>Cr.</abbr>";
-        }
-        $htmlString .= "</span>";
-        $htmlString .= "</a>";
-        $htmlString .= "</h5>";//classHeading
-    if($description=="true" && !empty($sections["Descriptions"]))
-    {
-        //error_log("Not here");
-        $htmlString .= "<p class='class-description'>" . $sections["Descriptions"][0]["Description"] . "</p>";
-        $htmlString .= "<p class='class-details-link'>";
-        $htmlString .= "<a href='".$courseUrl."'>View details for ".$sections["Descriptions"][0]["CourseID"]."</a>";
-        $htmlString .= "</p>";
-    }
-        $htmlString .= "</div>"; //classInfo
-        return $htmlString;
+		// Make sure that data has been returned
+		if ( $raw && isset( $raw->Courses[0] ) ) {
+
+			$course = $raw->Courses[0];
+
+			// Verify course number (API will return random course at times)
+			if ( $course->Number === $this->number ) {
+
+				// Build model
+				$this->data = Array(
+					'title' => $course->Title,
+					'subject' => $course->Subject,
+					'number' => $course->Number,
+					'credits' => $course->Credits,
+					'variable' => $course->IsVariableCredits,
+					'common' => $course->IsCommonCourse,
+					'description' => $course->Descriptions[0]->Description,
+				);
+			}
+		}
+	}
+
+	/**
+	 * Load and Output Data
+	 */
+	public function output() {
+		$this->load_course();
+		$course_data = $this->data;
+
+		if ( $course_data ) {
+
+			$title = $course_data['subject'] . 
+				( $course_data['common'] ? '&amp;' : '' ) . ' '
+				. $course_data['number'] . ': ' 
+				. $course_data['title'] . ' - ' 
+				. ( $course_data['variable'] ? 'variable' : $course_data['credits'] ) . ' credits';
+
+			$url = $this->base_url . $course_data['subject'] .
+				( $course_data['common'] ? '%26' : '' ) . '/' .
+				$course_data['number'];
+
+			$description = $course_data['description'];
+
+			$more = 'View details for ' . $course_data['subject'] . 
+				( $course_data['common'] ? '&amp;' : '' ) . ' '
+				. $course_data['number'];
+
+			if ( $this->description ) {
+				return "<h3><a href='$url'>$title</a></h3><p>$description</p><p><a href='$url'>$more</a></p>";
+			} else {
+				return "<h3><a href='$url'>$title</a></h3>";
+			}
+
+			
+		} else {
+			return '<p class="editor-only">Please select a valid course</p>';
+		}
+
+	}
 }

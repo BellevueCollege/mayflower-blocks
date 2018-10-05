@@ -13,7 +13,7 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { ServerSideRender, TextControl } = wp.components;
+const { ServerSideRender, TextControl, CheckboxControl } = wp.components;
 const { InspectorControls } = wp.editor;
 
 import {Fragment} from 'react';
@@ -48,6 +48,9 @@ registerBlockType( 'mayflower-blocks/course', {
 		item: {
 			type: 'string',
 		},
+		description: {
+			type: 'boolean',
+		},
 	},
 
 	edit: function ({setAttributes, attributes, className, isSelected}) {
@@ -72,6 +75,13 @@ registerBlockType( 'mayflower-blocks/course', {
 
 		return (
 			<Fragment>
+				<InspectorControls>
+					<CheckboxControl
+						label="Display Course Description"
+						checked={attributes.description}
+						onChange={(description) => setAttributes({ description })}
+					/>
+				</InspectorControls>
 				<div class={className}>
 					{editBlock}
 					<ServerSideRender
