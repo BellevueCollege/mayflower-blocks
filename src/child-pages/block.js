@@ -9,18 +9,16 @@
 import './style.scss';
 import './editor.scss';
 
-
+// Import components
+import ListChildPage from '../inc/nav-page/list.js';
+import GridChildPage from '../inc/nav-page/grid.js';
+import FluidGridChildPage from '../inc/nav-page/fluid-grid.js';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { InspectorControls } = wp.editor;
 const { ServerSideRender, TextControl, RadioControl } = wp.components;
 const { withSelect, select } = wp.data;
-const { decodeEntities } = wp.htmlEntities;
-const { RawHTML } = wp.element;
-import {Fragment} from 'react';
-//const {} = wp.api;
-
 
 /**
  * Register: aa Gutenberg Block.
@@ -35,69 +33,6 @@ import {Fragment} from 'react';
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-
-/**
- * Get Child Pages
- */
-
-function ChildPagesBase({ pages }) {
-	if ( Array.isArray( pages ) ) { 
-		return (
-			pages.map((page) => (
-				<Fragment>
-					<h2><a href={page.link}>{page.title.rendered}</a></h2>
-					<RawHTML>{page.excerpt.rendered}</RawHTML>
-					<FeaturedImage
-						ID={page.featured_media}
-					/>
-				</Fragment>
-			))
-		);
-	} else {
-		return (
-			<p>Loading...</p>
-		)
-	}
-	
-}
-
-const ChildPages = withSelect((select) => ({
-	pages: select('core').getEntityRecords(
-		'postType',
-		'page',
-		{
-			parent: ( select('core/editor').getCurrentPostId() )
-		}
-	)
-}))(ChildPagesBase);
-
-function FeaturedImageBase({ featured }) {
-	if ( featured ) {
-		return (
-			<Fragment>
-				<img
-					src={featured.source_url}
-					alt={featured.alt_text}
-				/>
-			</Fragment>
-		)
-	} else {
-		return (
-			<p>Image Loading</p>
-		)
-	}
-	
-}
-
-const FeaturedImage = withSelect((select, props) => ({
-	featured: select('core').getEntityRecord(
-		'postType',
-		'attachment',
-		props.ID
-	)
-}))(FeaturedImageBase);
-
-
 
 registerBlockType( 'mayflower-blocks/child-pages', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
@@ -117,14 +52,55 @@ registerBlockType( 'mayflower-blocks/child-pages', {
 
 	edit: function ({ setAttributes, attributes, className}) {
 
-		/*
-		let childPages = new wp.api.collections.Pages();
-		childPages.fetch({ 
-			data: { 
-				parent: postID
+		/**
+		 * Get Child Pages
+		 */
+
+		function ChildPagesBase({ pages }) {
+			if ( Array.isArray( pages ) ) { 
+				// sort by menu_order
+				const childPages = pages.sort( (a,b) => {
+					return a.menu_order > b.menu_order;
+				});
+
+				// FIX sort by title
+				// const childPages = childPagesMenuSort.sort( (a,b) => {
+				// 	return a.title.rendered.toLowerCase() > b.title.rendered.toLowerCase();
+				// });
+
+				let pageInfo;
+				return childPages.map((page) => (
+					pageInfo = {
+						id: page.id,
+						link: page.link,
+						title: page.title.rendered,
+						excerpt: page.excerpt.rendered,
+						featuredImgID: page.featured_media
+					},
+					({
+						'list': <ListChildPage page={pageInfo}/>,
+						'grid': <GridChildPage page={pageInfo}/>,
+						'fluid-grid': <FluidGridChildPage page={pageInfo}/>
+					}[attributes.template])
+				));
+
+			} else {
+				return (
+					<p>Loading...</p>
+				)
 			}
-		});
-		*/
+			
+		}
+
+		const ChildPages = withSelect((select) => ({
+			pages: select('core').getEntityRecords(
+				'postType',
+				'page',
+				{
+					parent: ( select('core/editor').getCurrentPostId() )
+				}
+			)
+		}))(ChildPagesBase);
 
 		return [
 			<InspectorControls>
@@ -143,7 +119,6 @@ registerBlockType( 'mayflower-blocks/child-pages', {
 			,
 			<div class={className}>
 				<ChildPages />
-				
 			</div>
 		];
 	},
