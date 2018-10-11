@@ -18,7 +18,7 @@ class ListChildPage extends React.Component {
                     <img
                         src={featured.media_details.sizes.thumbnail.source_url}
                         alt={featured.alt_text}
-                        class="media-object img-responsive img-thumbnail wp-post-image img-responsive"
+                        class="media-object img-responsive img-thumbnail wp-post-image"
                     />
             )
         } else {

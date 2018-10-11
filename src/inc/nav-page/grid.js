@@ -16,9 +16,9 @@ class GridChildPage extends React.Component {
         if ( featured ) {
             return (
                     <img
-                        src={featured.media_details.sizes.thumbnail.source_url}
+                        src={featured.media_details.sizes.thumbnail.source_url} //home-small-ad
                         alt={featured.alt_text}
-                        class="media-object img-responsive img-thumbnail wp-post-image img-responsive"
+                        class="media-object img-responsive img-thumbnail wp-post-image"
                     />
             )
         } else {
@@ -37,8 +37,18 @@ class GridChildPage extends React.Component {
     }))(FeaturedImageBase);
 
     return (
-        <div>
-            <h2>Grid View Preview</h2>
+        <div class="col-md-4 top-spacing15">
+            <article class={"post-" + this.props.page.id + " content-padding nav-page"}>
+                {(this.props.page.featuredImgID ? 
+                    <a href={this.props.page.link}>
+                        {<FeaturedImage ID={this.props.page.featuredImgID}/>}
+                    </a>
+                : '')}
+                <h2>
+                    <a href={this.props.page.link}>{this.props.page.title}</a>
+                </h2>
+                <RawHTML>{this.props.page.excerpt}</RawHTML>
+            </article>
         </div>
     );
   }

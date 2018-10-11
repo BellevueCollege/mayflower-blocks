@@ -59,17 +59,17 @@ registerBlockType( 'mayflower-blocks/child-pages', {
 		function ChildPagesBase({ pages }) {
 			if ( Array.isArray( pages ) ) { 
 				// sort by menu_order
-				const childPages = pages.sort( (a,b) => {
+				let childPagesMenuSort = pages.sort( (a,b) => {
 					return a.menu_order > b.menu_order;
 				});
 
-				// FIX sort by title
-				// const childPages = childPagesMenuSort.sort( (a,b) => {
+				// const childPagesTitleSort = childPagesMenuSort.sort( (a,b) => {
 				// 	return a.title.rendered.toLowerCase() > b.title.rendered.toLowerCase();
 				// });
 
 				let pageInfo;
-				return childPages.map((page) => (
+				// saves an array of page class objects corresponding to the selected template
+				const showTemplate = childPagesMenuSort.map((page) => (
 					pageInfo = {
 						id: page.id,
 						link: page.link,
@@ -84,6 +84,35 @@ registerBlockType( 'mayflower-blocks/child-pages', {
 					}[attributes.template])
 				));
 
+				// Grid template function
+				// splitRow crafts an array of arrays with 3 pages each so we can have 3 pages a row
+				// takes a parameter of pages which is an array of class objects, and a number of columns
+				const splitRow = (pages, columns) => {
+					let splitArray = [];
+					if ( pages.length ) { //if there are pages
+						let spliced = [pages.splice(0, columns)]; //splice pages array starting at 0 index ending at # of columns
+						splitArray = spliced.concat(splitRow(pages, columns)); //then concatenate another split
+						return splitArray;
+					} else { //return an empty array //TEST
+						return splitArray;
+					}
+				}
+
+				// output template
+				if (attributes.template === 'grid') {
+					let rows = splitRow(showTemplate, 3); //split each row into 3 columns
+					const grid = ( //outputs a row of 3 columns into each div
+						rows.map((row) => (
+							<div class="row">
+								{row}
+							</div>
+							)
+						)
+					);
+					return grid;
+				} else {
+					return showTemplate;
+				}
 			} else {
 				return (
 					<p>Loading...</p>
