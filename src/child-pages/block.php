@@ -43,8 +43,7 @@ register_block_type( 'mayflower-blocks/child-pages', array(
 add_action( 'enqueue_block_assets', 'mayflower_blocks_enqueue_script_child_pages' );
 
 function mayflower_blocks_enqueue_script_child_pages () {
-	wp_enqueue_script( 'wp-api' );
-	// wp_enqueue_script( 'imagesloaded' );
-	// wp_enqueue_script( 'masonry' );
-	// wp_enqueue_script( 'page-nav-page-fluid-grid', get_template_directory_uri() . '/js/page-nav-page-fluid-grid.js', array( 'wp-blocks', 'wp-element','imagesloaded', 'masonry' ), '', true );
+	wp_enqueue_script( 'imagesloaded' );
+	wp_enqueue_script( 'masonry' );
+	wp_enqueue_script( 'page-nav-page-fluid-grid', get_template_directory_uri() . '/js/page-nav-page-fluid-grid.js', array( 'wp-blocks', 'wp-element','imagesloaded', 'masonry' ), '', true );
 }

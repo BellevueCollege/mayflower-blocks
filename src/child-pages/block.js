@@ -13,11 +13,12 @@ import './editor.scss';
 import ListChildPage from '../inc/nav-page/list.js';
 import GridChildPage from '../inc/nav-page/grid.js';
 import FluidGridChildPage from '../inc/nav-page/fluid-grid.js';
+import FluidGridMasonry from '../inc/nav-page/fluid-grid-masonry.js';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { InspectorControls } = wp.editor;
-const { ServerSideRender, TextControl, RadioControl } = wp.components;
+const { RadioControl } = wp.components;
 const { withSelect, select } = wp.data;
 
 /**
@@ -93,7 +94,7 @@ registerBlockType( 'mayflower-blocks/child-pages', {
 						let spliced = [pages.splice(0, columns)]; //splice pages array starting at 0 index ending at # of columns
 						splitArray = spliced.concat(splitRow(pages, columns)); //then concatenate another split
 						return splitArray;
-					} else { //return an empty array //TEST
+					} else { //return an empty array
 						return splitArray;
 					}
 				}
@@ -109,9 +110,15 @@ registerBlockType( 'mayflower-blocks/child-pages', {
 							)
 						)
 					);
-					return grid;
-				} else {
-					return showTemplate;
+					return (<section class="nav-page"> {grid} </section>)
+				}
+
+				if (attributes.template === 'list') {
+					return (<section class="content-padding nav-page nav-page-list"> {showTemplate} </section>)
+				}
+
+				if (attributes.template === 'fluid-grid') {
+					return (<FluidGridMasonry pages={showTemplate}/>)
 				}
 			} else {
 				return (
