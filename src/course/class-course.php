@@ -1,7 +1,8 @@
 <?php
 
 class Mayflower_Blocks_Course {
-	private $base_url = 'http://www.bellevuecollege.edu/classes/All/';
+	private $link_base_url = 'https://www.bellevuecollege.edu/classes/All/';
+	private $api_base_url = 'https://wwwtest.bellevuecollege.edu/aproot/data/api/v1/course/';
 	private $subject;
 	private $number;
 	private $description;
@@ -19,8 +20,9 @@ class Mayflower_Blocks_Course {
 	private function fetch_json() {
 
 		// Build request URL
-		$api_url = $this->base_url . $this->subject . '/' . $this->number . "?format=json";
-
+		// Example: https://wwwtest.bellevuecollege.edu/aproot/data/api/v1/course/ACCT/101
+		$api_url = $this->api_base_url . urlencode( $this->subject ) . '/'. urlencode( $this->number );
+		
 		// Get raw data from API
 		$raw_data = wp_remote_get( $api_url );
 
@@ -35,26 +37,21 @@ class Mayflower_Blocks_Course {
 
 		// Fetch JSON
 		$raw = $this->fetch_json();
-
+		
 		// Make sure that data has been returned
-		if ( $raw && isset( $raw->Courses[0] ) ) {
+		if ( isset( $raw->course ) ) {
+			// Build model
+			$course = $raw->course;
 
-			$course = $raw->Courses[0];
-
-			// Verify course number (API will return random course at times)
-			if ( $course->Number === $this->number ) {
-
-				// Build model
-				$this->data = Array(
-					'title' => $course->Title,
-					'subject' => $course->Subject,
-					'number' => $course->Number,
-					'credits' => $course->Credits,
-					'variable' => $course->IsVariableCredits,
-					'common' => $course->IsCommonCourse,
-					'description' => $course->Descriptions[0]->Description,
-				);
-			}
+			$this->data = Array(
+				'title' => $course->title,
+				'subject' => $course->subject,
+				'number' => $course->courseNumber,
+				'credits' => $course->credits,
+				'variable' => $course->isVariableCredits,
+				'common' => $course->isCommonCourse,
+				'description' => $course->description,
+			);
 		}
 	}
 
@@ -67,20 +64,18 @@ class Mayflower_Blocks_Course {
 
 		if ( $course_data ) {
 
-			$title = $course_data['subject'] . 
-				( $course_data['common'] ? '&amp;' : '' ) . ' '
+			$title = $course_data['subject'] . ' '
 				. $course_data['number'] . ': ' 
 				. $course_data['title'] . ' - ' 
 				. ( $course_data['variable'] ? 'variable' : $course_data['credits'] ) . ' credits';
 
-			$url = $this->base_url . $course_data['subject'] .
+			$url = $this->link_base_url . $course_data['subject'] .
 				( $course_data['common'] ? '%26' : '' ) . '/' .
 				$course_data['number'];
 
 			$description = $course_data['description'];
 
-			$more = 'View details for ' . $course_data['subject'] . 
-				( $course_data['common'] ? '&amp;' : '' ) . ' '
+			$more = 'View details for ' . $course_data['subject'] . ' '
 				. $course_data['number'];
 
 			if ( $this->description ) {
@@ -91,7 +86,7 @@ class Mayflower_Blocks_Course {
 
 			
 		} else {
-			return '<p class="editor-only">Please select a valid course</p>';
+			return '<p class="editor-only alert alert-warning"><strong>Notice:</strong> course is not available</p>';
 		}
 
 	}
