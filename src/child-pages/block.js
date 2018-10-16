@@ -59,14 +59,28 @@ registerBlockType( 'mayflower-blocks/child-pages', {
 
 		function ChildPagesBase({ pages }) {
 			if ( Array.isArray( pages ) ) { 
-				// sort by menu_order
+				// sort by menu_order or title if there is no menu_order
 				let childPagesMenuSort = pages.sort( (a,b) => {
-					return a.menu_order > b.menu_order;
-				});
+					//if no 2 values are the same, return menu_order
+					if (a.menu_order !== b.menu_order){
+						return a.menu_order > b.menu_order;
+					}
 
-				// const childPagesTitleSort = childPagesMenuSort.sort( (a,b) => {
-				// 	return a.title.rendered.toLowerCase() > b.title.rendered.toLowerCase();
-				// });
+					// if there is no menu_order, then sort by title
+					let menuOrders = [];
+					pages.map( (page) => (
+						menuOrders.push(page.menu_order)
+					));
+					const checkMenuOrder = (value) => {
+						//check if every value returns same as a menu_order
+						return value == a.menu_order;
+					}
+					let isNoMenuOrder = menuOrders.every(checkMenuOrder);
+					if (isNoMenuOrder == true) {
+						//then sort by title
+						return a.title.rendered.toLowerCase() > b.title.rendered.toLowerCase();
+					}
+				});
 
 				let pageInfo;
 				// saves an array of page class objects corresponding to the selected template
