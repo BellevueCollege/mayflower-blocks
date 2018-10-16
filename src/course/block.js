@@ -13,12 +13,75 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { ServerSideRender, TextControl, CheckboxControl } = wp.components;
+const { ServerSideRender, TextControl, CheckboxControl, Disabled, SelectControl } = wp.components;
 const { InspectorControls } = wp.editor;
+const { Fragment, Component } = wp.element;
 
-import {Fragment} from 'react';
+// import { Fragment, Component } from 'react';
+//import { ClassSubjectSelect } from './component-class-api.js';
 
+class ClassSubjectSelect extends Component {
+	constructor() {
+		super(...arguments);
+		this.nodeRef = null;
+		this.bindRef = this.bindRef.bind(this);
+		this.state = {
+			error: null,
+			isLoaded: false,
+			classList: []
+		};
+	}
 
+	bindRef(node) {
+		if (!node) {
+			return;
+		}
+		this.nodeRef = node;
+	}
+
+	componentDidMount() {
+		fetch("https://wwwtest.bellevuecollege.edu/aproot/data/api/v1/subject")
+			.then(res => res.json())
+			.then(
+				(result) => {
+					this.setState({
+						isLoaded: true,
+						classList: result,
+					});
+				},
+				// Note: it's important to handle errors here
+				// instead of a catch() block so that we don't swallow
+				// exceptions from actual bugs in components.
+				(error) => {
+					this.setState({
+						isLoaded: true,
+						error
+					});
+				}
+			)
+	}
+
+	render() {
+		const { error, isLoaded, classList } = this.state;
+		const { attributes, setAttributes } = this.props;
+		//const { attributes } = this.props;
+		return (
+			<Fragment>
+				
+				<SelectControl
+					label="Subject"
+					value={attributes.subject}
+					options={[
+						{ label: 'Big', value: '100%' },
+						{ label: 'Medium', value: '50%' },
+						{ label: 'Small', value: '25%' },
+					]}
+				/>
+			</Fragment>
+		)
+	}
+}
+export default ClassSubjectSelect;
 
 /**
  * Register: aa Gutenberg Block.
@@ -33,7 +96,6 @@ import {Fragment} from 'react';
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-
 
 registerBlockType( 'mayflower-blocks/course', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
@@ -84,10 +146,16 @@ registerBlockType( 'mayflower-blocks/course', {
 				</InspectorControls>
 				<div class={className}>
 					{editBlock}
-					<ServerSideRender
-						block="mayflower-blocks/course"
-						attributes= { attributes }
+					<ClassSubjectSelect
+						attributes = {attributes}
+						onChange={(subject) => setAttributes({ subject })}
 					/>
+					<Disabled>
+						<ServerSideRender
+							block="mayflower-blocks/course"
+							attributes= { attributes }
+						/>
+					</Disabled>
 				</div>
 			</Fragment>
 		);
