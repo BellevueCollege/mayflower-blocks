@@ -17,71 +17,8 @@ const { ServerSideRender, TextControl, CheckboxControl, Disabled, SelectControl 
 const { InspectorControls } = wp.editor;
 const { Fragment, Component } = wp.element;
 
-// import { Fragment, Component } from 'react';
-//import { ClassSubjectSelect } from './component-class-api.js';
-
-class ClassSubjectSelect extends Component {
-	constructor() {
-		super(...arguments);
-		this.nodeRef = null;
-		this.bindRef = this.bindRef.bind(this);
-		this.state = {
-			error: null,
-			isLoaded: false,
-			classList: []
-		};
-	}
-
-	bindRef(node) {
-		if (!node) {
-			return;
-		}
-		this.nodeRef = node;
-	}
-
-	componentDidMount() {
-		fetch("https://wwwtest.bellevuecollege.edu/aproot/data/api/v1/subject")
-			.then(res => res.json())
-			.then(
-				(result) => {
-					this.setState({
-						isLoaded: true,
-						classList: result,
-					});
-				},
-				// Note: it's important to handle errors here
-				// instead of a catch() block so that we don't swallow
-				// exceptions from actual bugs in components.
-				(error) => {
-					this.setState({
-						isLoaded: true,
-						error
-					});
-				}
-			)
-	}
-
-	render() {
-		const { error, isLoaded, classList } = this.state;
-		const { attributes, setAttributes } = this.props;
-		//const { attributes } = this.props;
-		return (
-			<Fragment>
-				
-				<SelectControl
-					label="Subject"
-					value={attributes.subject}
-					options={[
-						{ label: 'Big', value: '100%' },
-						{ label: 'Medium', value: '50%' },
-						{ label: 'Small', value: '25%' },
-					]}
-				/>
-			</Fragment>
-		)
-	}
-}
-export default ClassSubjectSelect;
+import ClassSubjectSelect from './ClassSubjectSelect';
+import ClassItemSelect from './ClassItemSelect';
 
 /**
  * Register: aa Gutenberg Block.
@@ -116,23 +53,13 @@ registerBlockType( 'mayflower-blocks/course', {
 	},
 
 	edit: function ({setAttributes, attributes, className, isSelected}) {
-		// ensure the block attributes matches this plugin's name
-		let editBlock;
-		if ( isSelected ) {
-			editBlock = (
-				<div class="controls">
-					<TextControl
-						label="Subject"
-						value={attributes.subject}
-						onChange={(subject) => setAttributes({ subject })}
-					/>
-					<TextControl
-						label="Item"
-						value={attributes.item}
-						onChange={(item) => setAttributes({ item })}
-					/>
-				</div>
-			)
+		
+		// Update attributes from within children components
+		const handleSubjectUpdate = (newSubject) => {
+			setAttributes({subject: newSubject});
+		}
+		const handleItemUpdate = (newItem) => {
+			setAttributes({item: newItem});
 		}
 
 		return (
@@ -144,12 +71,18 @@ registerBlockType( 'mayflower-blocks/course', {
 						onChange={(description) => setAttributes({ description })}
 					/>
 				</InspectorControls>
+
 				<div class={className}>
-					{editBlock}
 					<ClassSubjectSelect
 						attributes = {attributes}
-						onChange={(subject) => setAttributes({ subject })}
+						onSubjectUpdate = {handleSubjectUpdate}
 					/>
+
+					<ClassItemSelect
+						attributes = {attributes}
+						onItemUpdate = {handleItemUpdate}
+					/>
+					
 					<Disabled>
 						<ServerSideRender
 							block="mayflower-blocks/course"

@@ -2,7 +2,7 @@
 
 class Mayflower_Blocks_Course {
 	private $link_base_url = 'https://www.bellevuecollege.edu/classes/All/';
-	private $api_base_url = 'https://wwwtest.bellevuecollege.edu/aproot/data/api/v1/course/';
+	private $api_base_url = 'https://bellevuecollege.edu/data/api/v1/course/';
 	private $subject;
 	private $number;
 	private $description;
@@ -20,7 +20,7 @@ class Mayflower_Blocks_Course {
 	private function fetch_json() {
 
 		// Build request URL
-		// Example: https://wwwtest.bellevuecollege.edu/aproot/data/api/v1/course/ACCT/101
+		// Example: https://bellevuecollege.edu/data/api/v1/course/ACCT/101
 		$api_url = $this->api_base_url . urlencode( $this->subject ) . '/'. urlencode( $this->number );
 		
 		// Get raw data from API
@@ -84,7 +84,6 @@ class Mayflower_Blocks_Course {
 				return "<h3><a href='$url'>$title</a></h3>";
 			}
 
-			
 		} else {
 			return '<p class="editor-only alert alert-warning"><strong>Notice:</strong> course is not available</p>';
 		}
