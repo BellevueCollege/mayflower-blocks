@@ -62,6 +62,22 @@ registerBlockType( 'mayflower-blocks/course', {
 			setAttributes({item: newItem});
 		}
 
+		let selectControls;
+		if (isSelected) {
+			selectControls = (
+			<div class="controls">
+				<ClassSubjectSelect
+					attributes = {attributes}
+					onSubjectUpdate = {handleSubjectUpdate}
+				/>
+				<ClassItemSelect
+					attributes = {attributes}
+					onItemUpdate = {handleItemUpdate}
+				/>
+			</div>
+			)
+		}
+
 		return (
 			<Fragment>
 				<InspectorControls>
@@ -73,15 +89,8 @@ registerBlockType( 'mayflower-blocks/course', {
 				</InspectorControls>
 
 				<div class={className}>
-					<ClassSubjectSelect
-						attributes = {attributes}
-						onSubjectUpdate = {handleSubjectUpdate}
-					/>
 
-					<ClassItemSelect
-						attributes = {attributes}
-						onItemUpdate = {handleItemUpdate}
-					/>
+					{ selectControls }
 					
 					<Disabled>
 						<ServerSideRender
