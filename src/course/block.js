@@ -52,6 +52,37 @@ registerBlockType( 'mayflower-blocks/course', {
 		},
 	},
 
+	//Existing single course description shortcode transformed into its block counterpart.
+	//Allows use of [coursedescription]
+	transforms: {
+		from: [
+			{
+				type: 'shortcode',
+				tag: 'coursedescription',
+				attributes: {
+					subject: {
+						type: 'string',
+						shortcode: ( { named: { subject } } ) => {
+							return subject;
+						},
+					},
+					item: {
+						type: 'string',
+						shortcode: ( { named: { item } } ) => {
+							return item;
+						},
+					},
+					description: {
+						type: 'boolean',
+						shortcode: ( { named: { description } } ) => {
+							return description;
+						},
+					}
+				},
+			},
+		]
+	},
+	
 	edit: function ({setAttributes, attributes, className, isSelected}) {
 		
 		// Update attributes from within children components
