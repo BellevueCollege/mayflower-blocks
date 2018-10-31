@@ -12,6 +12,92 @@
  * CSS for just Backend enqueued after style.scss
  * which makes it higher in priority.
  */
+.wp-block-cgb-block-mayflower-blocks {
+  background: #bada55;
+  border: 0.2rem solid #292929;
+  color: #292929;
+  margin: 0 auto;
+  max-width: 740px;
+  padding: 2rem; }
+
+.wp-block-mayflower-blocks-child-pages {
+  pointer-events: none;
+  border: 1px solid #eee;
+  padding: 1rem; }
+
+.loading-msg {
+  background: #fff;
+  border: 3px solid #ccc;
+  border-radius: 10px;
+  padding: 1em;
+  text-align: center; }
+
+/* ####################################### */
+/* ----- Page template overrides ----- */
+/* ###################################### */
+.nav-page h2 {
+  margin-top: 0; }
+
+.nav-page-list h2 {
+  margin-top: 2rem; }
+
+.nav-page img {
+  margin-top: 0;
+  display: inline; }
+
+div.nav-page {
+  margin-bottom: 1em; }
+
+li.media {
+  margin-left: 0; }
+
+/* ####################################### */
+/* ----- Fluid Grid Page Template ----- */
+/* ###################################### */
+.child-pages.fluid-grid div {
+  padding: 0 1em 1em 1em;
+  border: 1px solid #ccc; }
+
+.child-pages.fluid-grid div.hasimage {
+  border-top: 1px solid #fff0; }
+
+.child-pages.fluid-grid div.grid-sizer,
+.child-pages.fluid-grid > article {
+  width: calc(50% - 10px);
+  padding: 0;
+  border: 0;
+  min-width: 200px;
+  margin-bottom: 20px;
+  background: #fff; }
+
+.child-pages.fluid-grid:after {
+  content: '';
+  display: block;
+  clear: both; }
+
+@media screen and (max-width: 460px) {
+  .child-pages.fluid-grid div.grid-sizer,
+  .child-pages.fluid-grid > article {
+    width: 100%; } }
+
+@media screen and (min-width: 48em) {
+  .child-pages.fluid-grid div.grid-sizer,
+  .child-pages.fluid-grid > article {
+    width: calc(33.3333% - 10px); } }
+/**
+ * #.# Common SCSS
+ *
+ * Can include things like variables and mixins
+ * that are used across the project.
+*/
+/* Colors */
+/* Typography */
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
 .wp-block-mayflower-blocks-staff-list {
   pointer-events: none;
   border: 1px solid #eee;
