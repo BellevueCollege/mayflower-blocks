@@ -1,0 +1,28 @@
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
+
+.wp-block-mayflower-blocks-course {
+
+	.editor-only {
+		margin-top: 1em;
+		display: block;
+	}
+
+	.controls {
+		pointer-events: auto;
+		border: 1px solid black;
+		border-radius: 4px;
+		background: #eee;
+
+		display: flex;
+
+		& > div {
+			flex: 1 1 auto;
+			margin: 1em;
+		}
+	}
+}
