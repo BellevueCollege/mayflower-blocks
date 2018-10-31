@@ -87,7 +87,7 @@ registerBlockType( 'mayflower-blocks/course', {
 		
 		// Update attributes from within children components
 		const handleSubjectUpdate = (newSubject) => {
-			setAttributes({subject: newSubject});
+			setAttributes({subject: newSubject, item: 'select'});
 		}
 		const handleItemUpdate = (newItem) => {
 			setAttributes({item: newItem});
@@ -100,7 +100,7 @@ registerBlockType( 'mayflower-blocks/course', {
 				<ClassSubjectSelect
 					attributes = {attributes}
 					onSubjectUpdate = {handleSubjectUpdate}
-				/>
+				/> 
 				<ClassItemSelect
 					attributes = {attributes}
 					onItemUpdate = {handleItemUpdate}
@@ -109,6 +109,29 @@ registerBlockType( 'mayflower-blocks/course', {
 			)
 		}
 
+		let helpBox;
+		if (isSelected) {
+			if (attributes.subject == null || attributes.subject == 'select') {
+				helpBox = (
+					<p class="editor-only alert alert-info">
+						<strong>Notice:</strong> please select a subject to view courses.
+					</p>
+				);
+			} else if ( attributes.subject ) {
+				helpBox = (
+					<p class="editor-only alert alert-info">
+						<strong>Notice:</strong> please select a course if there are courses available.
+					</p>
+				);
+
+				if (attributes.item !== (null || 'select')) {
+					helpBox = (
+						<span></span>
+					);
+				}
+			}
+		}
+		
 		return (
 			<Fragment>
 				<InspectorControls>
@@ -121,6 +144,7 @@ registerBlockType( 'mayflower-blocks/course', {
 
 				<div class={className}>
 
+					{ helpBox }
 					{ selectControls }
 					
 					<Disabled>

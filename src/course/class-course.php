@@ -3,12 +3,10 @@
 class Mayflower_Blocks_Course {
 	private $link_base_url = 'https://www.bellevuecollege.edu/classes/All/';
 	private $api_base_url = 'https://www.bellevuecollege.edu/data/api/v1/course/';
-	private $api_subjects_base_url = 'https://www.bellevuecollege.edu/data/api/v1/courses/';
 	private $subject;
 	private $number;
 	private $description;
 	private $data;
-	private $subject_data;
 
 	function __construct( $subject, $number, $description ) {
 		$this->subject = $subject;
@@ -24,21 +22,6 @@ class Mayflower_Blocks_Course {
 		// Example: https://www.bellevuecollege.edu/data/api/v1/course/ACCT/101
 		$api_url = $this->api_base_url . urlencode( $this->subject ) . '/'. urlencode( $this->number );
 		
-		// Get raw data from API
-		$raw_data = wp_remote_get( $api_url );
-
-		// Return JSON if successful, otherwise return false
-		return is_array( $raw_data ) ? json_decode( $raw_data['body'] ) : false;
-	}
-
-	/**
-	 * Fetch Subject JSON data from API
-	 */
-	private function fetch_all_json() {
-		// Build request URL
-		// Example: https://www.bellevuecollege.edu/data/api/v1/courses/ACCT/
-		$api_url = $this->api_subjects_base_url . urlencode( $this->subject );
-
 		// Get raw data from API
 		$raw_data = wp_remote_get( $api_url );
 
@@ -72,64 +55,36 @@ class Mayflower_Blocks_Course {
 	}
 
 	/**
-	 * Load Subject Courses and Save to $subject_data
-	 */
-	private function load_subject() {
-		// Fetch JSON
-		$raw = $this->fetch_all_json();
-		
-		$this->subject_data = $raw->courses;
-	}
-
-	/**
 	 * Load and Output Data
 	 */
 	public function output() {
 		$this->load_course();
-		$this->load_subject();
 
 		$course_data = $this->data;
-		$subjects_data = $this->subject_data;
-
-		if ( $this->subject ) { //Check if a subject is set
-			
-			if ( $subjects_data ) { //if subject has courses, return courses
 				
-				if ( $course_data ) { //if there is course data, return course information
-					$title = $course_data['subject'] . ' '
-					. $course_data['number'] . ': ' 
-					. $course_data['title'] . ' - ' 
-					. ( $course_data['variable'] ? 'variable' : $course_data['credits'] ) . ' credits';
-	
-					$url = $this->link_base_url . $course_data['subject'] .
-						( $course_data['common'] ? '%26' : '' ) . '/' .
-						$course_data['number'];
-		
-					$description = $course_data['description'];
-		
-					$more = 'View details for ' . $course_data['subject'] . ' '
-						. $course_data['number'];
-		
-					if ( $this->description ) {
-						return "<h3><a href='$url'>$title</a></h3><p>$description</p><p><a href='$url'>$more</a></p>";
-					} else {
-						return "<h3><a href='$url'>$title</a></h3>";
-					}
+		if ( $course_data ) { //if there is course data, return course information
+			$title = $course_data['subject'] . ' '
+			. $course_data['number'] . ': ' 
+			. $course_data['title'] . ' - ' 
+			. ( $course_data['variable'] ? 'variable' : $course_data['credits'] ) . ' credits';
 
-				} else { //if course not selected, return to inform user there are courses available
-					return '<p class="editor-only alert alert-info"><strong>Notice:</strong> courses are available.</p>';
-				}
+			$url = $this->link_base_url . $course_data['subject'] .
+				( $course_data['common'] ? '%26' : '' ) . '/' .
+				$course_data['number'];
 
-			} else { //if subject has no courses, return alerts
-				if( $this->subject == 'select') {
-					return '<p class="editor-only alert alert-info"><strong>Notice:</strong> please select a subject to view courses.</p>';
-				}
-				return '<p class="editor-only alert alert-warning"><strong>Notice:</strong> courses are not available.</p>';
+			$description = $course_data['description'];
+
+			$more = 'View details for ' . $course_data['subject'] . ' '
+				. $course_data['number'];
+
+			if ( $this->description ) {
+				return "<h3><a href='$url'>$title</a></h3><p>$description</p><p><a href='$url'>$more</a></p>";
+			} else {
+				return "<h3><a href='$url'>$title</a></h3>";
 			}
-				
-		} else { // If subject not set, return 'select subject'
-			return '<p class="editor-only alert alert-info"><strong>Notice:</strong> please select a subject to view courses.</p>';
-		}
 
+		} else {
+			return '<!-- Notice: courses are available. -->';
+		}
 	}
 }
