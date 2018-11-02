@@ -64,6 +64,23 @@ function mayflower_blocks_cgb_editor_assets() {
 // Hook: Editor assets.
 add_action( 'enqueue_block_editor_assets', 'mayflower_blocks_cgb_editor_assets' );
 
+/**
+ * Add Custom Category for Bootstrap Blocks
+ */
+function mayflower_block_categories( $categories, $post ) {
+    return array_merge(
+        $categories,
+        array(
+            array(
+                'slug' => 'bootstrap-blocks',
+                'title' => __( 'Bootstrap Blocks', 'bootstrap-blocks' ),
+                'icon'  => 'editor-bold',
+            ),
+        )
+    );
+}
+add_filter( 'block_categories', 'mayflower_block_categories', 10, 2 );
+
 // Hook in PHP based block functionality
 require_once plugin_dir_path( __FILE__ ) . 'child-pages/block.php';
 require_once plugin_dir_path( __FILE__ ) . 'staff/block.php';

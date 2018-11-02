@@ -13,3 +13,4 @@ import './child-pages/block.js';
 import './staff/block.js';
 import './course/block.js';
 import './button/block.js';
+import './alert/block.js';
