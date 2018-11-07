@@ -12,9 +12,9 @@ import './editor.scss';
 
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType, PlainText } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText, InspectorControls, AlignmentToolbar } = wp.editor;
-const { ServerSideRender, TextControl, SelectControl, ToggleControl } = wp.components;
+const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { RichText, InspectorControls } = wp.editor;
+const { SelectControl } = wp.components;
 
 
 
@@ -50,20 +50,30 @@ registerBlockType( 'mayflower-blocks/alert', {
 	},
 	
 	//Existing bootstrap alert shortcode transformed into its block counterpart.
-	//Allows use of [alert type=""]
-	transforms: { //fix shortcode
+	//Allows use of [alert type=""][/alert]
+	transforms: {
 		from: [
 			{
 				type: 'shortcode',
 				tag: 'alert',
 				attributes: {
-					// alertText: {
-					// 	type: 'string',
-					// 	selector: '.alert',
-					// },
+					// Alert Text
+					alertText: {
+						type: 'string',
+						shortcode: (attrs, { content }) => {
+							// Content returns the whole shortcode, so we need to match only shortcode content
+							let rx = /(?<=\[\s*\s*alert.*\])(.*)(?=\[\s*\/\s*alert\s*\])/gmi;
+							let filtered = content.match(rx);
+
+							// Return content at array[0] if there was a match, otherwise return blank string
+							return Array.isArray(filtered) ? filtered[0] : '';
+						},
+					},
+
+					// Alert Type/Bootstrap Class
 					alertClass: {
 						type: 'string',
-						shortcode: ({ named: { type } }) => {
+						shortcode: ({ named: { type = 'type' } }) => {
 							return type;
 						},
 					},
@@ -72,7 +82,7 @@ registerBlockType( 'mayflower-blocks/alert', {
 		]
 	},
 
-	edit: function ({ className, attributes, setAttributes, isSelected }) {
+	edit: function ({ className, attributes, setAttributes }) {
 
 		return [
 			<InspectorControls>
