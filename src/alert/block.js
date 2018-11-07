@@ -13,7 +13,7 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText, InspectorControls } = wp.editor;
+const { RichText, InspectorControls, InnerBlocks } = wp.editor;
 const { SelectControl } = wp.components;
 
 
@@ -102,15 +102,17 @@ registerBlockType( 'mayflower-blocks/alert', {
 			</InspectorControls>
 			,
 			<div className={className}>
-				<RichText
-					tagName = "div"
-					className = {`alert alert-${attributes.alertClass}`}
-					formattingControls = {['bold', 'italic', 'link']}
-					placeholder = "Enter text, links or blocks for the alert..."
-					keepPlaceholderOnFocus = "true"
-					value = {attributes.alertText}
-					onChange = {(alertText) => setAttributes({ alertText })}
-				/>
+				<div className = {`alert alert-${attributes.alertClass}`}>
+					<RichText
+						tagName = "div"
+						formattingControls = {['bold', 'italic', 'link']}
+						placeholder = "Enter text or add blocks below..."
+						keepPlaceholderOnFocus = "true"
+						value = {attributes.alertText}
+						onChange = {(alertText) => setAttributes({ alertText })}
+					/>
+					<InnerBlocks />
+				</div>
 			</div>
 		]
 	},
@@ -127,11 +129,13 @@ registerBlockType( 'mayflower-blocks/alert', {
 
 	save: function( {attributes} ) {
 		return (
-			<RichText.Content
-				tagName = "div"
-				className = {`alert alert-${attributes.alertClass}`}
-				value = {attributes.alertText}
-			/>
+			<div className = {`alert alert-${attributes.alertClass}`}>
+				<RichText.Content
+					tagName = "div"
+					value = {attributes.alertText}
+				/>
+				<InnerBlocks.Content />
+			</div>
 		);
 	},
 } );
