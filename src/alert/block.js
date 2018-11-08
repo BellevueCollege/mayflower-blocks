@@ -111,7 +111,7 @@ registerBlockType( 'mayflower-blocks/alert', {
 						value = {attributes.alertText}
 						onChange = {(alertText) => setAttributes({ alertText })}
 					/>
-					<InnerBlocks />
+					<InnerBlocks allowedBlocks = {[ 'core/paragraph', 'mayflower-blocks/button', 'core/heading', 'core/list']}/>
 				</div>
 			</div>
 		]
