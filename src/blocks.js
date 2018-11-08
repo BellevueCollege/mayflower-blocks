@@ -14,3 +14,4 @@ import './staff/block.js';
 import './course/block.js';
 import './button/block.js';
 import './alert/block.js';
+import './well/block.js';
