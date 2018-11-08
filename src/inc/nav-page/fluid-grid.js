@@ -12,10 +12,15 @@ class FluidGridChildPage extends React.Component {
     }
 
     FeaturedImageBase = ({ featured }) =>{
+        let featuredSourceUrl;
         if ( featured ) {
+            //if there is a medium_large size, return source url, otherwise return full size source url
+            featuredSourceUrl = (featured.media_details.sizes.medium_large ? 
+                                featured.media_details.sizes.medium_large.source_url :
+                                featured.media_details.sizes.full.source_url);
             return (
                     <img
-                        src={featured.media_details.sizes.medium_large.source_url}
+                        src={featuredSourceUrl}
                         alt={featured.alt_text}
                         class="img-responsive wp-post-image"
                     />

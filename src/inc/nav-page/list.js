@@ -11,30 +11,35 @@ class ListChildPage extends React.Component {
         super(props);
     }
 
-    render() {
-        function FeaturedImageBase({ featured }) {
-            if ( featured ) {
-                return (
-                        <img
-                            src={featured.media_details.sizes.thumbnail.source_url}
-                            alt={featured.alt_text}
-                            class="media-object img-responsive img-thumbnail wp-post-image"
-                        />
-                )
-            } else {
-                return (
-                    <p>Image Loading</p>
-                )
-            }
-        }
+    FeaturedImageBase = ({ featured }) =>{
+        let featuredSourceUrl;
+        if ( featured ) {
+            //if there is a thumbnail size, return source url, otherwise return full size source url
+            featuredSourceUrl = (featured.media_details.sizes.thumbnail ? 
+                                featured.media_details.sizes.thumbnail.source_url :
+                                featured.media_details.sizes.full.source_url);
+            return (
+                    <img
+                        src={featuredSourceUrl}
+                        alt={featured.alt_text}
+                        class="media-object img-responsive img-thumbnail wp-post-image"
+                    />
+            )
+        } else {
+            return (
+                <p>Image Loading</p>
+            )
+        } 
+    }
 
+    render() {
         const FeaturedImage = withSelect((select, props) => ({
             featured: select('core').getEntityRecord(
                 'postType',
                 'attachment',
                 props.ID
             )
-        }))(FeaturedImageBase);
+        }))(this.FeaturedImageBase);
 
         return (
             <article class={"post-" + this.props.page.id}>

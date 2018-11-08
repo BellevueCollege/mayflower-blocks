@@ -11,30 +11,35 @@ class GridChildPage extends React.Component {
         super(props);
     }
 
-    render() {
-        function FeaturedImageBase({ featured }) {
-            if ( featured ) {
-                return (
-                        <img
-                            src={featured.media_details.sizes['home-small-ad'].source_url}
-                            alt={featured.alt_text}
-                            class="media-object img-responsive img-thumbnail wp-post-image"
-                        />
-                )
-            } else {
-                return (
-                    <p>Image Loading</p>
-                )
-            }
-        }
+    FeaturedImageBase = ({ featured }) =>{
+        let featuredSourceUrl;
+        if ( featured ) {
+            //if there is a home-small-ad size, return source url, otherwise return full size source url
+            featuredSourceUrl = (featured.media_details.sizes['home-small-ad'] ? 
+                                featured.media_details.sizes['home-small-ad'].source_url :
+                                featured.media_details.sizes.full.source_url);
+            return (
+                    <img
+                        src={featuredSourceUrl}
+                        alt={featured.alt_text}
+                        class="media-object img-responsive img-thumbnail wp-post-image"
+                    />
+            )
+        } else {
+            return (
+                <p>Image Loading</p>
+            )
+        } 
+    }
 
+    render() {
         const FeaturedImage = withSelect((select, props) => ({
             featured: select('core').getEntityRecord(
                 'postType',
                 'attachment',
                 props.ID
             )
-        }))(FeaturedImageBase);
+        }))(this.FeaturedImageBase);
 
         return (
             <div class="col-md-4 top-spacing15">
