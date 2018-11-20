@@ -18,4 +18,5 @@ import './alert/block.js';
 import './button/block.js';
 import './jumbotron/block.js';
 import './lead/block.js';
+import './panel/block.js';
 import './well/block.js';
