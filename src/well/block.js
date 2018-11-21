@@ -61,7 +61,7 @@ registerBlockType( 'mayflower-blocks/well', {
 						type: 'string',
 						shortcode: (attrs, { content }) => {
 							// Content returns the whole shortcode, so we need to match only shortcode content
-							let rx = /(?<=\[\s*\s*well.*\])(.*)(?=\[\s*\/\s*well\s*\])/gmi;
+							let rx = /(?<=\[\s*\s*well.*\])((.|\s)*\S(.|\s)*)(?=\[\s*\/\s*well\s*\])/gmi;
 							let filtered = content.match(rx);
 
 							// Return content at array[0] if there was a match, otherwise return blank string
@@ -100,15 +100,17 @@ registerBlockType( 'mayflower-blocks/well', {
 			</InspectorControls>
 			,
 			<div className={className}>
-				<div className = {`well ${attributes.wellSize}`}> 
-					<RichText
-						tagName = "div"
-						formattingControls = {['bold', 'italic', 'link']}
-						placeholder = "Enter text or add blocks below..."
-						keepPlaceholderOnFocus = "true"
-						value = {attributes.wellText}
-						onChange = {(wellText) => setAttributes({ wellText })}
-					/>
+				<div className = {`well ${attributes.wellSize}`}>
+					{attributes.wellText !== null && attributes.wellText !== '' && attributes.wellText !== undefined ? 
+						<RichText
+							tagName = "div"
+							formattingControls = {['bold', 'italic', 'link']}
+							placeholder = "Enter text or add blocks below..."
+							keepPlaceholderOnFocus = "true"
+							value = {attributes.wellText}
+							onChange = {(wellText) => setAttributes({ wellText })}
+						/>
+					: '' }
 					<InnerBlocks allowedBlocks = {[ 'core/paragraph', 'mayflower-blocks/button', 'core/heading', 'core/list']}/>
 				</div>
 			</div>

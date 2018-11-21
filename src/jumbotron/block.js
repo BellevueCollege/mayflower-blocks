@@ -60,7 +60,7 @@ registerBlockType( 'mayflower-blocks/jumbotron', {
 						type: 'string',
 						shortcode: (attrs, { content }) => {
 							// Content returns the whole shortcode, so we need to match only shortcode content
-							let rx = /(?<=\[\s*\s*jumbotron.*\])(.*)(?=\[\s*\/\s*jumbotron\s*\])/gmi;
+							let rx = /(?<=\[\s*\s*jumbotron.*\])((.|\s)*\S(.|\s)*)(?=\[\s*\/\s*jumbotron\s*\])/gmi;
 							let filtered = content.match(rx);
 
 							// Return content at array[0] if there was a match, otherwise return blank string
@@ -93,14 +93,16 @@ registerBlockType( 'mayflower-blocks/jumbotron', {
 						value = {attributes.jumbotronTitle}
 						onChange = {(jumbotronTitle) => setAttributes({ jumbotronTitle })}
 					/>
-					<RichText
-						tagName = "p"
-						formattingControls = {['bold', 'italic', 'link']}
-						placeholder = "Enter text or add blocks below..."
-						keepPlaceholderOnFocus = "true"
-						value = {attributes.jumbotronText}
-						onChange = {(jumbotronText) => setAttributes({ jumbotronText })}
-					/>
+					{attributes.jumbotronText !== null && attributes.jumbotronText !== '' && attributes.jumbotronText !== undefined ? 
+						<RichText
+							tagName = "p"
+							formattingControls = {['bold', 'italic', 'link']}
+							placeholder = "Enter text or add blocks below..."
+							keepPlaceholderOnFocus = "true"
+							value = {attributes.jumbotronText}
+							onChange = {(jumbotronText) => setAttributes({ jumbotronText })}
+						/>
+					: '' }
 					<InnerBlocks allowedBlocks = {[ 'core/paragraph', 'mayflower-blocks/button', 'core/heading', 'core/list']}/>
 				</div>
 			</div>

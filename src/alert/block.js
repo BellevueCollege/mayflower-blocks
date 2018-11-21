@@ -62,9 +62,9 @@ registerBlockType( 'mayflower-blocks/alert', {
 						type: 'string',
 						shortcode: (attrs, { content }) => {
 							// Content returns the whole shortcode, so we need to match only shortcode content
-							let rx = /(?<=\[\s*\s*alert.*\])(.*)(?=\[\s*\/\s*alert\s*\])/gmi;
+							let rx = /(?<=\[\s*\s*alert.*\])((.|\s)*\S(.|\s)*)(?=\[\s*\/\s*alert\s*\])/gmi;
 							let filtered = content.match(rx);
-
+							
 							// Return content at array[0] if there was a match, otherwise return blank string
 							return Array.isArray(filtered) ? filtered[0] : '';
 						},
@@ -103,6 +103,8 @@ registerBlockType( 'mayflower-blocks/alert', {
 			,
 			<div className={className}>
 				<div className = {`alert alert-${attributes.alertClass}`}>
+
+				{attributes.alertText !== null && attributes.alertText !== '' && attributes.alertText !== undefined ? 
 					<RichText
 						tagName = "div"
 						formattingControls = {['bold', 'italic', 'link']}
@@ -111,7 +113,8 @@ registerBlockType( 'mayflower-blocks/alert', {
 						value = {attributes.alertText}
 						onChange = {(alertText) => setAttributes({ alertText })}
 					/>
-					<InnerBlocks allowedBlocks = {[ 'core/paragraph', 'mayflower-blocks/button', 'core/heading', 'core/list']}/>
+				: '' }
+				<InnerBlocks allowedBlocks = {[ 'core/paragraph', 'mayflower-blocks/button', 'core/heading', 'core/list']}/>
 				</div>
 			</div>
 		]
