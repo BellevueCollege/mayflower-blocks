@@ -23,7 +23,7 @@ class ClassSubjectSelect extends Component {
 	}
 
 	componentDidMount() {
-		fetch("https://www.bellevuecollege.edu/data/api/v1/subjects")
+		fetch("https://www2.bellevuecollege.edu/data/api/v1/subjects")
 		.then(res => res.json())
 		.then(
 			(result) => {

@@ -1,8 +1,8 @@
 <?php
 
 class Mayflower_Blocks_Course {
-	private $link_base_url = 'https://www.bellevuecollege.edu/classes/All/';
-	private $api_base_url = 'https://www.bellevuecollege.edu/data/api/v1/course/';
+	private $link_base_url = 'https://www2.bellevuecollege.edu/classes/All/';
+	private $api_base_url = 'https://www2.bellevuecollege.edu/data/api/v1/course/';
 	private $subject;
 	private $number;
 	private $description;

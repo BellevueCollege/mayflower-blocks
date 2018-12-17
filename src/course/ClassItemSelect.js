@@ -25,7 +25,7 @@ class ClassItemSelect extends Component {
 	handleItemFetch = () => {
 		//if a subject exists, then fetch
 		if (this.props.attributes.subject !== '') {
-			fetch("https://www.bellevuecollege.edu/data/api/v1/courses/" + this.props.attributes.subject)
+			fetch("https://www2.bellevuecollege.edu/data/api/v1/courses/" + this.props.attributes.subject)
 			.then(res => res.json())
 			.then(
 				(result) => {
