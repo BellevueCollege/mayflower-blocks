@@ -8,10 +8,9 @@
     "eject": "cgb-scripts eject"
   },
   "dependencies": {
-    "@wordpress/data": "^2.0.0",
-    "cgb-scripts": "1.9.8",
+    "cgb-scripts": "1.13.0",
     "imagesloaded": "^4.1.4",
     "masonry-layout": "^4.2.2",
-    "npm": "^6.4.1"
+    "npm": "^6.5.0"
   }
 }
