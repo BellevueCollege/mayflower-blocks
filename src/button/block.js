@@ -63,7 +63,8 @@ registerBlockType( 'mayflower-blocks/button', {
 			default: false
 		},
 		buttonSize: {
-			type: 'string'
+			type: 'string',
+			default: ''
 		}
 	},
 
