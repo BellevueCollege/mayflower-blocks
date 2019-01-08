@@ -1,0 +1,17 @@
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
+//style={{backgroundColor: '#74d1ff'}}
+.wp-block-mayflower-blocks-row {
+
+    /* ERROR This does not assign a border to every odd child, it assigns to them all */
+    .row {
+        div[class^="col"]:nth-child(odd) { 
+            border: 2px solid #74d1ff;
+        }
+    }
+
+}
