@@ -16,6 +16,7 @@ const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.b
 const { RichText, InspectorControls, InnerBlocks } = wp.editor;
 const { SelectControl, Button } = wp.components;
 const { withSelect, select, dispatch } = wp.data;
+const { Fragment } = wp.element
 
 /**
  * Register: aa Gutenberg Block.
@@ -120,7 +121,7 @@ registerBlockType( 'mayflower-blocks/column', {
 			notSelected = (
 				<span>
 					{attributes.gridColumnClass ? 
-						<div class={`col-${attributes.gridColumnClass}-${attributes.gridColumnSize}`}>
+						<div className={`col-${attributes.gridColumnClass}-${attributes.gridColumnSize}`}>
 						<RichText
 								tagName = "p"
 								formattingControls = {['bold', 'italic', 'link']}
@@ -180,11 +181,13 @@ registerBlockType( 'mayflower-blocks/column', {
 				</Button>
 			</InspectorControls>
 			,
-			<span>
-
-			{selectedRow}
-			{notSelected}
-			</span>		
+			<Fragment>
+				{attributes.gridColumnClass ?
+					<div class={`col-${attributes.gridColumnClass}-${attributes.gridColumnSize}`}>
+						<InnerBlocks />
+					</div>
+					: ''}
+			</Fragment>
 		]
 	},
 
@@ -202,10 +205,7 @@ registerBlockType( 'mayflower-blocks/column', {
 
 		return (
 			<div class={`col-${attributes.gridColumnClass}-${attributes.gridColumnSize}`}>
-				<RichText.Content
-					tagName = "p"
-					value = {attributes.gridColumnText}
-				/>
+				<InnerBlocks.Content />
 			</div>
 		);
 	},

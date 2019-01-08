@@ -99,9 +99,10 @@ registerBlockType( 'mayflower-blocks/row', {
 				<div className="row">
 					{/* NOTE InnerBlocks stay because we are INSERTING inner blocks */}
 					<InnerBlocks 
-						allowedBlocks={['mayflower-blocks/column','core/paragraph']}
+						allowedBlocks={['mayflower-blocks/column']}
 					/>
 				</div>
+				<div className="clearfix"></div>
 			</div>
 		]
 	},

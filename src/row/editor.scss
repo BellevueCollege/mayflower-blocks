@@ -14,4 +14,18 @@
         }
     }
 
+
+}
+
+[data-type="mayflower-blocks/row"] {
+    background: #eee;
+    margin: 1em;
+}
+.wp-block-mayflower-blocks-row {
+   & .row .block-list-appender {
+        clear: both;
+        margin: 0 3rem;
+        padding: 1em 0;
+        
+    }
 }
