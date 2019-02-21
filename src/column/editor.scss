@@ -6,16 +6,58 @@
  */
 
 .wp-block-mayflower-blocks-column {
-    div[class^="col"]{
-        //background-color: #eee;
+
+    .column {
+        position: relative;
+    }
+
+    // .editor-block-list__layout .editor-block-list__block[data-type="mayflower-blocks/column"] {
+    //     .editor-block-list__block-edit::before {
+    //         outline: none;
+    //     }
+    //     .editor-block-mover {
+    //         display: none;
+    //     }
+    // }
+
+    .selected-column {
+        display: inline-block !important;
+        width: 100% !important;
+        height: 100% !important;
+        background-color: purple !important;
+    }
+
+    .rollover-column {
+        position: absolute;
+        background-color: #fff;
+        border: 1px dashed #8d96a0;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        text-align: center;
+
+        .rollover-menu {
+            margin-top: 1em;
+
+            button {
+                margin-bottom: 1em;
+            }
+        }
+    }
+
+    .visible-column {
+        display: block;
+    }
+
+    .invisible-column {
+        display: none;
     }
 }
 
-.editor-block-list__layout .editor-block-list__block[data-type="mayflower-blocks/column"] {
-    .editor-block-list__block-edit::before {
-        outline: none;
-    }
-    .editor-block-mover {
+[data-type="mayflower-blocks/column"] {
+    //don't display insertion points on column
+    .editor-block-list__insertion-point {
         display: none;
     }
 }

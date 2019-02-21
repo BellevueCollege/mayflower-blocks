@@ -9,14 +9,11 @@
 // import './style.scss';
 import './editor.scss';
 
-
-
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText, InspectorControls, InnerBlocks } = wp.editor;
-const { SelectControl, Button } = wp.components;
-const { withSelect, select, dispatch } = wp.data;
-const { Fragment } = wp.element
+const { InspectorControls, InnerBlocks } = wp.editor;
+const { SelectControl, Button, Disabled } = wp.components;
+const { select, dispatch } = wp.data;
 
 /**
  * Register: aa Gutenberg Block.
@@ -33,113 +30,202 @@ const { Fragment } = wp.element
  */
 
 
-registerBlockType( 'mayflower-blocks/column', {
+registerBlockType('mayflower-blocks/column', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
-	title: __( 'Column' ), // Block title.
+	title: __('Column'), // Block title.
 	icon: 'schedule', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
-	//parent: ['mayflower-blocks/row'], //Parent Block — Sets the parent block so this block only shows when the parent is being used.
-	//NOTE ^^^^ commenting this out for now to test columns outside of parent block
+	parent: ['mayflower-blocks/row'], //Parent Block — Sets the parent block so this block only shows when the parent is being used.
 
 	attributes: {
-		gridColumnText: {
-			type: 'string',
-			default: ''
-		},
 		gridColumnClass: {
 			type: 'string',
 			default: 'md'
 		},
 		gridColumnSize: {
-			type: 'string',
-			default: '4'
+			type: 'number',
+			default: 4
 		},
 		selected: {
 			type: 'boolean',
 			default: false
+		},
+		mouseOver: {
+			type: 'boolean',
+			default: false,
+		},
+		visible: {
+			type: 'boolean',
+			default: true
+		},
+		width: {
+			type: 'string',
+		},
+		siblingColumns: {
+			type: 'number',
+			default: 0
 		}
 	},
-	
+
 	edit: function ({ className, attributes, setAttributes, isSelected }, props) {
 
-		//Function for button in sidebar to remove the currently selected block
+		//Instantiate Column Data
+		const currentBlockClientId = select('core/editor').getSelectedBlockClientId(); // return this block's client id
+		const parentBlockClientId = select('core/editor').getBlockRootClientId(currentBlockClientId); //get parent's client id
+		const parentBlockData = select('core/editor').getBlock(parentBlockClientId); // get parent's data; includes children and attributes
+		let parentBlockChildren;
+
+		// Set how many siblings this block has from the parent data
+		if (parentBlockData) {
+			if (Array.isArray(parentBlockData.innerBlocks)) {
+				const parentBlockChildrenLength = parentBlockData.innerBlocks.length;
+				setAttributes({ siblingColumns: parentBlockChildrenLength });
+			}
+		}
+
+		const handleMouseEnter = () => {
+			setAttributes({ mouseOver: true });
+		}
+
+		const handleMouseLeave = () => {
+			setAttributes({ mouseOver: false });
+		}
+
+		/**
+		 * Removes the column block
+		 *
+		 * When a column block gets removed, the function also adjusts the width of each column block under the row block to fit each new column
+		 */
 		const handleRemoveColumnBlock = () => {
-			console.log('%c[Column] Removed Column', 'color: green');
+			dispatch('core/editor').removeBlock(currentBlockClientId, false);
+			dispatch('core/editor').updateBlockAttributes(parentBlockClientId, { childColumns: attributes.siblingColumns - 1 }); // Updates the parent
 
-			// Grab this selected block which is the child of the Row parent block
-			let childBlock = select('core/editor').getSelectedBlock(); //get block object
-			let childClientId = childBlock.clientId; // returns this selected block id
-			let parentClientId = select('core/editor').getBlockRootClientId(childClientId); //get the parent id of the child
-			let parentData = select('core/editor').getBlocksByClientId(parentClientId)[0]; //get parent data
-			let columns = parentData.attributes.columns;
+			parentBlockChildren = parentBlockData.innerBlocks;
+			let parentBlockChildrenLength = parentBlockChildren.length;
 
-			// Update the attributes in the parent
-			const updatedColumns = columns.filter(columnBlock =>  //returns an array removing matching child block
-				columnBlock.clientId !== childBlock.clientId
-			);
+			let gridColumnSize = '';
+			if (Array.isArray(parentBlockChildren)) {
+				//Return a grid column size depending on how many sibling columns there are
+				switch (parentBlockChildrenLength - 1) {
+					case 1:
+						gridColumnSize = 12;
+						break;
+					case 2:
+						gridColumnSize = 6;
+						break;
+					case 3:
+						gridColumnSize = 4;
+						break;
+					case 4:
+						gridColumnSize = 3;
+						break;
+					case 5:
+						gridColumnSize = 4;
+						break;
+					case 6:
+						gridColumnSize = 2;
+						break;
+					case 7:
+						gridColumnSize = 6;
+						break;
+					case 8:
+						gridColumnSize = 5;
+						break;
+					case 9:
+						gridColumnSize = 4;
+						break;
+					case 10:
+						gridColumnSize = 3;
+						break;
+					case 11:
+						gridColumnSize = 2;
+						break;
+					case 12:
+						gridColumnSize = 1;
+						break;
+					default:
+						gridColumnSize = 4;
+						break;
+				}
 
-			console.log('%c[Column] handleRemoveColumnBlock: Updated Parent Columns Attribute from child:', 'color: green');
-			console.log(updatedColumns);
-	
-			//make change to parent
-			dispatch('core/editor').updateBlockAttributes(parentClientId, {columns: updatedColumns});
+				//Performs a check on all siblings to see how many columns there are and sets the sibling columns size to adjust to the newly removed column
+				parentBlockChildren.forEach(sibling => {
+					if ((attributes.siblingColumns - 1) >= 7) {
+						dispatch('core/editor').updateBlockAttributes(sibling.clientId, { gridColumnSize: 1 });
+						//if a sibling is the last index after the column is removed, then update the attributes to the new gridColumnSize
+						if (sibling.clientId == parentBlockChildren[attributes.siblingColumns - 2].clientId) {
+							dispatch('core/editor').updateBlockAttributes(parentBlockChildren[attributes.siblingColumns - 2].clientId, { gridColumnSize: gridColumnSize });
+						}
+					} else {
+						dispatch('core/editor').updateBlockAttributes(sibling.clientId, { gridColumnSize: gridColumnSize });
 
-			// Remove the block
-			dispatch('core/editor').removeBlock(childClientId, false);
+						if ((attributes.siblingColumns - 1) == 5) {
+							//keep the sibling size the same
+							dispatch('core/editor').updateBlockAttributes(sibling.clientId, { gridColumnSize: sibling.attributes.gridColumnSize }); 
+							//if a sibling is the last index after the column is removed, then update the attributes to the new gridColumnSize
+							if (sibling.clientId == parentBlockChildren[attributes.siblingColumns - 2].clientId) {
+								dispatch('core/editor').updateBlockAttributes(parentBlockChildren[attributes.siblingColumns - 2].clientId, { gridColumnSize: gridColumnSize });
+							}
+						}
+					}
+				});
+			}
+
+			//If a column is removed while selected, also close the column
+			if (attributes.selected == true) {
+				handleCloseColumnBlock();
+			}
 		}
 
-		let selectedRow;
-		let notSelected;
+		/**
+		 * Selects a column block
+		 *
+		 * When a column block gets selected, the function adjusts the column to full-width and hides all sibling columns
+		 */
+		const handleSelectColumnBlock = () => {
+			setAttributes({ width: '100%' });
+			setAttributes({ selected: true });
 
-		//TEST Finicky here mostly for testing
-		//when this block is selected, it goes full width
-		if (isSelected) {
-			// setAttributes({selected: true});
-			// console.log('%cChild: Selected', 'color: green');
-				
-			selectedRow = (
-				<span>
-						{attributes.gridColumnClass ? 
-							<div class={`col-${attributes.gridColumnClass}-${attributes.gridColumnSize}`} style={{width: '100%', float:'left', backgroundColor:'#eee'}}>
-							<RichText
-									tagName = "p"
-									formattingControls = {['bold', 'italic', 'link']}
-									placeholder = "Enter column text or add blocks below..."
-									keepPlaceholderOnFocus = "true"
-									value = {attributes.gridColumnText}
-									onChange = {(gridColumnText) => setAttributes({ gridColumnText })}
-								/>
-							</div>
-						: '' }
-						{/* <div class="clearfix"></div> //TEST */}
-				</span>
-			);
-		} else {
-			// console.log('%cChild: Not selected', 'color: green');
-			// setAttributes({selected: false});
+			parentBlockChildren = parentBlockData.innerBlocks;
 
-			notSelected = (
-				<span>
-					{attributes.gridColumnClass ? 
-						<div className={`col-${attributes.gridColumnClass}-${attributes.gridColumnSize}`}>
-						<RichText
-								tagName = "p"
-								formattingControls = {['bold', 'italic', 'link']}
-								placeholder = "Enter column text or add blocks below..."
-								keepPlaceholderOnFocus = "true"
-								value = {attributes.gridColumnText}
-								onChange = {(gridColumnText) => setAttributes({ gridColumnText })}
-							/>
-						</div>
-					: '' }
-				</span>
-			);
+			if (Array.isArray(parentBlockChildren)) {
+				// If each sibling is not the current child, then set visibility to false
+				parentBlockChildren.forEach(sibling => {
+					if (sibling.clientId != currentBlockClientId) {
+						dispatch('core/editor').updateBlockAttributes(sibling.clientId, { visible: false });
+					}
+				});
+			}
+
+			// Tell parent a child is selected
+			dispatch('core/editor').updateBlockAttributes(parentBlockClientId, { childIsSelected: true });
+		};
+
+		/**
+		 * Closes a column block when a column block is selected
+		 *
+		 * Checks for a selected column block from the row block's innerblocks. If a column(child) was not selected, it updates the column block's attributes
+		 * to visible and if selected it updates the attributes width to null and selected to false.
+		 */
+		const handleCloseColumnBlock = () => {
+			setAttributes({ width: '' });
+			setAttributes({ selected: false });
+
+			parentBlockChildren = parentBlockData.innerBlocks;
+
+			if (Array.isArray(parentBlockChildren)) {
+				// If each sibling is not the current child, then set visibility to true
+				parentBlockChildren.forEach(sibling => {
+					if (sibling.clientId != currentBlockClientId) {
+						dispatch('core/editor').updateBlockAttributes(sibling.clientId, { visible: true });
+					}
+				});
+			}
+
+			// tell parent child is no longer selected
+			dispatch('core/editor').updateBlockAttributes(parentBlockClientId, { childIsSelected: false });
 		}
 
-		// console.log('COLUMN TEXT: ' + attributes.gridColumnText);
-		// console.log('COLUMN CLASS: ' + attributes.gridColumnClass);
-		// console.log('COLUMN SIZE: ' + attributes.gridColumnSize);
-		
 		return [
 			<InspectorControls>
 				<SelectControl
@@ -151,7 +237,7 @@ registerBlockType( 'mayflower-blocks/column', {
 						{ label: 'Medium (Tablet)', value: 'md' },
 						{ label: 'Large (Desktop)', value: 'lg' },
 					]}
-					onChange={(gridColumnClass) => { 
+					onChange={(gridColumnClass) => {
 						setAttributes({ gridColumnClass });
 					}}
 				/>
@@ -159,35 +245,59 @@ registerBlockType( 'mayflower-blocks/column', {
 					label="Column Size"
 					value={attributes.gridColumnSize}
 					options={[
-						{ label: '1', value: '1' },
-						{ label: '2', value: '2' },
-						{ label: '3', value: '3' },
-						{ label: '4', value: '4' },
-						{ label: '5', value: '5' },
-						{ label: '6', value: '6' },
-						{ label: '7', value: '7' },
-						{ label: '8', value: '8' },
-						{ label: '9', value: '9' },
-						{ label: '10', value: '10' },
-						{ label: '11', value: '11' },
-						{ label: '12', value: '12' },
+						{ label: '1', value: 1 },
+						{ label: '2', value: 2 },
+						{ label: '3', value: 3 },
+						{ label: '4', value: 4 },
+						{ label: '5', value: 5 },
+						{ label: '6', value: 6 },
+						{ label: '7', value: 7 },
+						{ label: '8', value: 8 },
+						{ label: '9', value: 9 },
+						{ label: '10', value: 10 },
+						{ label: '11', value: 11 },
+						{ label: '12', value: 12 },
 					]}
-					onChange={(gridColumnSize) => { 
+					onChange={(gridColumnSize) => {
 						setAttributes({ gridColumnSize });
 					}}
 				/>
+				{attributes.selected == true ?
+					<Button isDefault onClick={handleCloseColumnBlock} Disabled>
+						Save &amp; Close Column
+					</Button>
+					:
+					<Button isDefault onClick={handleSelectColumnBlock}>
+						Edit Column
+					</Button>
+				}
 				<Button isDefault onClick={handleRemoveColumnBlock}>
 					Remove Column
 				</Button>
 			</InspectorControls>
 			,
-			<Fragment>
-				{attributes.gridColumnClass ?
-					<div class={`col-${attributes.gridColumnClass}-${attributes.gridColumnSize}`}>
-						<InnerBlocks />
-					</div>
-					: ''}
-			</Fragment>
+			<div className={className}>
+				{attributes.gridColumnClass &&
+					<div class={`column ${attributes.visible == true ? 'visible-column' : 'invisible-column'} col-${attributes.gridColumnClass}-${attributes.gridColumnSize}`} style={{ width: attributes.width, float: attributes.width == '100%' ? 'none' : 'left' }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+						{attributes.selected !== true ?
+							<Disabled>
+								<InnerBlocks />
+							</Disabled>
+							: <InnerBlocks />}
+						<div style={{ display: attributes.mouseOver == true && attributes.selected !== true ? 'block' : 'none' }}>
+							<div className="rollover-column">
+								<div className="rollover-menu">
+									<Button isDefault onClick={handleSelectColumnBlock}>
+										Edit Column
+									</Button>
+									<Button isDefault onClick={handleRemoveColumnBlock}>
+										Remove Column
+									</Button>
+								</div>
+							</div>
+						</div>
+					</div>}
+			</div>
 		]
 	},
 
@@ -201,7 +311,7 @@ registerBlockType( 'mayflower-blocks/column', {
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
 
-	save: function( {attributes} ) { //TODO ERROR won't preview properly, but updates from the editor shows when the post is published
+	save: function ({ attributes }) {
 
 		return (
 			<div class={`col-${attributes.gridColumnClass}-${attributes.gridColumnSize}`}>
@@ -250,12 +360,12 @@ registerBlockType( 'mayflower-blocks/column', {
 
 					gridColumnSize: {
 						type: 'string',
-						shortcode: ({ named: { xs, sm, md, lg  } }) => {
+						shortcode: ({ named: { xs, sm, md, lg } }) => {
 							if (xs) {
 								return xs;
-							} else if ( sm ) {
+							} else if (sm) {
 								return sm;
-							} else if ( md ) {
+							} else if (md) {
 								return md;
 							} else {
 								return lg;
@@ -266,4 +376,5 @@ registerBlockType( 'mayflower-blocks/column', {
 			}
 		]
 	},
-} );
+});
+
