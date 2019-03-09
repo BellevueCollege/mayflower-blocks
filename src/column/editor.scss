@@ -9,22 +9,29 @@
 
     .column {
         position: relative;
+
+        &:hover .rollover-column {
+            display: block;
+        }
+        
+        &:hover.is-selected .rollover-column {
+            display: none;
+        }
+
+        &.is-selected {
+            width: 100%;
+            float: none;
+        }
+
+        &.visible {
+            display: block;
+        }
+    
+        &.invisible {
+            display: none;
+        }
     }
     
-
-    // .editor-block-list__layout .editor-block-list__block[data-type="mayflower-blocks/column"] {
-    //     .editor-block-list__block-edit::before {
-    //         outline: none;
-    //     }
-    //     .editor-block-mover {
-    //         display: none;
-    //     }
-    // }
-
-    .is-selected {
-        float: none;
-    }
-
     .rollover-column {
         display: none;
         position: absolute;
@@ -59,22 +66,6 @@
                 display: none;
             }
         }
-    }
-
-    .column:hover .rollover-column {
-        display: block;
-    }
-    
-    .column:hover.is-selected .rollover-column {
-        display: none;
-    }
-
-    .visible-column {
-        display: block;
-    }
-
-    .invisible-column {
-        display: none;
     }
 
 

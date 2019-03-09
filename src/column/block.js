@@ -54,9 +54,6 @@ registerBlockType('mayflower-blocks/column', {
 			type: 'boolean',
 			default: true
 		},
-		width: {
-			type: 'string',
-		},
 		siblingColumns: {
 			type: 'number',
 			default: 0
@@ -163,10 +160,10 @@ registerBlockType('mayflower-blocks/column', {
 		/**
 		 * Selects a column block
 		 *
-		 * When a column block gets selected, the function adjusts the column to full-width and hides all sibling columns
+		 * When a column block gets selected, the function hides all sibling columns
+		 * On click it will render the column to full-width
 		 */
 		const handleSelectColumnBlock = () => {
-			setAttributes({ width: '100%' });
 			setAttributes({ selected: true });
 
 			parentBlockChildren = parentBlockData.innerBlocks;
@@ -188,10 +185,9 @@ registerBlockType('mayflower-blocks/column', {
 		 * Closes a column block when a column block is selected
 		 *
 		 * Checks for a selected column block from the row block's innerblocks. If a column(child) was not selected, it updates the column block's attributes
-		 * to visible and if selected it updates the attributes width to null and selected to false.
+		 * to visible and if selected it updates selected to false.
 		 */
 		const handleCloseColumnBlock = () => {
-			setAttributes({ width: '' });
 			setAttributes({ selected: false });
 
 			parentBlockChildren = parentBlockData.innerBlocks;
@@ -261,7 +257,7 @@ registerBlockType('mayflower-blocks/column', {
 			,
 			<div className={className}>
 				{ attributes.gridColumnClass &&
-					<div class={`column ${attributes.visible == true ? 'visible-column' : 'invisible-column'} col-${attributes.gridColumnClass}-${attributes.gridColumnSize} ${attributes.width == '100%' && 'is-selected'}`} style={{ width: attributes.width }}>
+					<div class={`column ${attributes.visible == true ? 'visible' : 'invisible'} col-${attributes.gridColumnClass}-${attributes.gridColumnSize} ${attributes.selected == true && 'is-selected'}`}>
 						{attributes.selected !== true ?
 							<Disabled>
 								<InnerBlocks />
