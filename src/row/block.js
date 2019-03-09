@@ -113,23 +113,27 @@ registerBlockType('mayflower-blocks/row', {
 							break;
 					}
 
-					//Creates a new block and saves a block object to columnBlock
-					const columnBlock = createBlock('mayflower-blocks/column', { gridColumnClass: 'md', gridColumnSize: gridColumnSize, selected: false });
+				//Creates a new block and saves a block object to columnBlock
+				const columnBlock = createBlock('mayflower-blocks/column', { gridColumnClass: 'md', gridColumnSize: gridColumnSize, selected: false, siblingColumns: attributes.childColumns + 1 });
 
-					// Insert columnBlock to the row block appending to the last index of columns
-					dispatch('core/editor').insertBlock(columnBlock, currentBlockData.innerBlocks.length, currentBlockClientId);
+				// Insert columnBlock to the row block appending to the last index of columns
+				dispatch('core/editor').insertBlock(columnBlock, currentBlockData.innerBlocks.length, currentBlockClientId);
 
-					//Performs a check on all children to see how many columns there are and sets the sibling columns size to adjust to the newly added column
-					currentBlockChildren.forEach(child => {
-						if ((attributes.childColumns + 1) >= 7 && child.clientId !== columnBlock.clientId) {
-							dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: 1 });
-						} else {
-							dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: gridColumnSize });
-							if ((attributes.childColumns + 1) == 5 && child.clientId !== columnBlock.clientId) {
-								dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: child.attributes.gridColumnSize - 1 });
-							}
+				//Performs a check on all children to see how many columns there are and sets the sibling columns size to adjust to the newly added column
+				currentBlockChildren.forEach(child => {
+					//update all siblings that a sibling has been added
+					dispatch('core/editor').updateBlockAttributes(child.clientId, { siblingColumns: attributes.childColumns + 1});
+					
+					if ((attributes.childColumns + 1) >= 7 && child.clientId !== columnBlock.clientId) {
+						dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: 1 });
+					} else {
+						dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: gridColumnSize });
+						if ((attributes.childColumns + 1) == 5 && child.clientId !== columnBlock.clientId) {
+							dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: child.attributes.gridColumnSize - 1 });
 						}
-					});
+					}
+				});
+
 				}
 			}
 			//After a column block is created, continue to select the Row block to allow continuous addition/removal of column or row blocks

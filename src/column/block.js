@@ -50,10 +50,6 @@ registerBlockType('mayflower-blocks/column', {
 			type: 'boolean',
 			default: false
 		},
-		mouseOver: {
-			type: 'boolean',
-			default: false,
-		},
 		visible: {
 			type: 'boolean',
 			default: true
@@ -74,22 +70,6 @@ registerBlockType('mayflower-blocks/column', {
 		const parentBlockClientId = select('core/editor').getBlockRootClientId(currentBlockClientId); //get parent's client id
 		const parentBlockData = select('core/editor').getBlock(parentBlockClientId); // get parent's data; includes children and attributes
 		let parentBlockChildren;
-
-		// Set how many siblings this block has from the parent data
-		if (parentBlockData) {
-			if (Array.isArray(parentBlockData.innerBlocks)) {
-				const parentBlockChildrenLength = parentBlockData.innerBlocks.length;
-				setAttributes({ siblingColumns: parentBlockChildrenLength });
-			}
-		}
-
-		const handleMouseEnter = () => {
-			setAttributes({ mouseOver: true });
-		}
-
-		const handleMouseLeave = () => {
-			setAttributes({ mouseOver: false });
-		}
 
 		/**
 		 * Removes the column block
@@ -150,6 +130,9 @@ registerBlockType('mayflower-blocks/column', {
 
 				//Performs a check on all siblings to see how many columns there are and sets the sibling columns size to adjust to the newly removed column
 				parentBlockChildren.forEach(sibling => {
+					//update all siblings that a sibling has been removed
+					dispatch('core/editor').updateBlockAttributes(sibling.clientId, { siblingColumns: attributes.siblingColumns - 1 });
+
 					if ((attributes.siblingColumns - 1) >= 7) {
 						dispatch('core/editor').updateBlockAttributes(sibling.clientId, { gridColumnSize: 1 });
 						//if a sibling is the last index after the column is removed, then update the attributes to the new gridColumnSize
@@ -277,26 +260,25 @@ registerBlockType('mayflower-blocks/column', {
 			</InspectorControls>
 			,
 			<div className={className}>
-				{attributes.gridColumnClass &&
-					<div class={`column ${attributes.visible == true ? 'visible-column' : 'invisible-column'} col-${attributes.gridColumnClass}-${attributes.gridColumnSize}`} style={{ width: attributes.width, float: attributes.width == '100%' ? 'none' : 'left' }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+				{ attributes.gridColumnClass &&
+					<div class={`column ${attributes.visible == true ? 'visible-column' : 'invisible-column'} col-${attributes.gridColumnClass}-${attributes.gridColumnSize} ${attributes.width == '100%' && 'is-selected'}`} style={{ width: attributes.width }}>
 						{attributes.selected !== true ?
 							<Disabled>
 								<InnerBlocks />
 							</Disabled>
 							: <InnerBlocks />}
-						<div style={{ display: attributes.mouseOver == true && attributes.selected !== true ? 'block' : 'none' }}>
 							<div className="rollover-column">
 								<div className="rollover-menu">
 									<Button isDefault onClick={handleSelectColumnBlock}>
-										Edit Column
+										<span class="dashicons dashicons-edit"></span> <span class={`${attributes.gridColumnSize == 1 && attributes.gridColumnSize !== 12 && 'rollover-menu-text-hidden'}`}>Edit Column</span>
 									</Button>
 									<Button isDefault onClick={handleRemoveColumnBlock}>
-										Remove Column
+										<span class="dashicons dashicons-trash"></span> <span class={`${attributes.gridColumnSize == 1 && attributes.gridColumnSize !== 12 && 'rollover-menu-text-hidden'}`}>Remove Column</span>
 									</Button>
 								</div>
 							</div>
-						</div>
-					</div>}
+					</div>
+				}
 			</div>
 		]
 	},

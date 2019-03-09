@@ -10,6 +10,7 @@
     .column {
         position: relative;
     }
+    
 
     // .editor-block-list__layout .editor-block-list__block[data-type="mayflower-blocks/column"] {
     //     .editor-block-list__block-edit::before {
@@ -20,14 +21,12 @@
     //     }
     // }
 
-    .selected-column {
-        display: inline-block !important;
-        width: 100% !important;
-        height: 100% !important;
-        background-color: purple !important;
+    .is-selected {
+        float: none;
     }
 
     .rollover-column {
+        display: none;
         position: absolute;
         background-color: #fff;
         border: 1px dashed #8d96a0;
@@ -38,12 +37,36 @@
         text-align: center;
 
         .rollover-menu {
-            margin-top: 1em;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column;
 
             button {
+                word-wrap: break-word;
+                white-space: normal;
+                height: auto;
+                padding: .5em;
+                flex: 1;
+                align-items: center;
+                justify-content: center;
+            }
+
+            button:first-child {
                 margin-bottom: 1em;
             }
+
+            .rollover-menu-text-hidden {
+                display: none;
+            }
         }
+    }
+
+    .column:hover .rollover-column {
+        display: block;
+    }
+    
+    .column:hover.is-selected .rollover-column {
+        display: none;
     }
 
     .visible-column {
@@ -53,6 +76,8 @@
     .invisible-column {
         display: none;
     }
+
+
 }
 
 [data-type="mayflower-blocks/column"] {
