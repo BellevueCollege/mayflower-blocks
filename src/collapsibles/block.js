@@ -7,7 +7,7 @@
 
 // Import CSS.
 // import './style.scss';
-// import './editor.scss';
+import './editor.scss';
 
 
 
@@ -15,6 +15,7 @@ const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { RichText, InspectorControls, InnerBlocks } = wp.editor;
 const { SelectControl } = wp.components;
+const { Fragment } = wp.element;
 
 
 /**
@@ -44,11 +45,14 @@ registerBlockType( 'mayflower-blocks/collapsibles', {
 	edit: function ({ className }) {
 
 		return [
-			<div className={className}>
-				<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-					<InnerBlocks allowedBlocks = {['mayflower-blocks/collapse']}/>
+			<Fragment>
+				<p class="block-name">Collapsibles Block</p>
+				<div className={className}>
+					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+						<InnerBlocks allowedBlocks = {['mayflower-blocks/collapse']}/>
+					</div>
 				</div>
-			</div>
+			</Fragment>
 		]
 	},
 
