@@ -13,7 +13,7 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText, InspectorControls } = wp.editor;
+const { RichText, InspectorControls, InnerBlocks } = wp.editor;
 const { SelectControl, ToggleControl } = wp.components;
 
 
@@ -161,15 +161,19 @@ registerBlockType( 'mayflower-blocks/panel', {
 						</div>
 					: ''}
 
-					<RichText
-						tagName = "div"
-						className = "panel-body"
-						formattingControls = {['bold', 'italic', 'link']}
-						placeholder = "Enter text..."
-						keepPlaceholderOnFocus = "true"
-						value = {attributes.panelText}
-						onChange = {(panelText) => setAttributes({ panelText })}
-					/>
+					<div className="panel-body">
+						{attributes.panelText !== null && attributes.panelText !== '' && attributes.panelText !== undefined ? 
+							<RichText
+								tagName = "div"
+								formattingControls = {['bold', 'italic', 'link']}
+								placeholder = "Enter text..."
+								keepPlaceholderOnFocus = "true"
+								value = {attributes.panelText}
+								onChange = {(panelText) => setAttributes({ panelText })}
+							/>
+						: '' }
+						<InnerBlocks/>
+					</div>
 
 					{attributes.panelFooter == true ? 
 						<div className = "panel-footer">
@@ -213,12 +217,16 @@ registerBlockType( 'mayflower-blocks/panel', {
 					</div>
 				: ''}
 
-				<RichText.Content
-					tagName = "div"
-					className = "panel-body"
-					value = {attributes.panelText}
-				/>
-
+				<div className="panel-body">
+					{attributes.panelText !== null && attributes.panelText !== '' && attributes.panelText !== undefined ? 
+						<RichText.Content
+							tagName = "div"
+							value = {attributes.panelText}
+						/>
+					: '' }
+					<InnerBlocks.Content/>
+				</div>
+				
 				{attributes.panelFooter == true ?
 					attributes.panelFooterText == null || attributes.panelFooterText == '' ? '' :
 					<div className = "panel-footer">
