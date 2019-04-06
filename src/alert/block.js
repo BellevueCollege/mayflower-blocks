@@ -133,10 +133,12 @@ registerBlockType( 'mayflower-blocks/alert', {
 	save: function( {attributes} ) {
 		return (
 			<div className = {`alert alert-${attributes.alertClass}`}>
-				<RichText.Content
-					tagName = "div"
-					value = {attributes.alertText}
-				/>
+				{attributes.alertText !== null && attributes.alertText !== '' && attributes.alertText !== undefined ? 
+					<RichText.Content
+						tagName = "div"
+						value = {attributes.alertText}
+					/>
+				: '' }
 				<InnerBlocks.Content />
 			</div>
 		);

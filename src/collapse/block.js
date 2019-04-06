@@ -153,9 +153,12 @@ registerBlockType( 'mayflower-blocks/collapse', {
 				</div>
 				<div id={`collapse-${attributes.currentBlockClientId}`} class={`panel-collapse collapse ${attributes.collapseIn}`} role="tabpanel" aria-labelledby={`heading-${attributes.currentBlockClientId}`}>
 					<div class="panel-body">
-						<RichText.Content
-							value = {attributes.collapseText}
-						/>
+						{attributes.collapseText !== null && attributes.collapseText !== '' && attributes.collapseText !== undefined ? 
+							<RichText.Content
+								tagName = "div"
+								value = {attributes.collapseText}
+							/>
+						: '' }
 						<InnerBlocks.Content/>
 					</div>
 				</div>

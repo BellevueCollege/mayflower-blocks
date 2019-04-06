@@ -130,10 +130,12 @@ registerBlockType( 'mayflower-blocks/well', {
 	save: function( {attributes} ) {
 		return (
 			<div className = {`well ${attributes.wellSize}`}>
-				<RichText.Content
-					tagName = "div"
-					value = {attributes.wellText}
-				/>
+				{attributes.wellText !== null && attributes.wellText !== '' && attributes.wellText !== undefined ? 
+					<RichText.Content
+						tagName = "div"
+						value = {attributes.wellText}
+					/>
+				: '' }
 				<InnerBlocks.Content />
 			</div>
 		);
