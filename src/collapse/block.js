@@ -120,7 +120,7 @@ registerBlockType( 'mayflower-blocks/collapse', {
 									onChange = {(collapseText) => setAttributes({ collapseText })}
 								/>
 							: '' }
-							<InnerBlocks allowedBlocks = {[ 'core/paragraph', 'mayflower-blocks/button', 'core/heading', 'core/list']}/>
+							<InnerBlocks/>
 						</div>
 					</div>
 				}
