@@ -14,8 +14,9 @@
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { RichText, InspectorControls, InnerBlocks } = wp.editor;
-const { SelectControl } = wp.components;
+const { SelectControl, ToggleControl } = wp.components;
 const { select } = wp.data;
+const { omit } = lodash;
 
 /**
  * Register: aa Gutenberg Block.
@@ -37,6 +38,7 @@ registerBlockType( 'mayflower-blocks/collapse', {
 	title: __( 'Collapse' ), // Block title.
 	icon: 'editor-contract', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
+	description: 'Individual collapse elements.',
 	parent: ['mayflower-blocks/collapsibles'],
 
 	attributes: {
@@ -53,6 +55,10 @@ registerBlockType( 'mayflower-blocks/collapse', {
 		collapseIn: {
 			type: 'string',
 			default: ''
+		},
+		expanded: {
+			type: 'boolean',
+			default: false
 		},
 		currentBlockClientId: {
 			type: 'string',
@@ -81,15 +87,12 @@ registerBlockType( 'mayflower-blocks/collapse', {
 						setAttributes({ collapseClass });
 					}}
 				/>
-				<SelectControl
-					label="Keep Collapse Open?"
-					value={attributes.collapseIn}
-					options={[
-						{ label: 'Yes', value: 'in' },
-						{ label: 'No', value: '' },
-					]}
-					onChange={(collapseIn) => { 
-						setAttributes({ collapseIn });
+				<ToggleControl
+					label="Start Expanded"
+					help={ attributes.expanded ? 'Module will start out in an expanded state' : 'Module will start out in a collapsed state' }
+					checked={ attributes.expanded }
+					onChange={(expanded) => { 
+						setAttributes({ expanded });
 					}}
 				/>
 			</InspectorControls>
@@ -107,8 +110,8 @@ registerBlockType( 'mayflower-blocks/collapse', {
 						/>
 					</h4>
 				</div>
-				{(isSelected || select('core/editor').hasSelectedInnerBlock(attributes.currentBlockClientId) == true || attributes.collapseIn == 'in') && 
-					<div id={`collapse-${attributes.currentBlockClientId}`} class={`panel-collapse collapse in`} role="tabpanel" aria-labelledby={`heading-${attributes.currentBlockClientId}`}>
+				{(isSelected || select('core/editor').hasSelectedInnerBlock(attributes.currentBlockClientId) == true || attributes.expanded) && 
+					<div id={`collapse-${attributes.currentBlockClientId}`} class={`panel-collapse collapse ${attributes.expanded ? 'in' : ''}`} role="tabpanel" aria-labelledby={`heading-${attributes.currentBlockClientId}`}>
 						<div class="panel-body">
 							{attributes.collapseText !== null && attributes.collapseText !== '' && attributes.collapseText !== undefined ? 
 								<RichText
@@ -151,7 +154,7 @@ registerBlockType( 'mayflower-blocks/collapse', {
 						 </a>
 					</h4>
 				</div>
-				<div id={`collapse-${attributes.currentBlockClientId}`} class={`panel-collapse collapse ${attributes.collapseIn}`} role="tabpanel" aria-labelledby={`heading-${attributes.currentBlockClientId}`}>
+				<div id={`collapse-${attributes.currentBlockClientId}`} class={ ( attributes.expanded ? 'panel-collapse collapse in' : 'panel-collapse collapse' ) } role="tabpanel" aria-labelledby={`heading-${attributes.currentBlockClientId}`}>
 					<div class="panel-body">
 						{attributes.collapseText !== null && attributes.collapseText !== '' && attributes.collapseText !== undefined ? 
 							<RichText.Content
@@ -165,6 +168,65 @@ registerBlockType( 'mayflower-blocks/collapse', {
 			</div>
 		);
 	},
+
+	/*
+		Conversions from old versions of attributes
+	*/
+	deprecated: [
+		{
+			attributes: {
+				collapseText: {
+					type: 'string',
+				},
+				collapseHeadingText: {
+					type: 'string',
+				},
+				collapseClass: {
+					type: 'string',
+					default: 'default'
+				},
+				collapseIn: {
+					type: 'string',
+					default: ''
+				},
+				currentBlockClientId: {
+					type: 'string',
+					default: ''
+				}
+			},
+
+			save( { attributes } ) {
+
+				return (
+					<div className = {`panel panel-${attributes.collapseClass}`}>
+						<div class="panel-heading" role="tab" id={`heading-${attributes.currentBlockClientId}`}>
+							<h4 class="panel-title">
+								<a role="button" data-toggle="collapse" data-parent="#accordion" href={`#collapse-${attributes.currentBlockClientId}`} aria-expanded="true" aria-controls={`collapse-${attributes.currentBlockClientId}`}>
+									<RichText.Content
+										value = {attributes.collapseHeadingText}
+									/>
+								 </a>
+							</h4>
+						</div>
+						<div id={`collapse-${attributes.currentBlockClientId}`} class={ 'in' === attributes.collapseIn ? 'panel-collapse collapse in' : 'panel-collapse collapse' } role="tabpanel" aria-labelledby={`heading-${attributes.currentBlockClientId}`}>
+							<div class="panel-body">
+								<RichText.Content
+									value = {attributes.collapseText}
+								/>
+								<InnerBlocks.Content/>
+							</div>
+						</div>
+					</div>
+				);
+			},
+			migrate( attributes ) {
+				return {
+					...omit( attributes,['collapseIn'] ),
+					expanded: 'in' == attributes.collapseIn ? true : false,
+				};
+			},
+		}
+	],
 
 	//Existing bootstrap collapse shortcode transformed into its block counterpart.
 	//Allows use of [collapse title="" type="" active=""][/collapse]

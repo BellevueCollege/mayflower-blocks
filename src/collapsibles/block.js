@@ -38,7 +38,8 @@ registerBlockType( 'mayflower-blocks/collapsibles', {
 	title: __( 'Collapsibles' ), // Block title.
 	icon: 'editor-contract', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
-
+	keywords: [ 'collapse', 'accordion' ],
+	description: 'Create accordion-style collapsing modules in a variety of colors.',
 	attributes: {
 	},
 	
