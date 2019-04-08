@@ -13,8 +13,8 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText, InspectorControls, InnerBlocks } = wp.editor;
-const { SelectControl } = wp.components;
+const { RichText, InspectorControls, InnerBlocks, BlockControls } = wp.editor;
+const { SelectControl, Toolbar } = wp.components;
 
 
 
@@ -32,7 +32,6 @@ const { SelectControl } = wp.components;
  *                             registered; otherwise `undefined`.
  */
 
-
 registerBlockType( 'mayflower-blocks/alert', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Alert' ), // Block title.
@@ -44,6 +43,10 @@ registerBlockType( 'mayflower-blocks/alert', {
 			type: 'string',
 		},
 		alertClass: {
+			type: 'string',
+			default: 'info'
+		},
+		activeAlert: {
 			type: 'string',
 			default: 'info'
 		}
@@ -77,12 +80,66 @@ registerBlockType( 'mayflower-blocks/alert', {
 							return type;
 						},
 					},
+
+					//Active Alert Class
+					activeAlert: {
+						type: 'string',
+						shortcode: ({ named: { type = 'type' } }) => {
+							return type;
+						},
+					},
 				},
 			}
 		]
 	},
 
 	edit: function ({ className, attributes, setAttributes }) {
+
+		/**
+		 * AlertClassControl returns a Toolbar component with alert classes that changes via on click and updates the alert block's style.
+		 *
+		 * @return Toolbar component with alert classes
+		 * */
+		const AlertClassControl = () => {
+			function createClassControl ( alertClass ) {
+
+				//Switch checks the class control alertClass and returns the corresponding colorClass to update the SVG icon
+				let colorClass = '';
+				switch (alertClass) {
+					case 'info':
+						colorClass = '#31708f';
+						break;
+					case 'success':
+						colorClass = '#3c763d';
+						break;
+					case 'warning':
+						colorClass = '#8a6d3b';
+						break;
+					case 'danger':
+						colorClass = '#a94442';
+						break;
+					default:
+						colorClass = '#31708f';
+						break;
+				}
+
+				return {
+					icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+							<circle fill="white" cx="10" cy="10" r="10"/>
+							<g>
+								<path fill={colorClass} d="M10 2c4.42 0 8 3.58 8 8s-3.58 8-8 8-8-3.58-8-8 3.58-8 8-8zm1.13 9.38l.35-6.46H8.52l.35 6.46h2.26zm-.09 3.36c.24-.23.37-.55.37-.96 0-.42-.12-.74-.36-.97s-.59-.35-1.06-.35-.82.12-1.07.35-.37.55-.37.97c0 .41.13.73.38.96.26.23.61.34 1.06.34s.8-.11 1.05-.34z"/>
+							</g>
+							</svg>,
+					title: alertClass.charAt(0).toUpperCase() + alertClass.slice(1),
+					isActive: attributes.activeAlert === alertClass,
+					onClick: () => setAttributes( { alertClass: alertClass, activeAlert: alertClass } ),
+				};
+			};
+
+			return(
+				<Toolbar controls={ [ 'info', 'success', 'warning', 'danger' ].map( createClassControl ) } />
+			);
+		}
 
 		return [
 			<InspectorControls>
@@ -96,10 +153,14 @@ registerBlockType( 'mayflower-blocks/alert', {
 						{ label: 'Danger (Red)', value: 'danger' },
 					]}
 					onChange={(alertClass) => { 
-						setAttributes({ alertClass });
+						setAttributes({ alertClass: alertClass, activeAlert: alertClass });
 					}}
 				/>
 			</InspectorControls>
+			,
+			<BlockControls>
+				<AlertClassControl/>
+			</BlockControls>
 			,
 			<div className={className}>
 				<div className = {`alert alert-${attributes.alertClass}`}>
