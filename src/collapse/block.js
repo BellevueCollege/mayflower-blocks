@@ -47,14 +47,12 @@ registerBlockType( 'mayflower-blocks/collapse', {
 		},
 		collapseHeadingText: {
 			type: 'string',
+			source: 'html',
+			selector: 'a'
 		},
 		collapseClass: {
 			type: 'string',
 			default: 'default'
-		},
-		collapseIn: {
-			type: 'string',
-			default: ''
 		},
 		expanded: {
 			type: 'boolean',
@@ -63,7 +61,13 @@ registerBlockType( 'mayflower-blocks/collapse', {
 		currentBlockClientId: {
 			type: 'string',
 			default: ''
+		},
+		/* Deprecated Atts */
+		collapseIn: {
+			type: 'string',
+			default: ''
 		}
+			
 	},
 	
 	edit: function ({ className, attributes, setAttributes, clientId, isSelected}) {
@@ -73,6 +77,7 @@ registerBlockType( 'mayflower-blocks/collapse', {
 
 		return [
 			<InspectorControls>
+				<hr />
 				<SelectControl
 					label="Collapse Style"
 					value={attributes.collapseClass}
@@ -87,6 +92,7 @@ registerBlockType( 'mayflower-blocks/collapse', {
 						setAttributes({ collapseClass });
 					}}
 				/>
+				<hr />
 				<ToggleControl
 					label="Start Expanded"
 					help={ attributes.expanded ? 'Module will start out in an expanded state' : 'Module will start out in a collapsed state' }
@@ -111,7 +117,7 @@ registerBlockType( 'mayflower-blocks/collapse', {
 					</h4>
 				</div>
 				{(isSelected || select('core/editor').hasSelectedInnerBlock(attributes.currentBlockClientId) == true || attributes.expanded) && 
-					<div id={`collapse-${attributes.currentBlockClientId}`} class={`panel-collapse collapse ${attributes.expanded ? 'in' : ''}`} role="tabpanel" aria-labelledby={`heading-${attributes.currentBlockClientId}`}>
+					<div id={`collapse-${attributes.currentBlockClientId}`} class={'panel-collapse collapse in'} role="tabpanel" aria-labelledby={`heading-${attributes.currentBlockClientId}`}>
 						<div class="panel-body">
 							{attributes.collapseText !== null && attributes.collapseText !== '' && attributes.collapseText !== undefined ? 
 								<RichText
