@@ -12,9 +12,10 @@ import './editor.scss';
 
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { registerBlockType, createBlock } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { RichText, InspectorControls, InnerBlocks, BlockControls } = wp.editor;
 const { SelectControl, Toolbar } = wp.components;
+const { select, dispatch } = wp.data;
 
 
 
@@ -41,6 +42,7 @@ registerBlockType( 'mayflower-blocks/alert', {
 	attributes: {
 		alertText: {
 			type: 'string',
+			default: ''
 		},
 		alertClass: {
 			type: 'string',
@@ -89,8 +91,47 @@ registerBlockType( 'mayflower-blocks/alert', {
 						},
 					},
 				},
-			}
-		]
+			},
+			{
+				type: 'block',
+				blocks: [ 'core/paragraph' ],
+				transform: ( attributes ) => {
+					const paragraphBlock = createBlock( 'core/paragraph', {content: attributes.content} );
+					return createBlock( 'mayflower-blocks/alert', attributes, [paragraphBlock]);
+				},
+			},
+		],
+		to: [
+			{
+				type: 'block',
+				blocks: [ 'mayflower-blocks/well' ],
+				transform: ( attributes ) => {
+					const alertBlockInnerBlocks = select('core/editor').getSelectedBlock().innerBlocks;
+					return createBlock( 'mayflower-blocks/well', {wellText: attributes.alertText}, alertBlockInnerBlocks);
+				},
+			},
+			{
+				type: 'block',
+				blocks: [ 'core/paragraph' ],
+				transform: ( attributes ) => {
+					const alertBlock = select('core/editor').getSelectedBlock();
+					const alertBlockIndex = select('core/editor').getBlockIndex(alertBlock.clientId);
+					const alertBlockInnerBlocks = alertBlock.innerBlocks;
+					
+					if (alertBlockInnerBlocks && attributes.alertText) { 
+						//insert inner blocks at index after initial alert block because
+						//alert block transforms to a paragraph block with alertText and appears before innerblocks
+						dispatch('core/editor').insertBlocks(alertBlockInnerBlocks, alertBlockIndex + 1);
+					} else {
+						//insert at initial alert block
+						dispatch('core/editor').insertBlocks(alertBlockInnerBlocks, alertBlockIndex);
+					}
+					
+					//returns an empty block if there is no alertText
+					return createBlock( 'core/paragraph', {content: attributes.alertText});
+				},
+			},
+		],
 	},
 
 	edit: function ({ className, attributes, setAttributes }) {

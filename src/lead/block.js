@@ -12,9 +12,9 @@ import './editor.scss';
 
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { registerBlockType, createBlock } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { RichText } = wp.editor;
-
+const { select, dispatch } = wp.data;
 
 
 /**
@@ -41,6 +41,7 @@ registerBlockType( 'mayflower-blocks/lead', {
 	attributes: {
 		leadText: {
 			type: 'string',
+			default: ''
 		},
 	},
 	
@@ -65,8 +66,44 @@ registerBlockType( 'mayflower-blocks/lead', {
 						},
 					},
 				},
-			}
-		]
+			},
+			{
+				type: 'block',
+				blocks: [ 'core/paragraph' ],
+				transform: ( { content } ) => {
+					return createBlock( 'mayflower-blocks/lead', {
+						leadText: content,
+					} );
+				},
+			},
+		],
+		to: [
+			{
+				type: 'block',
+				blocks: [ 'core/paragraph' ],
+				transform: function( attributes ) {
+					return createBlock( 'core/paragraph', {
+						content: attributes.leadText,
+					} );
+				},
+			},
+			{
+				type: 'block',
+				blocks: [ 'mayflower-blocks/well' ],
+				transform: function( attributes ) {
+					const paragraphBlock = createBlock( 'core/paragraph', {content: attributes.leadText});
+					return createBlock( 'mayflower-blocks/well', attributes, [paragraphBlock]);
+				},
+			},
+			{
+				type: 'block',
+				blocks: [ 'mayflower-blocks/alert' ],
+				transform: function( attributes ) {
+					const paragraphBlock = createBlock( 'core/paragraph', {content: attributes.leadText});
+					return createBlock( 'mayflower-blocks/alert', attributes, [paragraphBlock]);
+				},
+			},
+		],
 	},
 
 	edit: function ({ className, attributes, setAttributes }) {

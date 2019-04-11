@@ -12,9 +12,10 @@ import './editor.scss';
 
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { registerBlockType, createBlock } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { RichText, InspectorControls, InnerBlocks } = wp.editor;
 const { SelectControl } = wp.components;
+const { select, dispatch } = wp.data;
 
 
 /**
@@ -41,6 +42,7 @@ registerBlockType( 'mayflower-blocks/well', {
 	attributes: {
 		wellText: {
 			type: 'string',
+			default: ''
 		},
 		wellSize: {
 			type: 'string',
@@ -77,8 +79,47 @@ registerBlockType( 'mayflower-blocks/well', {
 						},
 					},
 				},
-			}
-		]
+			},
+			{
+				type: 'block',
+				blocks: [ 'core/paragraph' ],
+				transform: ( attributes ) => {
+					const paragraphBlock = createBlock( 'core/paragraph', {content: attributes.content} );
+					return createBlock( 'mayflower-blocks/well', attributes, [paragraphBlock]);
+				},
+			},
+		],
+		to: [
+			{
+				type: 'block',
+				blocks: [ 'mayflower-blocks/alert' ],
+				transform: ( attributes ) => {
+					const wellBlockInnerBlocks = select('core/editor').getSelectedBlock().innerBlocks;
+					return createBlock( 'mayflower-blocks/alert', {alertText: attributes.wellText}, wellBlockInnerBlocks);
+				},
+			},
+			{
+				type: 'block',
+				blocks: [ 'core/paragraph' ],
+				transform: ( attributes ) => {
+					const wellBlock = select('core/editor').getSelectedBlock();
+					const wellBlockIndex = select('core/editor').getBlockIndex(wellBlock.clientId);
+					const wellBlockInnerBlocks = wellBlock.innerBlocks;
+					
+					if (wellBlockInnerBlocks && attributes.wellText) { 
+						//insert inner blocks at index after initial well block because
+						//well block transforms to a paragraph block with wellText and appears before innerblocks
+						dispatch('core/editor').insertBlocks(wellBlockInnerBlocks, wellBlockIndex + 1);
+					} else {
+						//insert at initial well block
+						dispatch('core/editor').insertBlocks(wellBlockInnerBlocks, wellBlockIndex);
+					}
+					
+					//returns an empty block if there is no wellText
+					return createBlock( 'core/paragraph', {content: attributes.wellText});
+				},
+			},
+		],
 	},
 
 	edit: function ({ className, attributes, setAttributes }) {
