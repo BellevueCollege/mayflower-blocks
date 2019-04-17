@@ -101,22 +101,34 @@ registerBlockType( 'mayflower-blocks/well', {
 			{
 				type: 'block',
 				blocks: [ 'core/paragraph' ],
+				isMatch: ( {wellText} ) => { //Perform a match to see if an well can be transformed to another block
+					const wellBlock = select('core/editor').getSelectedBlock();
+					const wellBlockInnerBlocks = wellBlock.innerBlocks;
+					if (wellText) {
+						return true;
+					} else {
+						if (wellBlockInnerBlocks.length >= 1){ //Return true if first innerblock is a paragraph
+							return wellBlockInnerBlocks[0].name == 'core/paragraph';
+						}
+					}
+				},
 				transform: ( attributes ) => {
 					const wellBlock = select('core/editor').getSelectedBlock();
 					const wellBlockIndex = select('core/editor').getBlockIndex(wellBlock.clientId);
 					const wellBlockInnerBlocks = wellBlock.innerBlocks;
 					
-					if (wellBlockInnerBlocks && attributes.wellText) { 
-						//insert inner blocks at index after initial well block because
-						//well block transforms to a paragraph block with wellText and appears before innerblocks
-						dispatch('core/editor').insertBlocks(wellBlockInnerBlocks, wellBlockIndex + 1);
-					} else {
-						//insert at initial well block
-						dispatch('core/editor').insertBlocks(wellBlockInnerBlocks, wellBlockIndex);
+					//if shortcode wellText exists, return paragraph transform and any innerblocks after shortcode paragraph content
+					if (attributes.wellText){
+						if (wellBlockInnerBlocks.length >= 1){
+							dispatch('core/editor').insertBlocks(wellBlockInnerBlocks, wellBlockIndex + 1);
+						}
+						return createBlock( 'core/paragraph', {content: attributes.wellText});
+					} else { //if no shortcode wellText, return innerblocks
+						if (wellBlockInnerBlocks.length > 1) { //if more than 1 innerblock, dispatch remaining innerblocks to appear after first innerblock
+							dispatch('core/editor').insertBlocks(wellBlockInnerBlocks.slice(1), wellBlockIndex + 1);
+						}
+						return wellBlockInnerBlocks[0];
 					}
-					
-					//returns an empty block if there is no wellText
-					return createBlock( 'core/paragraph', {content: attributes.wellText});
 				},
 			},
 		],

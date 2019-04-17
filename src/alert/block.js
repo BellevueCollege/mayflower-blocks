@@ -113,22 +113,34 @@ registerBlockType( 'mayflower-blocks/alert', {
 			{
 				type: 'block',
 				blocks: [ 'core/paragraph' ],
+				isMatch: ( {alertText} ) => { //Perform a match to see if an alert can be transformed to another block
+					const alertBlock = select('core/editor').getSelectedBlock();
+					const alertBlockInnerBlocks = alertBlock.innerBlocks;
+					if (alertText) {
+						return true;
+					} else {
+						if (alertBlockInnerBlocks.length >= 1){ //Return true if first innerblock is a paragraph
+							return alertBlockInnerBlocks[0].name == 'core/paragraph';
+						}
+					}
+				},
 				transform: ( attributes ) => {
 					const alertBlock = select('core/editor').getSelectedBlock();
 					const alertBlockIndex = select('core/editor').getBlockIndex(alertBlock.clientId);
 					const alertBlockInnerBlocks = alertBlock.innerBlocks;
 					
-					if (alertBlockInnerBlocks && attributes.alertText) { 
-						//insert inner blocks at index after initial alert block because
-						//alert block transforms to a paragraph block with alertText and appears before innerblocks
-						dispatch('core/editor').insertBlocks(alertBlockInnerBlocks, alertBlockIndex + 1);
-					} else {
-						//insert at initial alert block
-						dispatch('core/editor').insertBlocks(alertBlockInnerBlocks, alertBlockIndex);
+					//if shortcode alertText exists, return paragraph transform and any innerblocks after shortcode paragraph content
+					if (attributes.alertText){
+						if (alertBlockInnerBlocks.length >= 1){
+							dispatch('core/editor').insertBlocks(alertBlockInnerBlocks, alertBlockIndex + 1);
+						}
+						return createBlock( 'core/paragraph', {content: attributes.alertText});
+					} else { //if no shortcode alertText, return innerblocks
+						if (alertBlockInnerBlocks.length > 1) { //if more than 1 innerblock, dispatch remaining innerblocks to appear after first innerblock
+							dispatch('core/editor').insertBlocks(alertBlockInnerBlocks.slice(1), alertBlockIndex + 1);
+						}
+						return alertBlockInnerBlocks[0];
 					}
-					
-					//returns an empty block if there is no alertText
-					return createBlock( 'core/paragraph', {content: attributes.alertText});
 				},
 			},
 		],
