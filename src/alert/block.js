@@ -104,6 +104,30 @@ registerBlockType( 'mayflower-blocks/alert', {
 		to: [
 			{
 				type: 'block',
+				blocks: [ 'mayflower-blocks/lead' ],
+				isMatch: ( {alertText} ) => { //Perform a match to see if an alert can be transformed to a lead block
+					const alertBlock = select('core/editor').getSelectedBlock();
+					const alertBlockInnerBlocks = alertBlock.innerBlocks;
+					if ((alertText && alertBlockInnerBlocks.length == 0) || (alertText && alertBlockInnerBlocks.length == 1 && alertBlockInnerBlocks[0].attributes.content == '')) {
+						return true;
+					}
+					if (alertText == '' && alertBlockInnerBlocks.length == 1){ //Return true if alert only has 1 innerblock and it is a paragraph block
+						return alertBlockInnerBlocks[0].name == 'core/paragraph';
+					}
+					
+				},
+				transform: ( {alertText} ) => {
+					const alertBlock = select('core/editor').getSelectedBlock();
+					if (alertText){
+						return createBlock( 'mayflower-blocks/lead', {leadText: alertText});
+					} else {
+						return createBlock( 'mayflower-blocks/lead', {leadText: alertBlock.innerBlocks[0].attributes.content});
+					}
+					
+				},
+			},
+			{
+				type: 'block',
 				blocks: [ 'mayflower-blocks/well' ],
 				transform: ( attributes ) => {
 					const alertBlockInnerBlocks = select('core/editor').getSelectedBlock().innerBlocks;
@@ -113,7 +137,7 @@ registerBlockType( 'mayflower-blocks/alert', {
 			{
 				type: 'block',
 				blocks: [ 'core/paragraph' ],
-				isMatch: ( {alertText} ) => { //Perform a match to see if an alert can be transformed to another block
+				isMatch: ( {alertText} ) => { //Perform a match to see if an alert can be transformed to a paragraph block
 					const alertBlock = select('core/editor').getSelectedBlock();
 					const alertBlockInnerBlocks = alertBlock.innerBlocks;
 					if (alertText) {

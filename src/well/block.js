@@ -92,6 +92,30 @@ registerBlockType( 'mayflower-blocks/well', {
 		to: [
 			{
 				type: 'block',
+				blocks: [ 'mayflower-blocks/lead' ],
+				isMatch: ( {wellText} ) => { //Perform a match to see if a well can be transformed to a lead block
+					const wellBlock = select('core/editor').getSelectedBlock();
+					const wellBlockInnerBlocks = wellBlock.innerBlocks;
+					if ((wellText && wellBlockInnerBlocks.length == 0) || (wellText && wellBlockInnerBlocks.length == 1 && wellBlockInnerBlocks[0].attributes.content == '')) {
+						return true;
+					}
+					if (wellText == '' && wellBlockInnerBlocks.length == 1){ //Return true if well only has 1 innerblock and it is a paragraph block
+						return wellBlockInnerBlocks[0].name == 'core/paragraph';
+					}
+					
+				},
+				transform: ( {wellText} ) => {
+					const wellBlock = select('core/editor').getSelectedBlock();
+					if (wellText){
+						return createBlock( 'mayflower-blocks/lead', {leadText: wellText});
+					} else {
+						return createBlock( 'mayflower-blocks/lead', {leadText: wellBlock.innerBlocks[0].attributes.content});
+					}
+					
+				},
+			},
+			{
+				type: 'block',
 				blocks: [ 'mayflower-blocks/alert' ],
 				transform: ( attributes ) => {
 					const wellBlockInnerBlocks = select('core/editor').getSelectedBlock().innerBlocks;
@@ -101,7 +125,7 @@ registerBlockType( 'mayflower-blocks/well', {
 			{
 				type: 'block',
 				blocks: [ 'core/paragraph' ],
-				isMatch: ( {wellText} ) => { //Perform a match to see if an well can be transformed to another block
+				isMatch: ( {wellText} ) => { //Perform a match to see if a well can be transformed to a paragraph block
 					const wellBlock = select('core/editor').getSelectedBlock();
 					const wellBlockInnerBlocks = wellBlock.innerBlocks;
 					if (wellText) {
