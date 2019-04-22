@@ -13,8 +13,8 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType, createBlock } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText, InspectorControls, InnerBlocks } = wp.editor;
-const { SelectControl } = wp.components;
+const { RichText, InspectorControls, InnerBlocks, BlockControls } = wp.editor;
+const { SelectControl, Toolbar } = wp.components;
 const { select, dispatch } = wp.data;
 
 
@@ -47,6 +47,10 @@ registerBlockType( 'mayflower-blocks/well', {
 		wellSize: {
 			type: 'string',
 			default: ''
+		},
+		activeWell: {
+			type: 'string',
+			default: ''
 		}
 	},
 	
@@ -73,6 +77,18 @@ registerBlockType( 'mayflower-blocks/well', {
 
 					// Well Size
 					wellSize: {
+						type: 'string',
+						shortcode: ({ named: { size = '' } }) => {
+							if (size) {
+								return 'well-' + size;
+							} else {
+								return '';
+							}
+						},
+					},
+
+					//Active Well Size
+					activeWell: {
 						type: 'string',
 						shortcode: ({ named: { size = '' } }) => {
 							if (size) {
@@ -164,6 +180,46 @@ registerBlockType( 'mayflower-blocks/well', {
 
 	edit: function ({ className, attributes, setAttributes }) {
 
+		/**
+		 * WellSizeControl returns a Toolbar component with well sizes that changes via on click and updates the well's size.
+		 *
+		 * @return Toolbar component with well sizes
+		 * */
+		const WellSizeControl = () => {
+			function createClassControl ( wellSize ) {
+
+				//Switch checks the size control wellSize and returns the corresponding size
+				let size = '';
+				switch (wellSize) {
+					case 'default':
+						break;
+					case 'small':
+						size = 'well-sm';
+						break;
+					case 'large':
+						size = 'well-lg';
+						break;
+					default:
+						break;
+				}
+
+				const svgSmall = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none"/><g><path d="M15.75 6.75L18 3v14l-2.25-3.75L17 12h-4v4l1.25-1.25L18 17H2l3.75-2.25L7 16v-4H3l1.25 1.25L2 17V3l2.25 3.75L3 8h4V4L5.75 5.25 2 3h16l-3.75 2.25L13 4v4h4z"/></g></svg>;
+				const svgLarge= <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none"/><g><path d="M7 8h6v4H7zm-5 5v4h4l-1.2-1.2L7 12l-3.8 2.2M14 17h4v-4l-1.2 1.2L13 12l2.2 3.8M14 3l1.3 1.3L13 8l3.8-2.2L18 7V3M6 3H2v4l1.2-1.2L7 8 4.7 4.3"/></g></svg>;
+				const svgDefault = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none"/><g><path d="M18 3v2H2V3h16zm-6 4v2H2V7h10zm6 0v2h-4V7h4zM8 11v2H2v-2h6zm10 0v2h-8v-2h8zm-4 4v2H2v-2h12z"/></g></svg>;
+
+				return {
+					icon: wellSize == 'small' ? svgSmall : wellSize == 'large' ? svgLarge : svgDefault,
+					title: wellSize.charAt(0).toUpperCase() + wellSize.slice(1),
+					isActive: attributes.wellSize === size,
+					onClick: () => setAttributes( { wellSize: size, activeWell: size } ),
+				};
+			};
+
+			return(
+				<Toolbar controls={ [ 'default', 'small', 'large' ].map( createClassControl ) } />
+			);
+		}
+
 		return [
 			<InspectorControls>
 				<SelectControl
@@ -179,6 +235,10 @@ registerBlockType( 'mayflower-blocks/well', {
 					}}
 				/>
 			</InspectorControls>
+			,
+			<BlockControls>
+				<WellSizeControl/>
+			</BlockControls>
 			,
 			<div className={className}>
 				<div className = {`well ${attributes.wellSize}`}>
