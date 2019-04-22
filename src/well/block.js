@@ -74,8 +74,12 @@ registerBlockType( 'mayflower-blocks/well', {
 					// Well Size
 					wellSize: {
 						type: 'string',
-						shortcode: ({ named: { size = 'size' } }) => {
-							return size;
+						shortcode: ({ named: { size = '' } }) => {
+							if (size) {
+								return 'well-' + size;
+							} else {
+								return '';
+							}
 						},
 					},
 				},
