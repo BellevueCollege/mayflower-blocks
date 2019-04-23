@@ -14,7 +14,7 @@ import './editor.scss';
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType, createBlock } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { RichText, InspectorControls, InnerBlocks, BlockControls } = wp.editor;
-const { SelectControl, Toolbar } = wp.components;
+const { SelectControl, Toolbar, SVG, Path, G } = wp.components;
 const { select, dispatch } = wp.data;
 
 
@@ -201,12 +201,12 @@ registerBlockType( 'mayflower-blocks/alert', {
 				}
 
 				return {
-					icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+					icon: <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 							<circle fill="white" cx="10" cy="10" r="10"/>
-							<g>
-								<path fill={colorClass} d="M10 2c4.42 0 8 3.58 8 8s-3.58 8-8 8-8-3.58-8-8 3.58-8 8-8zm1.13 9.38l.35-6.46H8.52l.35 6.46h2.26zm-.09 3.36c.24-.23.37-.55.37-.96 0-.42-.12-.74-.36-.97s-.59-.35-1.06-.35-.82.12-1.07.35-.37.55-.37.97c0 .41.13.73.38.96.26.23.61.34 1.06.34s.8-.11 1.05-.34z"/>
-							</g>
-							</svg>,
+							<G>
+								<Path fill={colorClass} d="M10 2c4.42 0 8 3.58 8 8s-3.58 8-8 8-8-3.58-8-8 3.58-8 8-8zm1.13 9.38l.35-6.46H8.52l.35 6.46h2.26zm-.09 3.36c.24-.23.37-.55.37-.96 0-.42-.12-.74-.36-.97s-.59-.35-1.06-.35-.82.12-1.07.35-.37.55-.37.97c0 .41.13.73.38.96.26.23.61.34 1.06.34s.8-.11 1.05-.34z"/>
+							</G>
+							</SVG>,
 					title: alertClass.charAt(0).toUpperCase() + alertClass.slice(1),
 					isActive: attributes.activeAlert === alertClass,
 					onClick: () => setAttributes( { alertClass: alertClass, activeAlert: alertClass } ),
