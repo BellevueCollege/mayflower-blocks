@@ -14,7 +14,7 @@ import './editor.scss';
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { RichText, InspectorControls, InnerBlocks } = wp.editor;
-const { SelectControl, ToggleControl } = wp.components;
+const { SelectControl, ToggleControl, Toolbar, Panel, PanelBody, PanelRow} = wp.components;
 
 
 
@@ -53,6 +53,14 @@ registerBlockType( 'mayflower-blocks/panel', {
 		},
 		panelHeadingText: {
 			type: 'string'
+		},
+		panelHeadingClass: {
+			type: 'string',
+			default: 'h2'
+		},
+		activeHeadingClass: {
+			type: 'string',
+			default: 'h2'
 		},
 		panelFooter: {
 			type: 'boolean',
@@ -114,35 +122,99 @@ registerBlockType( 'mayflower-blocks/panel', {
 
 	edit: function ({ className, attributes, setAttributes }) {
 
+		/**
+		 * HeadingStyleControl returns a Toolbar component with heading levels that changes via on click and updates the panel block's heading.
+		 * Will only show if a panel heading is toggled on.
+		 * 
+		 * @return Toolbar component with heading levels 2-6 and paragraph
+		 * */
+		const HeadingStyleControl = () => {
+			function createClassControl ( headingStyle ) {
+
+				// get the Toolbar control style name and output the corresponding HTML tag
+				let style = (headingStyle == 'Paragraph' ? 'p' : 'h' + headingStyle[headingStyle.length - 1]);
+
+				// save the SVGs
+				const svgHeading = <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M12.5 4v5.2h-5V4H5v13h2.5v-5.2h5V17H15V4"></path></svg>;
+				const svgParagraph = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none" width="20" height="20"/><g><path d="M15 2H7.54c-.83 0-1.59.2-2.28.6-.7.41-1.25.96-1.65 1.65C3.2 4.94 3 5.7 3 6.52s.2 1.58.61 2.27c.4.69.95 1.24 1.65 1.64.69.41 1.45.61 2.28.61h.43V17c0 .27.1.51.29.71.2.19.44.29.71.29.28 0 .51-.1.71-.29.2-.2.3-.44.3-.71V5c0-.27.09-.51.29-.71.2-.19.44-.29.71-.29s.51.1.71.29c.19.2.29.44.29.71v12c0 .27.1.51.3.71.2.19.43.29.71.29.27 0 .51-.1.71-.29.19-.2.29-.44.29-.71V4H15c.27 0 .5-.1.7-.3.2-.19.3-.43.3-.7s-.1-.51-.3-.71C15.5 2.1 15.27 2 15 2z"/></g></svg>;
+				
+				// check if the heading style is Paragraph or a Heading, and return the corresponding toolbar object
+				if ( headingStyle == 'Paragraph' ){
+					return {
+						icon: svgParagraph,
+						title: headingStyle,
+						isActive: attributes.panelHeadingClass === style,
+						onClick: () => setAttributes( { panelHeadingClass: style, activeHeadingClass: style } ),
+					};
+				} else {
+					return {
+						subscript: style.charAt(1),
+						icon: svgHeading,
+						title: headingStyle,
+						isActive: attributes.panelHeadingClass === style,
+						onClick: () => setAttributes( { panelHeadingClass: style, activeHeadingClass: style } ),
+					};
+				}
+			};
+
+			return(
+				<Toolbar controls={ [ 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6', 'Paragraph' ].map( createClassControl ) } />
+			);
+		}
+
 		return [
 			<InspectorControls>
-				<SelectControl
-					label="Panel Style"
-					value={attributes.panelType}
-					options={[
-						{ label: 'Standard', value: 'default' },
-						{ label: 'Primary (BC Blue)', value: 'primary' },
-						{ label: 'Info (Light Blue)', value: 'info' },
-						{ label: 'Success (Green)', value: 'success' },
-						{ label: 'Warning (Yellow)', value: 'warning' },
-						{ label: 'Danger (Red)', value: 'danger' },
-					]}
-					onChange={(panelType) => { 
-						setAttributes({ panelType });
-					}}
-				/>
+				<Panel>
+					<PanelBody
+						title="Panel Style"
+						initialOpen={ true }
+					>
+						<PanelRow>
+							<SelectControl
+								label="Theme Style"
+								value={attributes.panelType}
+								options={[
+									{ label: 'Standard', value: 'default' },
+									{ label: 'Primary (BC Blue)', value: 'primary' },
+									{ label: 'Info (Light Blue)', value: 'info' },
+									{ label: 'Success (Green)', value: 'success' },
+									{ label: 'Warning (Yellow)', value: 'warning' },
+									{ label: 'Danger (Red)', value: 'danger' },
+								]}
+								onChange={(panelType) => { 
+									setAttributes({ panelType });
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<ToggleControl
+								label="Toggle Panel Heading"
+								checked={attributes.panelHeading}
+								onChange={(panelHeading) => setAttributes({ panelHeading })}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<ToggleControl
+								label="Toggle Panel Footer"
+								checked={attributes.panelFooter}
+								onChange={(panelFooter) => setAttributes({ panelFooter })}
+							/>
+						</PanelRow>
+					</PanelBody>
+				</Panel>
 
-				<ToggleControl
-					label="Toggle Panel Heading"
-					checked={attributes.panelHeading}
-					onChange={(panelHeading) => setAttributes({ panelHeading })}
-				/>
-					
-				<ToggleControl
-					label="Toggle Panel Footer"
-					checked={attributes.panelFooter}
-					onChange={(panelFooter) => setAttributes({ panelFooter })}
-				/>
+				{attributes.panelHeading == true ?
+					<Panel>
+						<PanelBody
+							title="Heading Style"
+							initialOpen={ true }
+						>
+							<PanelRow>
+								<HeadingStyleControl/>
+							</PanelRow>
+						</PanelBody>
+					</Panel>
+				: ''} 	
 			</InspectorControls>
 			,
 			<div className={className}>
@@ -151,7 +223,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 					{attributes.panelHeading == true ? 
 						<div className = "panel-heading">
 							<RichText
-								tagName = "div"
+								tagName = {attributes.panelHeadingClass}
 								formattingControls = {['bold', 'italic', 'link']}
 								placeholder = "Enter heading text..."
 								keepPlaceholderOnFocus = "true"
@@ -211,7 +283,8 @@ registerBlockType( 'mayflower-blocks/panel', {
 					attributes.panelHeadingText == null || attributes.panelHeadingText == '' ? '' :
 					<div className = "panel-heading">
 						<RichText.Content
-							tagName = "div"
+							tagName = {attributes.panelHeadingClass}
+							style = {{margin: '0'}}
 							value = {attributes.panelHeadingText}
 						/>
 					</div>
