@@ -13,9 +13,10 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { ServerSideRender, TextControl, CheckboxControl, Disabled, SelectControl } = wp.components;
+const { ServerSideRender, CheckboxControl, Disabled } = wp.components;
 const { InspectorControls } = wp.editor;
-const { Fragment, Component } = wp.element;
+const { Fragment } = wp.element;
+const { select } = wp.data;
 
 import ClassSubjectSelect from './ClassSubjectSelect';
 import ClassItemSelect from './ClassItemSelect';
@@ -43,9 +44,11 @@ registerBlockType( 'mayflower-blocks/course', {
 	attributes: {
 		subject: {
 			type: 'string',
+			default: 'select'
 		},
 		item: {
 			type: 'string',
+			default: 'select'
 		},
 		description: {
 			type: 'boolean',
@@ -83,7 +86,7 @@ registerBlockType( 'mayflower-blocks/course', {
 		]
 	},
 	
-	edit: function ({setAttributes, attributes, className, isSelected}) {
+	edit: function ({setAttributes, attributes, className, isSelected, clientId}) {
 		
 		// Update attributes from within children components
 		const handleSubjectUpdate = (newSubject) => {
@@ -94,7 +97,7 @@ registerBlockType( 'mayflower-blocks/course', {
 		}
 
 		let selectControls;
-		if (isSelected) {
+		if (isSelected || (select('core/editor').isBlockSelected(clientId) == false && (attributes.subject == 'select' || attributes.item == 'select'))) {
 			selectControls = (
 			<div class="controls">
 				<ClassSubjectSelect
@@ -110,21 +113,21 @@ registerBlockType( 'mayflower-blocks/course', {
 		}
 
 		let helpBox;
-		if (isSelected) {
-			if (attributes.subject == null || attributes.subject == 'select') {
+		if (isSelected || (select('core/editor').isBlockSelected(clientId) == false && (attributes.subject == 'select' || attributes.item == 'select'))) {
+			if (attributes.subject == 'select') {
 				helpBox = (
 					<p class="editor-only alert alert-info">
 						<strong>Notice:</strong> please select a subject to view courses.
 					</p>
 				);
-			} else if ( attributes.subject ) {
-				helpBox = (
-					<p class="editor-only alert alert-info">
-						<strong>Notice:</strong> please select a course if there are courses available.
-					</p>
-				);
-
-				if (attributes.item !== (null || 'select')) {
+			} else {
+				if (attributes.item == 'select') {
+					helpBox = (
+						<p class="editor-only alert alert-info">
+							<strong>Notice:</strong> please select a course if there are courses available.
+						</p>
+					);
+				} else {
 					helpBox = (
 						<span></span>
 					);
