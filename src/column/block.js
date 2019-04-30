@@ -1,5 +1,5 @@
 /**
- * BLOCK: Buttons
+ * BLOCK: Column
  *
  * Registering a basic block with Gutenberg.
  * Simple block, renders and saves the same content without any interactivity.
@@ -14,6 +14,7 @@ const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.b
 const { InspectorControls, InnerBlocks } = wp.editor;
 const { SelectControl, Button, Disabled } = wp.components;
 const { select, dispatch } = wp.data;
+const { Fragment } = wp.element;
 
 /**
  * Register: aa Gutenberg Block.
@@ -28,7 +29,22 @@ const { select, dispatch } = wp.data;
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
+const { createHigherOrderComponent } = wp.compose;
 
+// Creates a higher order component(HOC) to properly wrap the column block with the
+// corresponding bootstrap and CSS classes and prevent block stacking
+const mayflowerBlocksColumn = createHigherOrderComponent( ( BlockListBlock ) => {
+	return ( props ) => {
+		if (props.attributes.gridColumnClass && props.attributes.gridColumnSize){
+			return <BlockListBlock { ...props } className={`col-${props.attributes.gridColumnClass}-${props.attributes.gridColumnSize} ${props.attributes.selected == true && 'mfbc-is-selected'}`}/>;
+		} else {
+			return <BlockListBlock { ...props } />
+		}
+	};
+}, 'mayflowerBlocksColumn' );
+
+// Hook the HOC to replace the wrapping div for column blocks
+wp.hooks.addFilter( 'editor.BlockListBlock', 'mayflower-blocks/column', mayflowerBlocksColumn );
 
 registerBlockType('mayflower-blocks/column', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
@@ -164,8 +180,10 @@ registerBlockType('mayflower-blocks/column', {
 		 * On click it will render the column to full-width
 		 */
 		const handleSelectColumnBlock = () => {
-			setAttributes({ selected: true });
-
+			console.log('%cSelected', 'color:purple');
+			//setAttributes({ selected: true });
+			dispatch('core/editor').updateBlockAttributes(currentBlockClientId, { selected: true });
+			
 			parentBlockChildren = parentBlockData.innerBlocks;
 
 			if (Array.isArray(parentBlockChildren)) {
@@ -242,7 +260,7 @@ registerBlockType('mayflower-blocks/column', {
 					}}
 				/>
 				{attributes.selected == true ?
-					<Button isDefault onClick={handleCloseColumnBlock} Disabled>
+					<Button isDefault onClick={handleCloseColumnBlock}>
 						Save &amp; Close Column
 					</Button>
 					:
@@ -257,22 +275,22 @@ registerBlockType('mayflower-blocks/column', {
 			,
 			<div className={className}>
 				{ attributes.gridColumnClass &&
-					<div class={`column ${attributes.visible == true ? 'visible' : 'invisible'} col-${attributes.gridColumnClass}-${attributes.gridColumnSize} ${attributes.selected == true && 'is-selected'}`}>
+					<div class={`column ${attributes.visible == true ? 'visible' : 'invisible'}`}>
 						{attributes.selected !== true ?
 							<Disabled>
 								<InnerBlocks />
 							</Disabled>
 							: <InnerBlocks />}
-							<div className="rollover-column">
-								<div className="rollover-menu">
-									<Button isDefault onClick={handleSelectColumnBlock}>
-										<span class="dashicons dashicons-edit"></span> <span class={`${attributes.gridColumnSize == 1 && attributes.gridColumnSize !== 12 && 'rollover-menu-text-hidden'}`}>Edit Column</span>
-									</Button>
-									<Button isDefault onClick={handleRemoveColumnBlock}>
-										<span class="dashicons dashicons-trash"></span> <span class={`${attributes.gridColumnSize == 1 && attributes.gridColumnSize !== 12 && 'rollover-menu-text-hidden'}`}>Remove Column</span>
-									</Button>
-								</div>
+						<div class="rollover-column">
+							<div class="rollover-menu">
+								<Button isDefault onClick={handleSelectColumnBlock}>
+									<span class="dashicons dashicons-edit"></span> <span class={`${attributes.gridColumnSize == 1 && attributes.gridColumnSize !== 12 && 'rollover-menu-text-hidden'}`}>Edit Column</span>
+								</Button>
+								<Button isDefault onClick={handleRemoveColumnBlock}>
+									<span class="dashicons dashicons-trash"></span> <span class={`${attributes.gridColumnSize == 1 && attributes.gridColumnSize !== 12 && 'rollover-menu-text-hidden'}`}>Remove Column</span>
+								</Button>
 							</div>
+						</div>
 					</div>
 				}
 			</div>
@@ -310,13 +328,8 @@ registerBlockType('mayflower-blocks/column', {
 					gridColumnText: {
 						type: 'string',
 						shortcode: (attrs, { content }) => {
-							console.log(content);
 							let rx = /(?<=\[\s*\s*column.*\])(.*)(?=\[\s*\/\s*column\s*\])/gmi;
 							let filtered = content.match(rx);
-
-							console.log('gridColumnText');
-							console.log(filtered);
-
 							// Return content at array[0] if there was a match, otherwise return blank string
 							return Array.isArray(filtered) ? filtered[0] : '';
 						},
@@ -327,11 +340,7 @@ registerBlockType('mayflower-blocks/column', {
 						type: 'string',
 						shortcode: (attrs, { content }) => {
 							let columnRx = /(\w{2})(?=\s*=)/gmi;
-
 							let filtered = content.match(columnRx);
-							console.log('gridColumnClass');
-							console.log(filtered);
-
 							return Array.isArray(filtered) ? filtered[0] : '';
 						},
 					},

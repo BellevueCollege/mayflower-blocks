@@ -6,74 +6,140 @@
  */
 
 .wp-block-mayflower-blocks-column {
+	// .column {
+	//     //position: relative;
 
-    .column {
-        position: relative;
+	//     &:hover .rollover-column {
+	//         display: block;
+	//     }
 
-        &:hover .rollover-column {
-            display: block;
-        }
-        
-        &:hover.is-selected .rollover-column {
-            display: none;
-        }
+	//     &:hover.is-selected .rollover-column {
+	//         display: none;
+	//     }
 
-        &.is-selected {
-            width: 100%;
-            float: none;
-        }
+	//     &.is-selected {
+	//         width: 100%;
+	//         float: none;
+	//     }
 
-        &.visible {
-            display: block;
-        }
-    
-        &.invisible {
-            display: none;
-        }
-    }
-    
-    .rollover-column {
-        display: none;
-        position: absolute;
-        background-color: #fff;
-        border: 1px dashed #8d96a0;
-        height: 100%;
-        width: 100%;
-        top: 0;
-        left: 0;
-        text-align: center;
+	//     &.visible {
+	//         display: block;
+	//     }
 
-        .rollover-menu {
-            display: flex;
-            flex-wrap: wrap;
-            flex-direction: column;
+	//     &.invisible {
+	//         display: none;
+	//     }
+	// }
 
-            button {
-                word-wrap: break-word;
-                white-space: normal;
-                height: auto;
-                padding: .5em;
-                flex: 1;
-                align-items: center;
-                justify-content: center;
-            }
+	// .rollover-column {
+	//     display: none;
+	//     position: absolute;
+	//     background-color: #ff0000;
+	//     //border: 1px dashed #8d96a0;
+	//     height: 100%; //FIX TODO
+	//     width: 100%;
+	//     top: 0;
+	//     left: 0;
+	//     text-align: center;
 
-            button:first-child {
-                margin-bottom: 1em;
-            }
+	//     .rollover-menu {
+	//         display: flex;
+	//         flex-wrap: wrap;
+	//         //flex-direction: column;
 
-            .rollover-menu-text-hidden {
-                display: none;
-            }
-        }
-    }
+	//         button {
+	//             word-wrap: break-word;
+	//             white-space: normal;
+	//             height: auto;
+	//             padding: .5em;
+	//             flex: 1;
+	//             align-items: center;
+	//             justify-content: center;
+	//         }
 
+	//         button:first-child {
+	//         //    margin-bottom: 1em;
+	//         }
 
+	//         .rollover-menu-text-hidden {
+	//             display: none;
+	//         }
+	//     }
+	// }
 }
 
 [data-type="mayflower-blocks/column"] {
-    //don't display insertion points on column
-    .editor-block-list__insertion-point {
-        display: none;
-    }
+	//don't display insertion points on column
+	.editor-block-list__insertion-point {
+		display: none;
+	}
+
+	&.column {
+		position: relative;
+	}
+
+	&:hover .rollover-column {
+		display: block;
+	}
+
+	&:hover.is-selected .rollover-column {
+		display: none;
+	}
+
+	&.mfbc-is-selected {
+		width: 100%;
+		float: none;
+	}
+
+	&.visible {
+		display: block;
+	}
+
+	&.invisible {
+		display: none;
+	}
+
+	// .rollover-column {
+	// 	display: none;
+	// 	position: absolute;
+	// 	background-color: #ff0000;
+	// 	//border: 1px dashed #8d96a0;
+	// 	height: 100%; //FIX TODO
+	// 	width: 100%;
+	// 	top: 0;
+	// 	left: 0;
+	// 	text-align: center;
+
+	.rollover-menu {
+		display: flex;
+		flex-wrap: wrap;
+		//flex-direction: column;
+
+		button {
+			word-wrap: break-word;
+			white-space: normal;
+			height: auto;
+			padding: 0.5em;
+			flex: 1;
+			align-items: center;
+			justify-content: center;
+		}
+
+		button:first-child {
+			//    margin-bottom: 1em;
+		}
+
+		.rollover-menu-text-hidden {
+			display: none;
+		}
+	}
+	//}
+}
+
+.editor-block-list__block-edit {
+	//padding: 0;
+}
+
+.editor-block-list__layout {
+	//padding: 0;
 }

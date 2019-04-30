@@ -15,7 +15,7 @@ const { InspectorControls, InnerBlocks } = wp.editor;
 const { Button } = wp.components;
 const { select, dispatch } = wp.data;
 const { createBlock } = wp.blocks;
-const { Fragment } = wp.element
+const { Fragment } = wp.element;
 
 /**
  * Register: aa Gutenberg Block.
@@ -114,6 +114,7 @@ registerBlockType('mayflower-blocks/row', {
 					}
 
 				//Creates a new block and saves a block object to columnBlock
+				//const paragraphBlock = createBlock('core/paragraph', { content: `Child: ${attributes.childColumns + 1}` });
 				const columnBlock = createBlock('mayflower-blocks/column', { gridColumnClass: 'md', gridColumnSize: gridColumnSize, selected: false, siblingColumns: attributes.childColumns + 1 });
 
 				// Insert columnBlock to the row block appending to the last index of columns
@@ -151,13 +152,13 @@ registerBlockType('mayflower-blocks/row', {
 			currentBlockChildren = currentBlockData.innerBlocks;
 
 			if (Array.isArray(currentBlockChildren)) {
-				// If each child is the currently selected child, then set visibility to true,
-				// else set width to null and selected to false
+				// If a child is the currently selected child, then set visibility to true,
+				// else set selected to false
 				currentBlockChildren.forEach(child => {
 					if (child.attributes.selected == false) {
 						dispatch('core/editor').updateBlockAttributes(child.clientId, { visible: true });
 					} else {
-						dispatch('core/editor').updateBlockAttributes(child.clientId, { width: '', selected: false });
+						dispatch('core/editor').updateBlockAttributes(child.clientId, { selected: false });
 						setAttributes({ childIsSelected: false });
 					}
 				});
@@ -229,7 +230,7 @@ registerBlockType('mayflower-blocks/row', {
 						allowedBlocks={['mayflower-blocks/column']}
 					/>
 				</div>
-				<div className="clearfix"></div>
+				{/* <div className="clearfix"></div> */}
 
 				{isSelected && attributes.childIsSelected == false ? // If row block is selected and a child is not selected, show RowMenu
 					RowMenu
