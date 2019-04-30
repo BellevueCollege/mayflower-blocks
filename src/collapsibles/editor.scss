@@ -1,0 +1,27 @@
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
+
+[data-type="mayflower-blocks/collapsibles"] {
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+
+	p.block-name {
+		margin: 0;
+		padding: .1em .5em;
+		position: absolute;
+		top: -2.75em;
+		left: -1.25em;
+
+		border-top-left-radius: 5px;
+		background: #999;
+		font-size: .75rem;
+		color: #fff;
+		font-family: $font-body;
+	}
+	
+}

@@ -12,4 +12,13 @@
 import './child-pages/block.js';
 import './staff/block.js';
 import './course/block.js';
+
+// Bootstrap Blocks
+import './alert/block.js';
 import './button/block.js';
+import './collapse/block.js';
+import './collapsibles/block.js';
+import './jumbotron/block.js';
+import './lead/block.js';
+import './panel/block.js';
+import './well/block.js';
