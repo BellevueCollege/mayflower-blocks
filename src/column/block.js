@@ -11,10 +11,10 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { InspectorControls, InnerBlocks } = wp.editor;
-const { SelectControl, Button, Disabled } = wp.components;
+const { InspectorControls, InnerBlocks, BlockControls } = wp.editor;
+const { SelectControl, Button, Disabled, Toolbar, SVG, Path, G} = wp.components;
 const { select, dispatch } = wp.data;
-const { Fragment } = wp.element;
+const { createHigherOrderComponent } = wp.compose;
 
 /**
  * Register: aa Gutenberg Block.
@@ -29,7 +29,6 @@ const { Fragment } = wp.element;
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-const { createHigherOrderComponent } = wp.compose;
 
 // Creates a higher order component(HOC) to properly wrap the column block with the
 // corresponding bootstrap and CSS classes and prevent block stacking
@@ -38,7 +37,7 @@ const mayflowerBlocksColumn = createHigherOrderComponent( ( BlockListBlock ) => 
 		if (props.attributes.gridColumnClass && props.attributes.gridColumnSize){
 			return <BlockListBlock { ...props } className={`col-${props.attributes.gridColumnClass}-${props.attributes.gridColumnSize} ${props.attributes.selected == true && 'mfbc-is-selected'}`}/>;
 		} else {
-			return <BlockListBlock { ...props } />
+			return <BlockListBlock { ...props } />;
 		}
 	};
 }, 'mayflowerBlocksColumn' );
@@ -73,16 +72,40 @@ registerBlockType('mayflower-blocks/column', {
 		siblingColumns: {
 			type: 'number',
 			default: 0
-		}
+		},
 	},
 
-	edit: function ({ className, attributes, setAttributes, isSelected }, props) {
+	edit: function ({ className, attributes, setAttributes, clientId }) {
 
 		//Instantiate Column Data
 		const currentBlockClientId = select('core/editor').getSelectedBlockClientId(); // return this block's client id
 		const parentBlockClientId = select('core/editor').getBlockRootClientId(currentBlockClientId); //get parent's client id
 		const parentBlockData = select('core/editor').getBlock(parentBlockClientId); // get parent's data; includes children and attributes
 		let parentBlockChildren;
+
+		/**
+		 * ColumnToolBarControl returns a Toolbar component with edit and remove buttons to edit the column or remove the column.
+		 * 
+		 * @return Toolbar component with column control buttons
+		 * */
+		const ColumnToolBarControl = () => {
+			const controls = [
+				{
+					icon: <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none" width="20" height="20"/><G><Path d="M13.89 3.39l2.71 2.72c.46.46.42 1.24.03 1.64l-8.01 8.02-5.56 1.16 1.16-5.58s7.6-7.63 7.99-8.03c.39-.39 1.22-.39 1.68.07zm-2.73 2.79l-5.59 5.61 1.11 1.11 5.54-5.65zm-2.97 8.23l5.58-5.6-1.07-1.08-5.59 5.6z"/></G></SVG>,
+					title: 'Edit',
+					onClick: () => handleSelectColumnBlock()
+				},
+				{
+					icon: <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none" width="20" height="20"/><G><Path d="M12 4h3c.6 0 1 .4 1 1v1H3V5c0-.6.5-1 1-1h3c.2-1.1 1.3-2 2.5-2s2.3.9 2.5 2zM8 4h3c-.2-.6-.9-1-1.5-1S8.2 3.4 8 4zM4 7h11l-.9 10.1c0 .5-.5.9-1 .9H5.9c-.5 0-.9-.4-1-.9L4 7z"/></G></SVG>,
+					title: 'Remove',
+					onClick: () => handleRemoveColumnBlock()
+				},
+			];
+
+			return(
+				<Toolbar controls = { controls } />
+			);
+		}
 
 		/**
 		 * Removes the column block
@@ -273,6 +296,11 @@ registerBlockType('mayflower-blocks/column', {
 				</Button>
 			</InspectorControls>
 			,
+			attributes.selected == false ? 
+			<BlockControls>
+				<ColumnToolBarControl/>
+			</BlockControls> : ''
+			,
 			<div className={className}>
 				{ attributes.gridColumnClass &&
 					<div class={`column ${attributes.visible == true ? 'visible' : 'invisible'}`}>
@@ -281,16 +309,6 @@ registerBlockType('mayflower-blocks/column', {
 								<InnerBlocks />
 							</Disabled>
 							: <InnerBlocks />}
-						<div class="rollover-column">
-							<div class="rollover-menu">
-								<Button isDefault onClick={handleSelectColumnBlock}>
-									<span class="dashicons dashicons-edit"></span> <span class={`${attributes.gridColumnSize == 1 && attributes.gridColumnSize !== 12 && 'rollover-menu-text-hidden'}`}>Edit Column</span>
-								</Button>
-								<Button isDefault onClick={handleRemoveColumnBlock}>
-									<span class="dashicons dashicons-trash"></span> <span class={`${attributes.gridColumnSize == 1 && attributes.gridColumnSize !== 12 && 'rollover-menu-text-hidden'}`}>Remove Column</span>
-								</Button>
-							</div>
-						</div>
 					</div>
 				}
 			</div>

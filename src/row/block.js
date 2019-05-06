@@ -1,5 +1,5 @@
 /**
- * BLOCK: Buttons
+ * BLOCK: Row
  *
  * Registering a basic block with Gutenberg.
  * Simple block, renders and saves the same content without any interactivity.
@@ -114,8 +114,9 @@ registerBlockType('mayflower-blocks/row', {
 					}
 
 				//Creates a new block and saves a block object to columnBlock
-				//const paragraphBlock = createBlock('core/paragraph', { content: `Child: ${attributes.childColumns + 1}` });
-				const columnBlock = createBlock('mayflower-blocks/column', { gridColumnClass: 'md', gridColumnSize: gridColumnSize, selected: false, siblingColumns: attributes.childColumns + 1 });
+				const paragraphBlock = createBlock('core/paragraph', { content: '', placeholder: 'Select a column block to start editing or remove the column.' });
+				//const paragraphBlock = createBlock('core/paragraph', { content: `Child: ${attributes.childColumns + 1}`, placeholder: 'Select a column block to start editing or remove the column.' });
+				const columnBlock = createBlock('mayflower-blocks/column', { gridColumnClass: 'md', gridColumnSize: gridColumnSize, selected: false, siblingColumns: attributes.childColumns + 1 }, [paragraphBlock]);
 
 				// Insert columnBlock to the row block appending to the last index of columns
 				dispatch('core/editor').insertBlock(columnBlock, currentBlockData.innerBlocks.length, currentBlockClientId);
