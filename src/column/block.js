@@ -12,7 +12,7 @@ import './editor.scss';
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { InspectorControls, InnerBlocks, BlockControls } = wp.editor;
-const { SelectControl, Button, Disabled, Toolbar, SVG, Path, G} = wp.components;
+const { SelectControl, Button, Disabled, Toolbar, Panel, PanelBody, PanelRow, SVG, Path, G} = wp.components;
 const { select, dispatch } = wp.data;
 const { createHigherOrderComponent } = wp.compose;
 
@@ -35,7 +35,7 @@ const { createHigherOrderComponent } = wp.compose;
 const mayflowerBlocksColumn = createHigherOrderComponent( ( BlockListBlock ) => {
 	return ( props ) => {
 		if (props.attributes.gridColumnClass && props.attributes.gridColumnSize){
-			return <BlockListBlock { ...props } className={`col-${props.attributes.gridColumnClass}-${props.attributes.gridColumnSize} ${props.attributes.selected == true && 'mfbc-is-selected'}`}/>;
+			return <BlockListBlock { ...props } className={`col-${props.attributes.gridColumnClass}-${props.attributes.gridColumnSize} ${props.attributes.isEditing == true ? 'mbcolumn-is-editing' : ''} ${props.attributes.isVisible == false ? 'mbcolumn-is-invisible' : ''}`}/>;
 		} else {
 			return <BlockListBlock { ...props } />;
 		}
@@ -61,11 +61,11 @@ registerBlockType('mayflower-blocks/column', {
 			type: 'number',
 			default: 4
 		},
-		selected: {
+		isEditing: {
 			type: 'boolean',
 			default: false
 		},
-		visible: {
+		isVisible: {
 			type: 'boolean',
 			default: true
 		},
@@ -93,7 +93,7 @@ registerBlockType('mayflower-blocks/column', {
 				{
 					icon: <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none" width="20" height="20"/><G><Path d="M13.89 3.39l2.71 2.72c.46.46.42 1.24.03 1.64l-8.01 8.02-5.56 1.16 1.16-5.58s7.6-7.63 7.99-8.03c.39-.39 1.22-.39 1.68.07zm-2.73 2.79l-5.59 5.61 1.11 1.11 5.54-5.65zm-2.97 8.23l5.58-5.6-1.07-1.08-5.59 5.6z"/></G></SVG>,
 					title: 'Edit',
-					onClick: () => handleSelectColumnBlock()
+					onClick: () => handleEditColumnBlock()
 				},
 				{
 					icon: <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none" width="20" height="20"/><G><Path d="M12 4h3c.6 0 1 .4 1 1v1H3V5c0-.6.5-1 1-1h3c.2-1.1 1.3-2 2.5-2s2.3.9 2.5 2zM8 4h3c-.2-.6-.9-1-1.5-1S8.2 3.4 8 4zM4 7h11l-.9 10.1c0 .5-.5.9-1 .9H5.9c-.5 0-.9-.4-1-.9L4 7z"/></G></SVG>,
@@ -190,22 +190,20 @@ registerBlockType('mayflower-blocks/column', {
 				});
 			}
 
-			//If a column is removed while selected, also close the column
-			if (attributes.selected == true) {
+			//If a column is removed while editing, also close the column
+			if (attributes.isEditing == true) {
 				handleCloseColumnBlock();
 			}
 		}
 
 		/**
-		 * Selects a column block
+		 * Selects a column block to edit content
 		 *
-		 * When a column block gets selected, the function hides all sibling columns
-		 * On click it will render the column to full-width
+		 * When a column block gets selected for editing, the function hides all sibling columns.
+		 * On click it will render the column to full-width.
 		 */
-		const handleSelectColumnBlock = () => {
-			console.log('%cSelected', 'color:purple');
-			//setAttributes({ selected: true });
-			dispatch('core/editor').updateBlockAttributes(currentBlockClientId, { selected: true });
+		const handleEditColumnBlock = () => {
+			setAttributes({ isEditing: true });
 			
 			parentBlockChildren = parentBlockData.innerBlocks;
 
@@ -213,23 +211,23 @@ registerBlockType('mayflower-blocks/column', {
 				// If each sibling is not the current child, then set visibility to false
 				parentBlockChildren.forEach(sibling => {
 					if (sibling.clientId != currentBlockClientId) {
-						dispatch('core/editor').updateBlockAttributes(sibling.clientId, { visible: false });
+						dispatch('core/editor').updateBlockAttributes(sibling.clientId, { isVisible: false });
 					}
 				});
 			}
 
-			// Tell parent a child is selected
-			dispatch('core/editor').updateBlockAttributes(parentBlockClientId, { childIsSelected: true });
+			// Tell parent a child is selected for editing
+			dispatch('core/editor').updateBlockAttributes(parentBlockClientId, { childIsEditing: true });
 		};
 
 		/**
-		 * Closes a column block when a column block is selected
+		 * Closes a column block when a column block is being edited
 		 *
 		 * Checks for a selected column block from the row block's innerblocks. If a column(child) was not selected, it updates the column block's attributes
-		 * to visible and if selected it updates selected to false.
+		 * isVisible to true and if selected it updates isEditing to false.
 		 */
 		const handleCloseColumnBlock = () => {
-			setAttributes({ selected: false });
+			setAttributes({ isEditing: false });
 
 			parentBlockChildren = parentBlockData.innerBlocks;
 
@@ -237,79 +235,92 @@ registerBlockType('mayflower-blocks/column', {
 				// If each sibling is not the current child, then set visibility to true
 				parentBlockChildren.forEach(sibling => {
 					if (sibling.clientId != currentBlockClientId) {
-						dispatch('core/editor').updateBlockAttributes(sibling.clientId, { visible: true });
+						dispatch('core/editor').updateBlockAttributes(sibling.clientId, { isVisible: true });
 					}
 				});
 			}
 
 			// tell parent child is no longer selected
-			dispatch('core/editor').updateBlockAttributes(parentBlockClientId, { childIsSelected: false });
+			dispatch('core/editor').updateBlockAttributes(parentBlockClientId, { childIsEditing: false });
 		}
 
 		return [
 			<InspectorControls>
-				<SelectControl
-					label="Column Class"
-					value={attributes.gridColumnClass}
-					options={[
-						{ label: 'X-Small (XS Mobile)', value: 'xs' },
-						{ label: 'Small (Mobile)', value: 'sm' },
-						{ label: 'Medium (Tablet)', value: 'md' },
-						{ label: 'Large (Desktop)', value: 'lg' },
-					]}
-					onChange={(gridColumnClass) => {
-						setAttributes({ gridColumnClass });
-					}}
-				/>
-				<SelectControl
-					label="Column Size"
-					value={attributes.gridColumnSize}
-					options={[
-						{ label: '1', value: 1 },
-						{ label: '2', value: 2 },
-						{ label: '3', value: 3 },
-						{ label: '4', value: 4 },
-						{ label: '5', value: 5 },
-						{ label: '6', value: 6 },
-						{ label: '7', value: 7 },
-						{ label: '8', value: 8 },
-						{ label: '9', value: 9 },
-						{ label: '10', value: 10 },
-						{ label: '11', value: 11 },
-						{ label: '12', value: 12 },
-					]}
-					onChange={(gridColumnSize) => {
-						setAttributes({ gridColumnSize });
-					}}
-				/>
-				{attributes.selected == true ?
-					<Button isDefault onClick={handleCloseColumnBlock}>
-						Save &amp; Close Column
-					</Button>
-					:
-					<Button isDefault onClick={handleSelectColumnBlock}>
-						Edit Column
-					</Button>
-				}
-				<Button isDefault onClick={handleRemoveColumnBlock}>
-					Remove Column
-				</Button>
+				<Panel> 
+					<PanelBody
+						title="Column Controls"
+						opened={ true }
+					>
+						<SelectControl
+							label="Column Class"
+							value={attributes.gridColumnClass}
+							options={[
+								{ label: 'X-Small (XS Mobile)', value: 'xs' },
+								{ label: 'Small (Mobile)', value: 'sm' },
+								{ label: 'Medium (Tablet)', value: 'md' },
+								{ label: 'Large (Desktop)', value: 'lg' },
+							]}
+							onChange={(gridColumnClass) => {
+								setAttributes({ gridColumnClass });
+							}}
+						/>
+
+						<SelectControl
+							label="Column Size"
+							value={attributes.gridColumnSize}
+							options={[
+								{ label: '1', value: 1 },
+								{ label: '2', value: 2 },
+								{ label: '3', value: 3 },
+								{ label: '4', value: 4 },
+								{ label: '5', value: 5 },
+								{ label: '6', value: 6 },
+								{ label: '7', value: 7 },
+								{ label: '8', value: 8 },
+								{ label: '9', value: 9 },
+								{ label: '10', value: 10 },
+								{ label: '11', value: 11 },
+								{ label: '12', value: 12 },
+							]}
+							onChange={(gridColumnSize) => {
+								setAttributes({ gridColumnSize });
+							}}
+						/>
+
+						{attributes.isEditing == true ?
+							<PanelRow>
+								<Button isDefault onClick={handleCloseColumnBlock}>
+									Save &amp; Close Column
+								</Button>
+							</PanelRow>
+							:
+							<PanelRow>
+								<Button isDefault onClick={handleEditColumnBlock}>
+									Edit Column
+								</Button>
+							</PanelRow>
+						}
+						<PanelRow>
+							<Button isDefault onClick={handleRemoveColumnBlock}>
+								Remove Column
+							</Button>
+						</PanelRow>
+					</PanelBody>
+				</Panel>
 			</InspectorControls>
 			,
-			attributes.selected == false ? 
+			attributes.isEditing == false ? 
 			<BlockControls>
 				<ColumnToolBarControl/>
 			</BlockControls> : ''
 			,
 			<div className={className}>
 				{ attributes.gridColumnClass &&
-					<div class={`column ${attributes.visible == true ? 'visible' : 'invisible'}`}>
-						{attributes.selected !== true ?
-							<Disabled>
-								<InnerBlocks />
-							</Disabled>
-							: <InnerBlocks />}
-					</div>
+					attributes.isEditing !== true ?
+						<Disabled>
+							<InnerBlocks />
+						</Disabled>
+					: <InnerBlocks />
 				}
 			</div>
 		]

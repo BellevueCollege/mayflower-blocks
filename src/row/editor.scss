@@ -5,17 +5,22 @@
  * which makes it higher in priority.
  */
 
+//remove unecessary border on Panel
+.components-panel {
+    border: 0;
+}
+
  .wp-block[data-type="mayflower-blocks/row"] div[class^="wp-block-"]{
 
     .row {
         margin: 0 15px;
-    }
-
-    & .row .block-list-appender {
-        clear: both;
-        margin: 0 3rem;
-        padding: 1em 0;
-        display: none;
+        
+        .block-list-appender {
+            clear: both;
+            margin: 0 3rem;
+            padding: 1em 0;
+            display: none;
+        }
     }
 
     .row-menu {
@@ -34,6 +39,10 @@
             span {
                 margin-left: 0.25em;
                 line-height: 1.25em;
+
+                &.dashicons.dashicons-trash{
+                    margin-top: -2px;
+                }
             }
         }
 

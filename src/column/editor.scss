@@ -23,20 +23,12 @@
             display: none;
         }
 
-        &.column {
-            position: relative;
-        }
-
-        &.mfbc-is-selected {
+        &.mbcolumn-is-editing {
             width: 100%;
             float: none;
         }
-
-        &.visible {
-            display: block;
-        }
-
-        &.invisible {
+        
+        &.mbcolumn-is-invisible {
             display: none;
         }
     }

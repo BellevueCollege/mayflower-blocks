@@ -12,10 +12,9 @@ import './editor.scss';
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { InspectorControls, InnerBlocks } = wp.editor;
-const { Button } = wp.components;
+const { Button, Panel, PanelBody, PanelRow, SVG, Path, G } = wp.components;
 const { select, dispatch } = wp.data;
 const { createBlock } = wp.blocks;
-const { Fragment } = wp.element;
 
 /**
  * Register: aa Gutenberg Block.
@@ -39,7 +38,7 @@ registerBlockType('mayflower-blocks/row', {
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 
 	attributes: {
-		childIsSelected: {
+		childIsEditing: {
 			type: 'boolean',
 			default: false,
 		},
@@ -115,8 +114,7 @@ registerBlockType('mayflower-blocks/row', {
 
 				//Creates a new block and saves a block object to columnBlock
 				const paragraphBlock = createBlock('core/paragraph', { content: '', placeholder: 'Select a column block to start editing or remove the column.' });
-				//const paragraphBlock = createBlock('core/paragraph', { content: `Child: ${attributes.childColumns + 1}`, placeholder: 'Select a column block to start editing or remove the column.' });
-				const columnBlock = createBlock('mayflower-blocks/column', { gridColumnClass: 'md', gridColumnSize: gridColumnSize, selected: false, siblingColumns: attributes.childColumns + 1 }, [paragraphBlock]);
+				const columnBlock = createBlock('mayflower-blocks/column', { gridColumnClass: 'md', gridColumnSize: gridColumnSize, siblingColumns: attributes.childColumns + 1 }, [paragraphBlock]);
 
 				// Insert columnBlock to the row block appending to the last index of columns
 				dispatch('core/editor').insertBlock(columnBlock, currentBlockData.innerBlocks.length, currentBlockClientId);
@@ -156,11 +154,11 @@ registerBlockType('mayflower-blocks/row', {
 				// If a child is the currently selected child, then set visibility to true,
 				// else set selected to false
 				currentBlockChildren.forEach(child => {
-					if (child.attributes.selected == false) {
-						dispatch('core/editor').updateBlockAttributes(child.clientId, { visible: true });
+					if (child.attributes.isEditing == false) {
+						dispatch('core/editor').updateBlockAttributes(child.clientId, { isVisible: true });
 					} else {
-						dispatch('core/editor').updateBlockAttributes(child.clientId, { selected: false });
-						setAttributes({ childIsSelected: false });
+						dispatch('core/editor').updateBlockAttributes(child.clientId, { isEditing: false });
+						setAttributes({ childIsEditing: false });
 					}
 				});
 			}
@@ -193,12 +191,12 @@ registerBlockType('mayflower-blocks/row', {
 			<div class="row-menu">
 				{attributes.childColumns < 12 ?
 					<Button className="row-menu-button" onClick={handleAddColumnBlock}>
-						<svg aria-hidden="true" role="img" focusable="false" class="dashicon dashicons-insert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M10 1c-5 0-9 4-9 9s4 9 9 9 9-4 9-9-4-9-9-9zm0 16c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7-3.1 7-7 7zm1-11H9v3H6v2h3v3h2v-3h3V9h-3V6z"></path></svg>
+						<SVG class="dashicon dashicons-insert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><Path d="M10 1c-5 0-9 4-9 9s4 9 9 9 9-4 9-9-4-9-9-9zm0 16c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7-3.1 7-7 7zm1-11H9v3H6v2h3v3h2v-3h3V9h-3V6z"></Path></SVG>
 						<span>Add Column</span>
 					</Button>
 					: ''}
 				<Button className="row-menu-button" onClick={handleAddRowBlock}>
-					<svg aria-hidden="true" role="img" focusable="false" class="dashicon dashicons-insert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M10 1c-5 0-9 4-9 9s4 9 9 9 9-4 9-9-4-9-9-9zm0 16c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7-3.1 7-7 7zm1-11H9v3H6v2h3v3h2v-3h3V9h-3V6z"></path></svg>
+					<SVG class="dashicon dashicons-insert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><Path d="M10 1c-5 0-9 4-9 9s4 9 9 9 9-4 9-9-4-9-9-9zm0 16c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7-3.1 7-7 7zm1-11H9v3H6v2h3v3h2v-3h3V9h-3V6z"></Path></SVG>
 					<span>Add Row</span>
 				</Button>
 				<Button className="row-menu-button" onClick={handleRemoveRowBlock}>
@@ -210,18 +208,31 @@ registerBlockType('mayflower-blocks/row', {
 
 		return [
 			<InspectorControls>
-				{attributes.childIsSelected == false ?
-					<Fragment>
-						<Button isDefault onClick={handleAddColumnBlock}>
-							Add Column
-						</Button>
-						<Button isDefault onClick={handleAddRowBlock}>
-							Add Row
-						</Button>
-						<Button isDefault onClick={handleRemoveRowBlock}>
-							Remove Row
-						</Button>
-					</Fragment>
+				{attributes.childIsEditing == false ?
+					<Panel> 
+						<PanelBody
+							title="Row Controls"
+							opened={ true }
+						>
+							{ attributes.childColumns < 12 ?
+								<PanelRow>
+									<Button isDefault onClick={handleAddColumnBlock}>
+										Add Column
+									</Button> 
+								</PanelRow>
+							: '' }
+							<PanelRow>
+								<Button isDefault onClick={handleAddRowBlock}>
+									Add Row
+								</Button>
+							</PanelRow>
+							<PanelRow>
+								<Button isDefault onClick={handleRemoveRowBlock}>
+									Remove Row
+								</Button>
+							</PanelRow>
+						</PanelBody>
+					</Panel>
 				: ''}
 			</InspectorControls>
 			,
@@ -233,13 +244,13 @@ registerBlockType('mayflower-blocks/row', {
 				</div>
 				{/* <div className="clearfix"></div> */}
 
-				{isSelected && attributes.childIsSelected == false ? // If row block is selected and a child is not selected, show RowMenu
+				{isSelected && attributes.childIsEditing == false ? // If row block is selected and a child is not selected, show RowMenu
 					RowMenu
 				: // Else, always show RowMenu if the row block is not selected and there are no child columns
 					attributes.childColumns == 0 && RowMenu
 				}
 
-				{attributes.childIsSelected == true ? // If a child is selected, show the Save & Close Button
+				{attributes.childIsEditing == true ? // If a child is selected, show the Save & Close Button
 					<div class="row-menu">
 						<Button className="row-menu-button" onClick={handleCloseColumnBlock}>
 							<span class="dashicons dashicons-dismiss"></span>
