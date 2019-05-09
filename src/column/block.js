@@ -141,24 +141,6 @@ registerBlockType('mayflower-blocks/column', {
 					case 6:
 						gridColumnSize = 2;
 						break;
-					case 7:
-						gridColumnSize = 6;
-						break;
-					case 8:
-						gridColumnSize = 5;
-						break;
-					case 9:
-						gridColumnSize = 4;
-						break;
-					case 10:
-						gridColumnSize = 3;
-						break;
-					case 11:
-						gridColumnSize = 2;
-						break;
-					case 12:
-						gridColumnSize = 1;
-						break;
 					default:
 						gridColumnSize = 4;
 						break;
@@ -168,23 +150,16 @@ registerBlockType('mayflower-blocks/column', {
 				parentBlockChildren.forEach(sibling => {
 					//update all siblings that a sibling has been removed
 					dispatch('core/editor').updateBlockAttributes(sibling.clientId, { siblingColumns: attributes.siblingColumns - 1 });
+					//update all siblings with the new column size
+					dispatch('core/editor').updateBlockAttributes(sibling.clientId, { gridColumnSize: gridColumnSize });
 
-					if ((attributes.siblingColumns - 1) >= 7) {
-						dispatch('core/editor').updateBlockAttributes(sibling.clientId, { gridColumnSize: 1 });
+					//do a check on siblingColumns if there are 5 to correctly add the proper sized last column
+					if ((attributes.siblingColumns - 1) == 5) {
+						//keep the sibling size the same
+						dispatch('core/editor').updateBlockAttributes(sibling.clientId, { gridColumnSize: sibling.attributes.gridColumnSize }); 
 						//if a sibling is the last index after the column is removed, then update the attributes to the new gridColumnSize
 						if (sibling.clientId == parentBlockChildren[attributes.siblingColumns - 2].clientId) {
 							dispatch('core/editor').updateBlockAttributes(parentBlockChildren[attributes.siblingColumns - 2].clientId, { gridColumnSize: gridColumnSize });
-						}
-					} else {
-						dispatch('core/editor').updateBlockAttributes(sibling.clientId, { gridColumnSize: gridColumnSize });
-
-						if ((attributes.siblingColumns - 1) == 5) {
-							//keep the sibling size the same
-							dispatch('core/editor').updateBlockAttributes(sibling.clientId, { gridColumnSize: sibling.attributes.gridColumnSize }); 
-							//if a sibling is the last index after the column is removed, then update the attributes to the new gridColumnSize
-							if (sibling.clientId == parentBlockChildren[attributes.siblingColumns - 2].clientId) {
-								dispatch('core/editor').updateBlockAttributes(parentBlockChildren[attributes.siblingColumns - 2].clientId, { gridColumnSize: gridColumnSize });
-							}
 						}
 					}
 				});

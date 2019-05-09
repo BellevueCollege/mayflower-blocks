@@ -67,7 +67,7 @@ registerBlockType('mayflower-blocks/row', {
 
 			let gridColumnSize = '';
 			if (Array.isArray(currentBlockChildren)) {
-				if (attributes.childColumns >= 0 && attributes.childColumns < 12) {
+				if (attributes.childColumns >= 0 && attributes.childColumns < 6) {
 					//Return a grid column size depending on how many child columns there are
 					//Ex: If there are 6 columns already, the leftover space to add a column is 2
 					switch (attributes.childColumns + 1) {
@@ -89,24 +89,6 @@ registerBlockType('mayflower-blocks/row', {
 						case 6:
 							gridColumnSize = 2;
 							break;
-						case 7:
-							gridColumnSize = 6;
-							break;
-						case 8:
-							gridColumnSize = 5;
-							break;
-						case 9:
-							gridColumnSize = 4;
-							break;
-						case 10:
-							gridColumnSize = 3;
-							break;
-						case 11:
-							gridColumnSize = 2;
-							break;
-						case 12:
-							gridColumnSize = 1;
-							break;
 						default:
 							gridColumnSize = 4;
 							break;
@@ -123,14 +105,12 @@ registerBlockType('mayflower-blocks/row', {
 				currentBlockChildren.forEach(child => {
 					//update all siblings that a sibling has been added
 					dispatch('core/editor').updateBlockAttributes(child.clientId, { siblingColumns: attributes.childColumns + 1});
-					
-					if ((attributes.childColumns + 1) >= 7 && child.clientId !== columnBlock.clientId) {
-						dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: 1 });
-					} else {
-						dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: gridColumnSize });
-						if ((attributes.childColumns + 1) == 5 && child.clientId !== columnBlock.clientId) {
-							dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: child.attributes.gridColumnSize - 1 });
-						}
+					//update all siblings with the new column size
+					dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: gridColumnSize });
+
+					//do a check on childColumns if there are 5 to correctly add the proper sized columns for the siblings
+					if ((attributes.childColumns + 1) == 5 && child.clientId !== columnBlock.clientId) {
+						dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: child.attributes.gridColumnSize - 1 });
 					}
 				});
 
@@ -189,7 +169,7 @@ registerBlockType('mayflower-blocks/row', {
 		 */
 		const RowMenu = (
 			<div class="row-menu">
-				{attributes.childColumns < 12 ?
+				{attributes.childColumns < 6 ?
 					<Button className="row-menu-button" onClick={handleAddColumnBlock}>
 						<SVG class="dashicon dashicons-insert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><Path d="M10 1c-5 0-9 4-9 9s4 9 9 9 9-4 9-9-4-9-9-9zm0 16c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7-3.1 7-7 7zm1-11H9v3H6v2h3v3h2v-3h3V9h-3V6z"></Path></SVG>
 						<span>Add Column</span>
@@ -214,7 +194,7 @@ registerBlockType('mayflower-blocks/row', {
 							title="Row Controls"
 							opened={ true }
 						>
-							{ attributes.childColumns < 12 ?
+							{ attributes.childColumns < 6 ?
 								<PanelRow>
 									<Button isDefault onClick={handleAddColumnBlock}>
 										Add Column
