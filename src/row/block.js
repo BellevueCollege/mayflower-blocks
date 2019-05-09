@@ -168,18 +168,18 @@ registerBlockType('mayflower-blocks/row', {
 		 * Row menu to show buttons for adding a column and row and removing a row
 		 */
 		const RowMenu = (
-			<div class="row-menu">
+			<div class="row-menu" style={{marginTop: attributes.childColumns !== 0 ? '1em' : ''}}>
 				{attributes.childColumns < 6 ?
-					<Button className="row-menu-button" onClick={handleAddColumnBlock}>
+					<Button onClick={handleAddColumnBlock}>
 						<SVG class="dashicon dashicons-insert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><Path d="M10 1c-5 0-9 4-9 9s4 9 9 9 9-4 9-9-4-9-9-9zm0 16c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7-3.1 7-7 7zm1-11H9v3H6v2h3v3h2v-3h3V9h-3V6z"></Path></SVG>
 						<span>Add Column</span>
 					</Button>
 					: ''}
-				<Button className="row-menu-button" onClick={handleAddRowBlock}>
+				<Button onClick={handleAddRowBlock}>
 					<SVG class="dashicon dashicons-insert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><Path d="M10 1c-5 0-9 4-9 9s4 9 9 9 9-4 9-9-4-9-9-9zm0 16c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7-3.1 7-7 7zm1-11H9v3H6v2h3v3h2v-3h3V9h-3V6z"></Path></SVG>
 					<span>Add Row</span>
 				</Button>
-				<Button className="row-menu-button" onClick={handleRemoveRowBlock}>
+				<Button onClick={handleRemoveRowBlock}>
 					<span class="dashicons dashicons-trash"></span>
 					<span>Remove Row</span>
 				</Button>
@@ -231,8 +231,8 @@ registerBlockType('mayflower-blocks/row', {
 				}
 
 				{attributes.childIsEditing == true ? // If a child is selected, show the Save & Close Button
-					<div class="row-menu">
-						<Button className="row-menu-button" onClick={handleCloseColumnBlock}>
+					<div class="row-menu" style={{marginTop: attributes.childColumns !== 0 ? '1em' : ''}}>
+						<Button onClick={handleCloseColumnBlock}>
 							<span class="dashicons dashicons-dismiss"></span>
 							<span>Save &amp; Close Column</span>
 						</Button>

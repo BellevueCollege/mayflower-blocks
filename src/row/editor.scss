@@ -10,7 +10,8 @@
     border: 0;
 }
 
- .wp-block[data-type="mayflower-blocks/row"] div[class^="wp-block-"]{
+ .wp-block[data-type="mayflower-blocks/row"] div[class="wp-block-mayflower-blocks-row"]{
+    padding: 1em 0;
 
     .row {
         margin: 0 15px;
@@ -30,7 +31,6 @@
             flex: 1;
             clear: both;
             font-size: 1em;
-            margin-top: 1em;
             padding: 1em;
             border: 1px dashed #8d96a0;
             justify-content: center;
