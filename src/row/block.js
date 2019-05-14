@@ -65,57 +65,33 @@ registerBlockType('mayflower-blocks/row', {
 			setAttributes({ childColumns: attributes.childColumns + 1 }); //up the childColumns attribute as each new column block is added
 			currentBlockChildren = currentBlockData.innerBlocks;
 
-			let gridColumnSize = '';
 			if (Array.isArray(currentBlockChildren)) {
 				if (attributes.childColumns >= 0 && attributes.childColumns < 6) {
-					//Return a grid column size depending on how many child columns there are
-					//Ex: If there are 6 columns already, the leftover space to add a column is 2
-					switch (attributes.childColumns + 1) {
-						case 1:
-							gridColumnSize = 12;
-							break;
-						case 2:
-							gridColumnSize = 6;
-							break;
-						case 3:
-							gridColumnSize = 4;
-							break;
-						case 4:
-							gridColumnSize = 3;
-							break;
-						case 5:
-							gridColumnSize = 4;
-							break;
-						case 6:
-							gridColumnSize = 2;
-							break;
-						default:
-							gridColumnSize = 4;
-							break;
-					}
+					// set the column size if children is divisible equally by 12 columns, else set it to size of 4 (5 columns)
+					let gridColumnSize = (12 % ( attributes.childColumns + 1 ) == 0 ) ? ( 12 / ( attributes.childColumns + 1 ) ) : 4;
 
-				//Creates a new block and saves a block object to columnBlock
-				const paragraphBlock = createBlock('core/paragraph', { content: '', placeholder: 'Select a column block to start editing or remove the column.' });
-				const columnBlock = createBlock('mayflower-blocks/column', { gridColumnClass: 'md', gridColumnSize: gridColumnSize, siblingColumns: attributes.childColumns + 1 }, [paragraphBlock]);
+					//Creates a new block and saves a block object to columnBlock
+					const paragraphBlock = createBlock('core/paragraph', { content: '', placeholder: 'Select a column block to start editing or remove the column.' });
+					const columnBlock = createBlock('mayflower-blocks/column', { gridColumnClass: 'md', gridColumnSize: gridColumnSize, siblingColumns: attributes.childColumns + 1 }, [paragraphBlock]);
 
-				// Insert columnBlock to the row block appending to the last index of columns
-				dispatch('core/editor').insertBlock(columnBlock, currentBlockData.innerBlocks.length, currentBlockClientId);
+					// Insert columnBlock to the row block appending to the last index of columns
+					dispatch('core/editor').insertBlock(columnBlock, currentBlockData.innerBlocks.length, currentBlockClientId);
 
-				//Performs a check on all children to see how many columns there are and sets the sibling columns size to adjust to the newly added column
-				currentBlockChildren.forEach(child => {
-					//update all siblings that a sibling has been added
-					dispatch('core/editor').updateBlockAttributes(child.clientId, { siblingColumns: attributes.childColumns + 1});
-					//update all siblings with the new column size
-					dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: gridColumnSize });
-
-					//do a check on childColumns if there are 5 to correctly add the proper sized columns for the siblings
-					if ((attributes.childColumns + 1) == 5 && child.clientId !== columnBlock.clientId) {
-						dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: child.attributes.gridColumnSize - 1 });
-					}
-				});
-
+					// Performs a check on all children to see how many columns there are and sets the sibling columns size to adjust to the newly added column
+					// currentBlockChildren does not have the newly added column
+					currentBlockChildren.forEach(child => {
+						//update all siblings that a sibling has been added
+						dispatch('core/editor').updateBlockAttributes(child.clientId, { siblingColumns: attributes.childColumns + 1});
+					
+						if ( 12 % (attributes.childColumns + 1) == 0 ) { // sets size for 1, 2, 3, 4, 6 columns
+							dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: gridColumnSize });
+						} else { // sets size to adjust for 5 columns
+							dispatch('core/editor').updateBlockAttributes(child.clientId, { gridColumnSize: 2 });
+						}
+					});
 				}
 			}
+			
 			//After a column block is created, continue to select the Row block to allow continuous addition/removal of column or row blocks
 			wp.data.dispatch('core/editor').selectBlock(currentBlockClientId);
 		}
