@@ -258,7 +258,9 @@ registerBlockType('mayflower-blocks/column', {
 								{ label: '12', value: 12 },
 							]}
 							onChange={(gridColumnSize) => {
-								setAttributes({ gridColumnSize });
+								// Parse to int because it gets casted as a string
+								let size = parseInt(gridColumnSize, 10); 
+								setAttributes({ gridColumnSize: size });
 							}}
 						/>
 
@@ -314,7 +316,7 @@ registerBlockType('mayflower-blocks/column', {
 	save: function ({ attributes }) {
 
 		return (
-			<div class={`col-${attributes.gridColumnClass}-${attributes.gridColumnSize}`}>
+			<div className={`col-${attributes.gridColumnClass}-${attributes.gridColumnSize}`}>
 				<InnerBlocks.Content />
 			</div>
 		);
