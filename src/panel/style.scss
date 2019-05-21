@@ -4,5 +4,6 @@
  * CSS for both Frontend+Backend.
  */
 
-.wp-block-mayflower-blocks-panel {
+div.wp-block-mayflower-blocks-collapse div.wp-block-mayflower-blocks-panel {
+    margin-bottom: 20px; // Re-add margin bottom because it gets overrided if nested in a Collapse block
 }
