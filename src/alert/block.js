@@ -67,11 +67,10 @@ registerBlockType( 'mayflower-blocks/alert', {
 						type: 'string',
 						shortcode: (attrs, { content }) => {
 							// Content returns the whole shortcode, so we need to match only shortcode content
-							let rx = /(?<=\[\s*\s*alert.*\])((.|\s)*\S(.|\s)*)(?=\[\s*\/\s*alert\s*\])/gmi;
-							let filtered = content.match(rx);
+							let filtered = content.replace(/(\[alert.*?\]\s*)|(\s*\[\/alert\])/gmi, '');
 							
-							// Return content at array[0] if there was a match, otherwise return blank string
-							return Array.isArray(filtered) ? filtered[0] : '';
+							// Return filtered content if there was a match, otherwise return blank string
+							return filtered ? filtered : '';
 						},
 					},
 
