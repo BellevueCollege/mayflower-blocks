@@ -1,0 +1,77 @@
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
+.wp-block[data-type="mayflower-blocks/tab-list"] {
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .block-list-appender {
+        display: none;
+    }
+
+    > .editor-block-list__insertion-point {
+        display: none;
+    }
+
+    &.block-editor-block-list__block.is-selected {
+        > .editor-block-list__block-edit {
+            &::before {
+                box-shadow: none;
+                border: none;
+            }
+            > .editor-block-mover {
+                display: none;
+            }
+            > div[role="toolbar"].editor-block-contextual-toolbar {
+                display: none;
+            }
+        }
+    }
+
+    ul.nav-tabs {
+        align-items: center; 
+    }
+    
+    ul.nav-tabs li[role="presentation"] {
+        float: left;
+        border: 1px solid transparent;
+
+        button.add-tab {
+            padding: 10px 15px;
+            color: #555555;
+            border-radius: 4px 4px 0 0;
+            align-items: center;
+            &:hover {
+                border: 1px solid #ddd;
+                border-bottom-color: transparent;
+                margin: -1px;
+            }
+
+            span {
+                margin-left: 10px;
+            }
+        }
+
+        a {
+            text-decoration: none;
+            box-shadow: none;
+            margin-right: 2px;
+            line-height: 1.428571429;
+            position: relative;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 4px 4px 0 0;
+        }
+
+        &.active a[role="tab"] {
+            color: #555555;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+            margin: -1px;
+        }
+    }
+}

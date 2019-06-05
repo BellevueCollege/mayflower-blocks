@@ -1,0 +1,27 @@
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
+.wp-block[data-type="mayflower-blocks/tab-content-panel"] {
+
+    > .editor-block-list__insertion-point {
+        display: none;
+    }
+
+    &.block-editor-block-list__block.is-selected {
+        > .editor-block-list__block-edit {
+            &::before {
+                box-shadow: none;
+                border: none;
+            }
+            > .editor-block-mover {
+                display: none;
+            }
+            > div[role="toolbar"].editor-block-contextual-toolbar {
+                display: none;
+            }
+        }
+    }
+}
