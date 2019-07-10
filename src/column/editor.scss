@@ -1,0 +1,39 @@
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
+
+ .wp-block div[class^="wp-block-"] {
+
+    @media (min-width: 600px){
+        .editor-block-list__layout .editor-block-list__block {
+            padding-left: 43px;
+            padding-right: 43px;
+        }
+    }
+
+}
+
+.wp-block div[class^="wp-block-"] {
+    [data-type="mayflower-blocks/column"] {
+        //don't display insertion points on column if not editing
+        .editor-block-list__insertion-point {
+            display: none;
+        }
+
+        &.mbcolumn-is-editing {
+            width: 100%;
+            float: none;
+
+            .editor-block-list__insertion-point {
+                display: block;
+            }
+        }
+        
+        &.mbcolumn-is-invisible {
+            display: none;
+        }
+    }
+}

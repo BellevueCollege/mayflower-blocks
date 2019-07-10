@@ -1,0 +1,16 @@
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
+.wp-block[data-type="mayflower-blocks/tabs"] {
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+    border-radius: 5px;
+	margin-top: 1em;
+    
+    .wp-block-mayflower-blocks-tabs > .editor-inner-blocks > .editor-block-list__layout > div > div.editor-default-block-appender {
+        display: none;
+    }
+}
