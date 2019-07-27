@@ -85,3 +85,4 @@ add_filter( 'block_categories', 'mayflower_block_categories', 10, 2 );
 require_once plugin_dir_path( __FILE__ ) . 'child-pages/block.php';
 require_once plugin_dir_path( __FILE__ ) . 'staff/block.php';
 require_once plugin_dir_path( __FILE__ ) . 'course/block.php';
+require_once plugin_dir_path( __FILE__ ) . 'tablepress/block.php';
