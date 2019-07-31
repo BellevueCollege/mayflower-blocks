@@ -86,3 +86,24 @@ require_once plugin_dir_path( __FILE__ ) . 'child-pages/block.php';
 require_once plugin_dir_path( __FILE__ ) . 'staff/block.php';
 require_once plugin_dir_path( __FILE__ ) . 'course/block.php';
 require_once plugin_dir_path( __FILE__ ) . 'tablepress/block.php';
+
+/**
+ * Filter wp_kses to add support for the aria attributes we use
+ */
+if ( ! function_exists( 'mayflower_block_add_allowed_tags' ) ) {
+    function mayflower_block_add_allowed_tags( $tags ) {
+        $new = [
+            'div' => [
+                'aria-multiselectable' => true,
+            ],
+            'a' => [
+                'aria-expanded' => true,
+                'aria-controls' => true,
+            ],
+        ];
+        $tags['div'] = array_merge( $new['div'], $tags['div'] );
+        $tags['a'] = array_merge( $new['a'], $tags['a'] );
+        return $tags;
+    }
+    add_filter( 'wp_kses_allowed_html', 'mayflower_block_add_allowed_tags' );
+}

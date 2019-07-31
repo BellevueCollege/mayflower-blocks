@@ -10,13 +10,12 @@
 import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { registerBlockType, getBlockDefaultClassName } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { RichText, InspectorControls, BlockControls } = wp.editor;
 const { Toolbar, ToggleControl, Panel, PanelBody, PanelRow, Dashicon } = wp.components;
 const { select, dispatch } = wp.data;
 const { Fragment } = wp.element;
 const { createHigherOrderComponent } = wp.compose;
-
 
 /**
  * Register: aa Gutenberg Block.
@@ -209,7 +208,7 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 				</BlockControls>
 			,
 			<Fragment>
-				<a aria-controls={`#${attributes.tabId}`} role="tab" data-toggle="tab"> 
+				<a className={className} aria-controls={`#${attributes.tabId}`} role="tab" data-toggle="tab"> 
 					<RichText
 						formattingControls = {['']}
 						placeholder = "Enter title..."
@@ -232,9 +231,10 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
 
-	save: function( {attributes} ) {
+	save: function( { attributes } ) {
+		const className = getBlockDefaultClassName( 'mayflower-blocks/tab-list-tab' );
 		return (
-			<li role="presentation" class={attributes.tabDefault ? 'active' : ''}> 
+			<li role="presentation" className={`${className} ${attributes.tabDefault ? ' active' : ''}`}> 
 				<a href={`#${attributes.tabId}`} aria-controls={`#${attributes.tabId}`} role="tab" data-toggle="tab"> 
 					<RichText.Content
 						value = {attributes.tabTitle}

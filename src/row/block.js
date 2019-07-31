@@ -229,11 +229,13 @@ registerBlockType('mayflower-blocks/row', {
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
 
-	save: function ({ attributes }) {
+	save: function ( { className } )  {
 
 		return (
-			<div class="row">
-				<InnerBlocks.Content />
+			<div className={className}>
+				<div class="row">
+					<InnerBlocks.Content />
+				</div>
 			</div>
 		);
 	},
