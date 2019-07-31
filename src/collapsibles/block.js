@@ -69,7 +69,7 @@ registerBlockType( 'mayflower-blocks/collapsibles', {
 
 	save: function() {
 		return (
-			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			<div className="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 				<InnerBlocks.Content/>
 			</div>
 		);

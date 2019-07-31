@@ -10,7 +10,7 @@
 import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { registerBlockType, getBlockDefaultClassName } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { InnerBlocks } = wp.editor;
 
 /**
@@ -55,9 +55,10 @@ registerBlockType( 'mayflower-blocks/tab-content', {
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
 
-	save: function( ) {
+	save: function( {} ) {
+		const className = getBlockDefaultClassName('mayflower-blocks/tab-content');
 		return (
-			<div class="tab-content">
+			<div className={`${className} tab-content`}>
 				<InnerBlocks.Content/>
 			</div>
 		);

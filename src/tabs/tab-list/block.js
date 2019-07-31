@@ -10,7 +10,7 @@
 import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { registerBlockType, getBlockDefaultClassName } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { InnerBlocks } = wp.editor;
 const { Button, Dashicon } = wp.components;
 const { select, dispatch } = wp.data;
@@ -41,7 +41,7 @@ registerBlockType( 'mayflower-blocks/tab-list', {
 	attributes: {
 	},
 	
-	edit: function ({ clientId }) {
+	edit: function ({ clientId, className }) {
 
 		// Get the current tab-list block with the clientId
 		const currentBlockData = select('core/editor').getBlock(clientId);
@@ -100,7 +100,7 @@ registerBlockType( 'mayflower-blocks/tab-list', {
 		}
 
 		return [
-			<ul class="nav nav-tabs" role="tablist">
+			<ul className={`${className} nav nav-tabs`} role="tablist">
 				<InnerBlocks allowedBlocks={['mayflower-blocks/tab-list-tab']}/>
 				<li role="presentation">
 					<Button onClick={addTab} className="add-tab">
@@ -123,8 +123,9 @@ registerBlockType( 'mayflower-blocks/tab-list', {
 	 */
 
 	save: function() {
+		const className = getBlockDefaultClassName('mayflower-blocks/tab-list');
 		return (
-			<ul class="nav nav-tabs" role="tablist">
+			<ul className={`${className} nav nav-tabs`} role="tablist">
 				<InnerBlocks.Content/>
 			</ul>
 		);

@@ -10,7 +10,7 @@
 import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { registerBlockType, getBlockDefaultClassName } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { InnerBlocks } = wp.editor;
 const { Fragment } = wp.element;
 const { createHigherOrderComponent } = wp.compose;
@@ -85,9 +85,10 @@ registerBlockType( 'mayflower-blocks/tab-content-panel', {
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
 
-	save: function( {attributes } ) {
+	save: function( { attributes } ) {
+		const className = getBlockDefaultClassName('mayflower-blocks/tab-content-panel');
 		return (		
-			<div role="tabpanel" class={`tab-pane ${attributes.tabDefault == true ? 'active' : ''}`} id={attributes.tabId}>
+			<div role="tabpanel" className={`${className} tab-pane${attributes.tabDefault == true ? ' active' : ''}`} id={attributes.tabId}>
 				<InnerBlocks.Content/>
 			</div>
 		);

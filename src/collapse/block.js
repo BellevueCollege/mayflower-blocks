@@ -157,7 +157,7 @@ registerBlockType( 'mayflower-blocks/collapse', {
 							<RichText.Content
 								value = {attributes.collapseHeadingText}
 							/>
-						 </a>
+						</a>
 					</h4>
 				</div>
 				<div id={`collapse-${attributes.currentBlockClientId}`} class={ ( attributes.expanded ? 'panel-collapse collapse in' : 'panel-collapse collapse' ) } role="tabpanel" aria-labelledby={`heading-${attributes.currentBlockClientId}`}>
