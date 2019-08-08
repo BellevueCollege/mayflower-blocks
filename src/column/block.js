@@ -295,6 +295,7 @@ registerBlockType('mayflower-blocks/column', {
 
 	//Existing bootstrap grid shortcode transformed into its block counterpart.
 	//Allows use of [column md="6"] test text [/column]
+	//Todo: Currently doesn't work, Gutenberg doesn't support nested shortcodes
 	transforms: {
 		from: [
 			{
@@ -305,10 +306,11 @@ registerBlockType('mayflower-blocks/column', {
 					gridColumnText: {
 						type: 'string',
 						shortcode: (attrs, { content }) => {
-							let rx = /(?<=\[\s*\s*column.*\])(.*)(?=\[\s*\/\s*column\s*\])/gmi;
-							let filtered = content.match(rx);
-							// Return content at array[0] if there was a match, otherwise return blank string
-							return Array.isArray(filtered) ? filtered[0] : '';
+							// Content returns the whole shortcode, so we need to match only shortcode content
+							let filtered = content.replace(/(\[\s*column\s*.*?\]\s*)|(\s*\[\s*\/\s*column\s*\])/gmi, '');
+
+							// Return filtered content if there was a match, otherwise return blank string
+							return filtered ? filtered : '';
 						},
 					},
 
