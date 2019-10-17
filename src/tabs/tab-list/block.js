@@ -125,10 +125,24 @@ registerBlockType( 'mayflower-blocks/tab-list', {
 	save: function() {
 		const className = getBlockDefaultClassName('mayflower-blocks/tab-list');
 		return (
-			<ul className={`${className} nav nav-tabs`} role="tablist">
-				<InnerBlocks.Content/>
-			</ul>
+			<div className="card-header">
+				<ul className={`${className} nav nav-tabs card-header-tabs`} role="tablist">
+					<InnerBlocks.Content/>
+				</ul>
+			</div>
 		);
 	},
+	deprecated: [
+		{
+			save: function() {
+				const className = getBlockDefaultClassName('mayflower-blocks/tab-list');
+				return (
+					<ul className={`${className} nav nav-tabs`} role="tablist">
+						<InnerBlocks.Content/>
+					</ul>
+				);
+			},
+		}
+	]
 
 } );

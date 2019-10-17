@@ -234,8 +234,8 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 	save: function( { attributes } ) {
 		const className = getBlockDefaultClassName( 'mayflower-blocks/tab-list-tab' );
 		return (
-			<li role="presentation" className={`${className} ${attributes.tabDefault ? ' active' : ''}`}> 
-				<a href={`#${attributes.tabId}`} aria-controls={`#${attributes.tabId}`} role="tab" data-toggle="tab"> 
+			<li role="presentation" className={`${className} nav-item`}> 
+				<a className={`nav-link ${attributes.tabDefault ? ' active' : ''}`} href={`#${attributes.tabId}`} aria-controls={`#${attributes.tabId}`} role="tab" data-toggle="tab"> 
 					<RichText.Content
 						value = {attributes.tabTitle}
 					/>
@@ -243,4 +243,40 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 			</li>
 		);
 	},
+
+	deprecated: [
+		        {
+					attributes: {
+						tabActive: {
+							type: 'boolean',
+							default: false
+						},
+						tabId: {
+							type: 'string',
+						},
+						tabTitle: {
+							type: 'string',
+							default: ''
+						},
+						tabDefault: {
+							type: 'boolean',
+							default: false
+						},
+					},
+		
+		            save: function( { attributes } ) {
+						const className = getBlockDefaultClassName( 'mayflower-blocks/tab-list-tab' );
+						return (
+							<li role="presentation" className={`${className} ${attributes.tabDefault ? ' active' : ''}`}> 
+								<a href={`#${attributes.tabId}`} aria-controls={`#${attributes.tabId}`} role="tab" data-toggle="tab"> 
+									<RichText.Content
+										value = {attributes.tabTitle}
+									/>
+								</a>
+							</li>
+						);
+					},
+		        }
+		    ]
+		
 } );

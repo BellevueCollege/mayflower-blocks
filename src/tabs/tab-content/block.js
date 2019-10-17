@@ -58,9 +58,22 @@ registerBlockType( 'mayflower-blocks/tab-content', {
 	save: function( {} ) {
 		const className = getBlockDefaultClassName('mayflower-blocks/tab-content');
 		return (
-			<div className={`${className} tab-content`}>
+			<div className={`${className} card-body tab-content`}>
 				<InnerBlocks.Content/>
 			</div>
 		);
 	},
+
+	deprecated: [
+		{
+			save: function( {} ) {
+				const className = getBlockDefaultClassName('mayflower-blocks/tab-content');
+				return (
+					<div className={`${className} tab-content`}>
+						<InnerBlocks.Content/>
+					</div>
+				);
+			},
+		}
+	]
 } );

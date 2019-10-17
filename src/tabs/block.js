@@ -63,11 +63,23 @@ registerBlockType( 'mayflower-blocks/tabs', {
 
 	save: function() {
 		return (
-			<div>
+			<div className="card">
 				<InnerBlocks.Content/>
 			</div>
 		);
 	},
+
+	deprecated: [
+		{
+			save: function() {
+				return (
+					<div>
+						<InnerBlocks.Content/>
+					</div>
+				);
+			},
+		}
+	],
 
 	//Existing bootstrap tabs shortcode transformed into its block counterpart.
 	//Allows use of [tabs][/tabs]
