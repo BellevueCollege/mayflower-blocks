@@ -5,7 +5,32 @@
  * which makes it higher in priority.
  */
 
-.wp-block-mayflower-blocks-panel {
+ .wp-block-mayflower-blocks-panel {
+
+	/**
+	Over-ride heading color being set by Block editor
+	*/
+	.bg-success,
+	.bg-warning,
+	.bg-danger,
+	.bg-primary,
+	.bg-secondary,
+	.bg-dark {
+		h2.card-header,
+		h3.card-header {
+			color: #fff;
+		}
+	}
+
+	
+	.card {
+		padding: 0;
+		max-width: 100%;
+	}
+	.card-body {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
 }
 
 .components-panel {

@@ -35,26 +35,28 @@ const { SelectControl, ToggleControl, Toolbar, Panel, PanelBody, PanelRow, SVG, 
 
 registerBlockType( 'mayflower-blocks/panel', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
-	title: __( 'Panel' ), // Block title.
+	title: __( 'Card' ), // Block title.
 	icon: 'align-center', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 
 	attributes: {
-		panelText: {
+		cardText: {
 			type: 'string',
 		},
-		panelType: {
+		cardType: {
 			type: 'string',
 			default: 'default'
 		},
-		panelHeading: {
+		cardHeading: {
 			type: 'boolean',
 			default: true
 		},
-		panelHeadingText: {
-			type: 'string'
+		cardHeadingText: {
+			type: 'string',
+			source: 'html',
+			selector: '.card-header',
 		},
-		panelHeadingClass: {
+		cardHeadingTag: {
 			type: 'string',
 			default: 'h2'
 		},
@@ -62,16 +64,18 @@ registerBlockType( 'mayflower-blocks/panel', {
 			type: 'string',
 			default: 'h2'
 		},
-		panelFooter: {
+		cardFooter: {
 			type: 'boolean',
 			default: true
 		},
-		panelFooterText: {
-			type: 'string'
+		cardFooterText: {
+			type: 'string',
+			source: 'html',
+			selector: '.card-footer',
 		}
 	},
 	
-	//Existing bootstrap panel shortcode transformed into its block counterpart.
+	//Existing bootstrap card shortcode transformed into its block counterpart.
 	//Allows use of [panel type="" heading="" footer=""][/panel]
 	transforms: {
 		from: [
@@ -80,7 +84,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 				tag: 'panel',
 				attributes: {
 					// Panel Text
-					panelText: {
+					cardText: {
 						type: 'string',
 						shortcode: (attrs, { content }) => {
 							// Content returns the whole shortcode, so we need to match only shortcode content
@@ -92,7 +96,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 					},
 
 					// Panel Type/Bootstrap Class
-					panelType: {
+					cardType: {
 						type: 'string',
 						shortcode: ({ named: { type } }) => {
 							return type;
@@ -100,7 +104,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 					},
 
 					//Panel Header
-					panelHeadingText: {
+					cardHeadingText: {
 						type: 'string',
 						shortcode: ({ named: { heading } }) => {
 							return heading;
@@ -108,7 +112,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 					},
 
 					//Panel Footer
-					panelFooterText: {
+					cardFooterText: {
 						type: 'string',
 						shortcode: ({ named: { footer } }) => {
 							return footer;
@@ -122,8 +126,8 @@ registerBlockType( 'mayflower-blocks/panel', {
 	edit: function ({ className, attributes, setAttributes }) {
 
 		/**
-		 * HeadingStyleControl returns a Toolbar component with heading levels that changes via on click and updates the panel block's heading.
-		 * Will only show if a panel heading is toggled on.
+		 * HeadingStyleControl returns a Toolbar component with heading levels that changes via on click and updates the card block's heading.
+		 * Will only show if a card heading is toggled on.
 		 * 
 		 * @return Toolbar component with heading levels 2-6 and paragraph
 		 * */
@@ -142,16 +146,16 @@ registerBlockType( 'mayflower-blocks/panel', {
 					return {
 						icon: svgParagraph,
 						title: headingStyle,
-						isActive: attributes.panelHeadingClass === style,
-						onClick: () => setAttributes( { panelHeadingClass: style, activeHeadingClass: style } ),
+						isActive: attributes.cardHeadingTag === style,
+						onClick: () => setAttributes( { cardHeadingTag: style, activeHeadingClass: style } ),
 					};
 				} else {
 					return {
 						subscript: style.charAt(1),
 						icon: svgHeading,
 						title: headingStyle,
-						isActive: attributes.panelHeadingClass === style,
-						onClick: () => setAttributes( { panelHeadingClass: style, activeHeadingClass: style } ),
+						isActive: attributes.cardHeadingTag === style,
+						onClick: () => setAttributes( { cardHeadingTag: style, activeHeadingClass: style } ),
 					};
 				}
 			};
@@ -165,44 +169,47 @@ registerBlockType( 'mayflower-blocks/panel', {
 			<InspectorControls>
 				<Panel>
 					<PanelBody
-						title="Panel Style"
+						title="Card Style"
 						initialOpen={ true }
 					>
 						<PanelRow>
 							<SelectControl
 								label="Theme Style"
-								value={attributes.panelType}
+								value={attributes.cardType}
 								options={[
-									{ label: 'Standard', value: 'default' },
+									{ label: 'Default', value: 'default' },
 									{ label: 'Primary (BC Blue)', value: 'primary' },
+									{ label: 'Secondary (Gray)', value: 'secondary' },
 									{ label: 'Info (Light Blue)', value: 'info' },
 									{ label: 'Success (Green)', value: 'success' },
 									{ label: 'Warning (Yellow)', value: 'warning' },
 									{ label: 'Danger (Red)', value: 'danger' },
+									{ label: 'Light', value: 'light' },
+									{ label: 'Dark', value: 'dark' },
 								]}
-								onChange={(panelType) => { 
-									setAttributes({ panelType });
+								onChange={(cardType) => { 
+									setAttributes({ cardType });
 								}}
 							/>
 						</PanelRow>
 						<PanelRow>
 							<ToggleControl
 								label="Toggle Panel Heading"
-								checked={attributes.panelHeading}
-								onChange={(panelHeading) => setAttributes({ panelHeading })}
+								checked={attributes.cardHeading}
+								onChange={(cardHeading) => setAttributes({ cardHeading })}
 							/>
 						</PanelRow>
 						<PanelRow>
 							<ToggleControl
 								label="Toggle Panel Footer"
-								checked={attributes.panelFooter}
-								onChange={(panelFooter) => setAttributes({ panelFooter })}
+								checked={attributes.cardFooter}
+								onChange={(cardFooter) => setAttributes({ cardFooter })}
 							/>
 						</PanelRow>
 					</PanelBody>
 				</Panel>
 
-				{attributes.panelHeading == true ?
+				{attributes.cardHeading == true ?
 					<Panel>
 						<PanelBody
 							title="Heading Style"
@@ -217,44 +224,47 @@ registerBlockType( 'mayflower-blocks/panel', {
 			</InspectorControls>
 			,
 			<div className={className}>
-				<div className = {`panel panel-${attributes.panelType}`}>
+				<div className = {'card bg-' + attributes.cardType + (
+					attributes.cardType !== 'default' && 
+					attributes.cardType !== 'light' &&
+					attributes.cardType !== 'info'
+					? ' text-white' : '')}>
 
-					{attributes.panelHeading == true ? 
-						<div className = "panel-heading">
-							<RichText
-								tagName = {attributes.panelHeadingClass}
-								formattingControls = {['bold', 'italic', 'link']}
-								placeholder = "Enter heading text..."
-								keepPlaceholderOnFocus = "true"
-								value = {attributes.panelHeadingText}
-								onChange = {(panelHeadingText) => setAttributes({ panelHeadingText })}
-							/>
-						</div>
+					{attributes.cardHeading == true ? 
+						<RichText
+							tagName = {attributes.cardHeadingTag}
+							className = "card-header"
+							formattingControls = {['bold', 'italic', 'link']}
+							placeholder = "Enter heading text..."
+							keepPlaceholderOnFocus = "true"
+							value = {attributes.cardHeadingText}
+							onChange = {(cardHeadingText) => setAttributes({ cardHeadingText })}
+						/>
 					: ''}
 
-					<div className="panel-body">
-						{attributes.panelText !== null && attributes.panelText !== '' && attributes.panelText !== undefined ? 
+					<div className="card-body">
+						{attributes.cardText !== null && attributes.cardText !== '' && attributes.cardText !== undefined ? 
 							<RichText
 								tagName = "div"
 								formattingControls = {['bold', 'italic', 'link']}
 								placeholder = "Enter text..."
 								keepPlaceholderOnFocus = "true"
-								value = {attributes.panelText}
-								onChange = {(panelText) => setAttributes({ panelText })}
+								value = {attributes.cardText}
+								onChange = {(cardText) => setAttributes({ cardText })}
 							/>
 						: '' }
 						<InnerBlocks/>
 					</div>
 
-					{attributes.panelFooter == true ? 
-						<div className = "panel-footer">
+					{attributes.cardFooter == true ? 
+						<div className = "card-footer">
 							<RichText
 								tagName = "div"
 								formattingControls = {['bold', 'italic', 'link']}
 								placeholder = "Enter footer text..."
 								keepPlaceholderOnFocus = "true"
-								value = {attributes.panelFooterText}
-								onChange = {(panelFooterText) => setAttributes({ panelFooterText })}
+								value = {attributes.cardFooterText}
+								onChange = {(cardFooterText) => setAttributes({ cardFooterText })}
 							/>
 						</div>
 					: ''}
@@ -276,40 +286,136 @@ registerBlockType( 'mayflower-blocks/panel', {
 
 	save: function( {attributes} ) {
 		return (
-			<div className = {`panel panel-${attributes.panelType}`}>
+			<div className = {'card bg-' + attributes.cardType + (
+				attributes.cardType !== 'default' && 
+				attributes.cardType !== 'light' &&
+				attributes.cardType !== 'info'
+				? ' text-white' : '')}>
 
-				{attributes.panelHeading == true ? 
-					attributes.panelHeadingText == null || attributes.panelHeadingText == '' ? '' :
-					<div className = "panel-heading">
-						<RichText.Content
-							tagName = {attributes.panelHeadingClass}
-							style = {{margin: '0'}}
-							value = {attributes.panelHeadingText}
-						/>
-					</div>
+				{attributes.cardHeading == true ? 
+					attributes.cardHeadingText == null || attributes.cardHeadingText == '' ? '' :
+					<RichText.Content
+						tagName = {attributes.cardHeadingTag}
+						value = {attributes.cardHeadingText}
+						className = "card-header"
+					/>
 				: ''}
 
-				<div className="panel-body">
-					{attributes.panelText !== null && attributes.panelText !== '' && attributes.panelText !== undefined ? 
+				<div className="card-body">
+					{attributes.cardText !== null && attributes.cardText !== '' && attributes.cardText !== undefined ? 
 						<RichText.Content
 							tagName = "div"
-							value = {attributes.panelText}
+							value = {attributes.cardText}
 						/>
 					: '' }
 					<InnerBlocks.Content/>
 				</div>
 				
-				{attributes.panelFooter == true ?
-					attributes.panelFooterText == null || attributes.panelFooterText == '' ? '' :
-					<div className = "panel-footer">
-						<RichText.Content
-							tagName = "div"
-							value = {attributes.panelFooterText}
-						/>
-					</div>
+				{attributes.cardFooter == true ?
+					attributes.cardFooterText == null || attributes.cardFooterText == '' ? '' :
+					<RichText.Content
+						tagName = "div"
+						className="card-footer"
+						value = {attributes.cardFooterText}
+					/>
 				: ''}
 
 			</div>
 		);
 	},
+
+	deprecated: [
+		{
+			attributes: {
+				panelText: {
+					type: 'string',
+				},
+				panelType: {
+					type: 'string',
+					default: 'default'
+				},
+				panelHeading: {
+					type: 'boolean',
+					default: true
+				},
+				panelHeadingText: {
+					type: 'string',
+				},
+				panelHeadingClass: {
+					type: 'string',
+					default: 'h2'
+				},
+				activeHeadingClass: {
+					type: 'string',
+					default: 'h2'
+				},
+				panelFooter: {
+					type: 'boolean',
+					default: true
+				},
+				panelFooterText: {
+					type: 'string',
+				}
+			},
+			migrate( { 
+				panelText,
+				panelType,
+				panelHeading,
+				panelHeadingText,
+				panelHeadingClass,
+				panelFooter,
+				panelFooterText
+			 } ) {
+				return {
+					cardText: panelText,
+					cardType: panelType,
+					cardHeading: panelHeading,
+					cardHeadingText: panelHeadingText,
+					cardHeadingTag: panelHeadingClass,
+					cardFooter: panelFooter,
+					cardFooterText: panelFooterText
+				};
+			},
+			
+				
+			save: function( {attributes} ) {
+				return (
+					<div className = {`panel panel-${attributes.panelType}`}>
+		
+						{attributes.panelHeading == true ? 
+							attributes.panelHeadingText == null || attributes.panelHeadingText == '' ? '' :
+							<div className = "panel-heading">
+								<RichText.Content
+									tagName = {attributes.panelHeadingClass}
+									style = {{margin: '0'}}
+									value = {attributes.panelHeadingText}
+								/>
+							</div>
+						: ''}
+		
+						<div className="panel-body">
+							{attributes.panelText !== null && attributes.panelText !== '' && attributes.panelText !== undefined ? 
+								<RichText.Content
+									tagName = "div"
+									value = {attributes.panelText}
+								/>
+							: '' }
+							<InnerBlocks.Content/>
+						</div>
+						
+						{attributes.panelFooter == true ?
+							attributes.panelFooterText == null || attributes.panelFooterText == '' ? '' :
+							<div className = "panel-footer">
+								<RichText.Content
+									tagName = "div"
+									value = {attributes.panelFooterText}
+								/>
+							</div>
+						: ''}
+		
+					</div>
+				);
+			},
+		}
+	]
 } );
