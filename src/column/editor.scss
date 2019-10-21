@@ -4,7 +4,9 @@
  * CSS for just Backend enqueued after style.scss
  * which makes it higher in priority.
  */
-
+ .row > .editor-inner-blocks.block-editor-inner-blocks > .editor-block-list__layout.block-editor-block-list__layout {
+    display: flex;
+}
  .wp-block div[class^="wp-block-"] {
 
     @media (min-width: 600px){
@@ -12,6 +14,8 @@
             padding-left: 43px;
             padding-right: 43px;
         }
+
+        
     }
 
 }
@@ -24,8 +28,10 @@
         }
 
         &.mbcolumn-is-editing {
+            flex: 0 0 100%;
             width: 100%;
-            float: none;
+            max-width: 100%;
+            display: block;
 
             .editor-block-list__insertion-point {
                 display: block;

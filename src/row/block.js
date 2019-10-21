@@ -194,11 +194,9 @@ registerBlockType('mayflower-blocks/row', {
 			</InspectorControls>
 			,
 			<div className={className}>
-				<div className="row">
-					<InnerBlocks
-						allowedBlocks={['mayflower-blocks/column']}
-					/>
-				</div>
+				<InnerBlocks
+					allowedBlocks={['mayflower-blocks/column']}
+				/>
 				{/* <div className="clearfix"></div> */}
 
 				{isSelected && attributes.childIsEditing == false ? // If row block is selected and a child is not selected, show RowMenu
