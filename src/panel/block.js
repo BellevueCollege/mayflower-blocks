@@ -363,6 +363,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 				panelHeading,
 				panelHeadingText,
 				panelHeadingClass,
+				activeHeadingClass,
 				panelFooter,
 				panelFooterText
 			 } ) {
@@ -372,6 +373,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 					cardHeading: panelHeading,
 					cardHeadingText: panelHeadingText,
 					cardHeadingTag: panelHeadingClass,
+					activeHeadingClass: activeHeadingClass,
 					cardFooter: panelFooter,
 					cardFooterText: panelFooterText
 				};
