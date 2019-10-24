@@ -91,12 +91,14 @@ registerBlockType( 'mayflower-blocks/button', {
 					label="Button Style"
 					value={attributes.buttonType}
 					options={[
-						{ label: 'Standard', value: 'default' },
 						{ label: 'Primary (BC Blue)', value: 'primary' },
+						{ label: 'Secondary (Gray)', value: 'secondary' },
 						{ label: 'Info (Light Blue)', value: 'info' },
 						{ label: 'Success (Green)', value: 'success' },
 						{ label: 'Warning (Orange)', value: 'warning' },
 						{ label: 'Danger (Red)', value: 'danger' },
+						{ label: 'Light', value: 'light' },
+						{ label: 'Dark', value: 'dark' },
 					]}
 					onChange={(buttonType) => { 
 						setAttributes({ buttonType });
@@ -107,7 +109,6 @@ registerBlockType( 'mayflower-blocks/button', {
 					label="Button Size"
 					value={attributes.buttonSize}
 					options={[
-						{ label: 'Extra Small', value: 'btn-xs' },
 						{ label: 'Small', value: 'btn-sm' },
 						{ label: 'Standard', value: '' },
 						{ label: 'Large', value: 'btn-lg' },
@@ -157,6 +158,71 @@ registerBlockType( 'mayflower-blocks/button', {
 			/>
 		);
 	},
+
+	deprecated: [
+		/**
+		 * Button XS removed, Button Default removed. Catch and replace.
+		 */
+		{
+			attributes: {
+				buttonText: {
+					type: 'string',
+					selector: 'a'
+				},
+				buttonLink: {
+					type: 'string',
+					source: 'attribute',
+					selector: 'a',
+					attribute: 'href'
+				},
+				buttonType: {
+					type: 'string',
+					default: 'default'
+				},
+				buttonAlign: {
+					type: 'string'
+				},
+				buttonBlock: {
+					type: 'boolean',
+					default: false
+				},
+				buttonSize: {
+					type: 'string',
+					default: ''
+				}
+			},
+
+			migrate( { buttonText, buttonLink, buttonType, buttonAlign, buttonSize, buttonBlock } ) {
+				return {
+					buttonType: buttonType = 'default' === buttonType ? 'light' : buttonType,
+					buttonSize: buttonSize = 'btn-xs' === buttonType ? 'btn-sm' : buttonSize,
+					buttonText: buttonText,
+					buttonLink: buttonLink,
+					buttonAlign: buttonAlign,
+					buttonBlock: buttonBlock,
+				};
+			},
+
+			isEligible( attributes, innerBlocks ) {
+				if( 'btn-xs' === attributes.buttonSize || 'default' === attributes.buttonType ) {
+					return true;
+				} else {
+					return false;
+				}
+			},
+			
+			save: function( {attributes} ) {
+				return (
+					<RichText.Content 
+						tagName="a" 
+						className={`btn btn-${attributes.buttonType} ${attributes.buttonBlock ? 'btn-block' : ''} ${attributes.buttonSize}`}
+						href={attributes.buttonLink}
+						value={attributes.buttonText}
+					/>
+				);
+			},
+		}
+	],
 
 	// Transform allows original shortcode to be transitioned to button block
 	transforms: {
