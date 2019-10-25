@@ -53,7 +53,7 @@ registerBlockType( 'mayflower-blocks/button', {
 		},
 		buttonType: {
 			type: 'string',
-			default: 'default'
+			default: 'primary'
 		},
 		buttonAlign: {
 			type: 'string'
