@@ -1,20 +1,21 @@
 /**
- * BLOCK: Buttons
+ * BLOCK: Well
  *
- * Registering a basic block with Gutenberg.
- * Simple block, renders and saves the same content without any interactivity.
+ * The Well block allows a Bootstrap 3 well. This has been removed
+ * with Globals/Bootstrap 4.
  */
 
 // Import CSS.
 // import './style.scss';
 import './editor.scss';
+import { create } from 'domain';
 
 
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType, createBlock } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { RichText, InspectorControls, InnerBlocks, BlockControls } = wp.editor;
-const { SelectControl, Toolbar, SVG, Path, G } = wp.components;
+const { Button } = wp.components;
 const { select, dispatch } = wp.data;
 
 
@@ -38,7 +39,9 @@ registerBlockType( 'mayflower-blocks/well', {
 	title: __( 'Well' ), // Block title.
 	icon: 'text', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
-
+	supports: {
+		inserter: false
+	},
 	attributes: {
 		wellText: {
 			type: 'string',
@@ -57,58 +60,14 @@ registerBlockType( 'mayflower-blocks/well', {
 	//Existing bootstrap well shortcode transformed into its block counterpart.
 	//Allows use of [well size=""][/well]
 	transforms: {
-		from: [
-			{
-				type: 'shortcode',
-				tag: 'well',
-				attributes: {
-					// Well Text
-					wellText: {
-						type: 'string',
-						shortcode: (attrs, { content }) => {
-							// Content returns the whole shortcode, so we need to match only shortcode content
-							let filtered = content.replace(/(\[well.*?\]\s*)|(\s*\[\/well\])/gmi, '');
-							
-							// Return filtered content if there was a match, otherwise return blank string
-							return filtered ? filtered : '';
-						},
-					},
-
-					// Well Size
-					wellSize: {
-						type: 'string',
-						shortcode: ({ named: { size = '' } }) => {
-							if (size) {
-								return 'well-' + size;
-							} else {
-								return '';
-							}
-						},
-					},
-
-					//Active Well Size
-					activeWell: {
-						type: 'string',
-						shortcode: ({ named: { size = '' } }) => {
-							if (size) {
-								return 'well-' + size;
-							} else {
-								return '';
-							}
-						},
-					},
-				},
-			},
+		to: [
 			{
 				type: 'block',
-				blocks: [ 'core/paragraph' ],
-				transform: ( attributes ) => {
-					const paragraphBlock = createBlock( 'core/paragraph', {content: attributes.content} );
-					return createBlock( 'mayflower-blocks/well', attributes, [paragraphBlock]);
-				},
+				blocks: [ 'mayflower-blocks/panel' ],
+				transform: (attributes, innerBlocks) => {
+					return createBlock( 'mayflower-blocks/panel', {cardHeading: false, cardFooter: false, cardType: 'light'}, innerBlocks )
+				}
 			},
-		],
-		to: [
 			{
 				type: 'block',
 				blocks: [ 'mayflower-blocks/lead' ],
@@ -177,82 +136,22 @@ registerBlockType( 'mayflower-blocks/well', {
 		],
 	},
 
-	edit: function ({ className, attributes, setAttributes }) {
-
-		/**
-		 * WellSizeControl returns a Toolbar component with well sizes that changes via on click and updates the well's size.
-		 *
-		 * @return Toolbar component with well sizes
-		 * */
-		const WellSizeControl = () => {
-			function createClassControl ( wellSize ) {
-
-				//Switch checks the size control wellSize and returns the corresponding size
-				let size = '';
-				switch (wellSize) {
-					case 'default':
-						break;
-					case 'small':
-						size = 'well-sm';
-						break;
-					case 'large':
-						size = 'well-lg';
-						break;
-					default:
-						break;
-				}
-
-				const svgSmall = <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none"/><G><Path d="M15.75 6.75L18 3v14l-2.25-3.75L17 12h-4v4l1.25-1.25L18 17H2l3.75-2.25L7 16v-4H3l1.25 1.25L2 17V3l2.25 3.75L3 8h4V4L5.75 5.25 2 3h16l-3.75 2.25L13 4v4h4z"/></G></SVG>;
-				const svgLarge= <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none"/><G><Path d="M7 8h6v4H7zm-5 5v4h4l-1.2-1.2L7 12l-3.8 2.2M14 17h4v-4l-1.2 1.2L13 12l2.2 3.8M14 3l1.3 1.3L13 8l3.8-2.2L18 7V3M6 3H2v4l1.2-1.2L7 8 4.7 4.3"/></G></SVG>;
-				const svgDefault = <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none"/><G><Path d="M18 3v2H2V3h16zm-6 4v2H2V7h10zm6 0v2h-4V7h4zM8 11v2H2v-2h6zm10 0v2h-8v-2h8zm-4 4v2H2v-2h12z"/></G></SVG>;
-
-				return {
-					icon: wellSize == 'small' ? svgSmall : wellSize == 'large' ? svgLarge : svgDefault,
-					title: wellSize.charAt(0).toUpperCase() + wellSize.slice(1),
-					isActive: attributes.wellSize === size,
-					onClick: () => setAttributes( { wellSize: size, activeWell: size } ),
-				};
-			};
-
-			return(
-				<Toolbar controls={ [ 'default', 'small', 'large' ].map( createClassControl ) } />
-			);
-		}
-
+	edit: function ({ className, attributes, setAttributes, innerBlocks }) {
+		const handleConvertToCard = () => {
+			const wellBlockInnerBlocks = select('core/editor').getSelectedBlock().innerBlocks;
+			const currentBlockClientId = select('core/editor').getSelectedBlockClientId();
+			const cardBlock = createBlock( 'mayflower-blocks/panel', {cardHeading: false, cardFooter: false, cardType: 'light'}, wellBlockInnerBlocks );
+			const currentIndex = select('core/editor').getBlockIndex(currentBlockClientId);
+			dispatch('core/editor').removeBlock(currentBlockClientId, false);
+			dispatch('core/editor').insertBlock(cardBlock, currentIndex);
+			
+		};
 		return [
-			<InspectorControls>
-				<SelectControl
-					label="Well Style"
-					value={attributes.wellSize}
-					options={[
-						{ label: 'Default Size', value: '' },
-						{ label: 'Small Size', value: 'well-sm' },
-						{ label: 'Large Size', value: 'well-lg' },
-					]}
-					onChange={(wellSize) => { 
-						setAttributes({ wellSize });
-					}}
-				/>
-			</InspectorControls>
-			,
-			<BlockControls>
-				<WellSizeControl/>
-			</BlockControls>
-			,
-			<div className={className}>
-				<div className = {`well ${attributes.wellSize}`}>
-					{attributes.wellText !== null && attributes.wellText !== '' && attributes.wellText !== undefined ? 
-						<RichText
-							tagName = "div"
-							formattingControls = {['bold', 'italic', 'link']}
-							placeholder = "Enter text or add blocks below..."
-							keepPlaceholderOnFocus = "true"
-							value = {attributes.wellText}
-							onChange = {(wellText) => setAttributes({ wellText })}
-						/>
-					: '' }
-					<InnerBlocks allowedBlocks = {[ 'core/paragraph', 'mayflower-blocks/button', 'core/heading', 'core/list']}/>
-				</div>
+			<div className="alert alert-warning">
+				<p>The <strong>Well</strong> block is no longer available- please use a <strong>Card</strong> block instead.</p>
+				<Button isDefault onClick={handleConvertToCard}>
+					Convert to Card
+				</Button>
 			</div>
 		]
 	},

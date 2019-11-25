@@ -12,7 +12,7 @@ import './editor.scss';
 
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { registerBlockType, createBlock } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { RichText, InspectorControls, InnerBlocks } = wp.editor;
 const { SelectControl, ToggleControl, Toolbar, Panel, PanelBody, PanelRow, SVG, Path, G} = wp.components;
 
@@ -119,6 +119,50 @@ registerBlockType( 'mayflower-blocks/panel', {
 						},
 					},
 				},
+			},
+			{
+				type: 'shortcode',
+				tag: 'well',
+				attributes: {
+					// Well Text
+					cardText: {
+						type: 'string',
+						shortcode: (attrs, { content }) => {
+							// Content returns the whole shortcode, so we need to match only shortcode content
+							let filtered = content.replace(/(\[well.*?\]\s*)|(\s*\[\/well\])/gmi, '');
+							
+							// Return filtered content if there was a match, otherwise return blank string
+							return filtered ? filtered : '';
+						},
+					},
+					cardHeading: {
+						type: 'boolean',
+						default: false
+					},
+					cardFooter: {
+						type: 'boolean',
+						default: false
+					},
+					cardType: {
+						type: 'string',
+						default: 'light'
+					},
+				},
+			},
+			{
+				type: 'block',
+				blocks: [ 'core/paragraph' ],
+				transform: ( attributes, innerBlocks, content ) => {
+					const paragraphBlock = createBlock( 'core/paragraph', {content: content} );
+					//return createBlock( 'mayflower-blocks/panel', attributes, [paragraphBlock]);
+					return createBlock( 'mayflower-blocks/panel', {cardHeading: false, cardFooter: false, cardType: 'light'},  )
+				},
+			},
+
+		],
+		to: [
+			{
+
 			}
 		]
 	},
