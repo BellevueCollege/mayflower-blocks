@@ -8,16 +8,14 @@
 // Import CSS.
 // import './style.scss';
 import './editor.scss';
-import { create } from 'domain';
-
-
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType, createBlock } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText, InspectorControls, InnerBlocks, BlockControls } = wp.editor;
-const { Button } = wp.components;
+const { registerBlockType, createBlock } = wp.blocks;
+const { RichText, InnerBlocks } = wp.blockEditor;
+const { Component } = wp.element;
 const { select, dispatch } = wp.data;
-
+const { insertBlock, insertBlocks, removeBlock } = dispatch( 'core/block-editor' );
+const { getBlock, getBlockIndex, getSelectedBlock } = select( 'core/block-editor' );
 
 /**
  * Register: aa Gutenberg Block.
@@ -33,30 +31,29 @@ const { select, dispatch } = wp.data;
  *                             registered; otherwise `undefined`.
  */
 
-
 registerBlockType( 'mayflower-blocks/well', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Well' ), // Block title.
 	icon: 'text', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 	supports: {
-		inserter: false
+		inserter: false,
 	},
 	attributes: {
 		wellText: {
 			type: 'string',
-			default: ''
+			default: '',
 		},
 		wellSize: {
 			type: 'string',
-			default: ''
+			default: '',
 		},
 		activeWell: {
 			type: 'string',
-			default: ''
-		}
+			default: '',
+		},
 	},
-	
+
 	//Existing bootstrap well shortcode transformed into its block counterpart.
 	//Allows use of [well size=""][/well]
 	transforms: {
@@ -64,98 +61,104 @@ registerBlockType( 'mayflower-blocks/well', {
 			{
 				type: 'block',
 				blocks: [ 'mayflower-blocks/panel' ],
-				transform: (attributes, innerBlocks) => {
-					return createBlock( 'mayflower-blocks/panel', {cardHeading: false, cardFooter: false, cardType: 'light'}, innerBlocks )
-				}
+				transform: ( innerBlocks ) => {
+					return createBlock( 'mayflower-blocks/panel', { cardHeading: false, cardFooter: false, cardType: 'light' }, innerBlocks );
+				},
 			},
 			{
 				type: 'block',
 				blocks: [ 'mayflower-blocks/lead' ],
-				isMatch: ( {wellText} ) => { //Perform a match to see if a well can be transformed to a lead block
-					const wellBlock = select('core/editor').getSelectedBlock();
+				isMatch: ( { wellText } ) => { //Perform a match to see if a well can be transformed to a lead block
+					const wellBlock = getSelectedBlock();
 					const wellBlockInnerBlocks = wellBlock.innerBlocks;
-					if ((wellText && wellBlockInnerBlocks.length == 0) || (wellText && wellBlockInnerBlocks.length == 1 && wellBlockInnerBlocks[0].attributes.content == '')) {
+					if ( ( wellText && wellBlockInnerBlocks.length === 0 ) || ( wellText && wellBlockInnerBlocks.length === 1 && wellBlockInnerBlocks[ 0 ].attributes.content === '' ) ) {
 						return true;
 					}
-					if (wellText == '' && wellBlockInnerBlocks.length == 1){ //Return true if well only has 1 innerblock and it is a paragraph block
-						return wellBlockInnerBlocks[0].name == 'core/paragraph';
+					if ( wellText === '' && wellBlockInnerBlocks.length === 1 ) { //Return true if well only has 1 innerblock and it is a paragraph block
+						return wellBlockInnerBlocks[ 0 ].name === 'core/paragraph';
 					}
-					
 				},
-				transform: ( {wellText} ) => {
-					const wellBlock = select('core/editor').getSelectedBlock();
-					if (wellText){
-						return createBlock( 'mayflower-blocks/lead', {leadText: wellText});
-					} else {
-						return createBlock( 'mayflower-blocks/lead', {leadText: wellBlock.innerBlocks[0].attributes.content});
+				transform: ( { wellText } ) => {
+					const wellBlock = getSelectedBlock();
+					if ( wellText ) {
+						return createBlock( 'mayflower-blocks/lead', { leadText: wellText } );
 					}
-					
+					return createBlock( 'mayflower-blocks/lead', { leadText: wellBlock.innerBlocks[ 0 ].attributes.content } );
 				},
 			},
 			{
 				type: 'block',
 				blocks: [ 'mayflower-blocks/alert' ],
 				transform: ( attributes ) => {
-					const wellBlockInnerBlocks = select('core/editor').getSelectedBlock().innerBlocks;
-					return createBlock( 'mayflower-blocks/alert', {alertText: attributes.wellText}, wellBlockInnerBlocks);
+					const wellBlockInnerBlocks = getSelectedBlock().innerBlocks;
+					return createBlock( 'mayflower-blocks/alert', { alertText: attributes.wellText }, wellBlockInnerBlocks );
 				},
 			},
 			{
 				type: 'block',
 				blocks: [ 'core/paragraph' ],
-				isMatch: ( {wellText} ) => { //Perform a match to see if a well can be transformed to a paragraph block
-					const wellBlock = select('core/editor').getSelectedBlock();
+				isMatch: ( { wellText } ) => { //Perform a match to see if a well can be transformed to a paragraph block
+					const wellBlock = getSelectedBlock();
 					const wellBlockInnerBlocks = wellBlock.innerBlocks;
-					if (wellText) {
+					if ( wellText ) {
 						return true;
-					} else {
-						if (wellBlockInnerBlocks.length >= 1){ //Return true if first innerblock is a paragraph
-							return wellBlockInnerBlocks[0].name == 'core/paragraph';
-						}
+					}
+					if ( wellBlockInnerBlocks.length >= 1 ) { //Return true if first innerblock is a paragraph
+						return wellBlockInnerBlocks[ 0 ].name === 'core/paragraph';
 					}
 				},
 				transform: ( attributes ) => {
-					const wellBlock = select('core/editor').getSelectedBlock();
-					const wellBlockIndex = select('core/editor').getBlockIndex(wellBlock.clientId);
+					const wellBlock = getSelectedBlock();
+					const wellBlockIndex = getBlockIndex( wellBlock.clientId );
 					const wellBlockInnerBlocks = wellBlock.innerBlocks;
-					
 					//if shortcode wellText exists, return paragraph transform and any innerblocks after shortcode paragraph content
-					if (attributes.wellText){
-						if (wellBlockInnerBlocks.length >= 1){
-							dispatch('core/editor').insertBlocks(wellBlockInnerBlocks, wellBlockIndex + 1);
+					if ( attributes.wellText ) {
+						if ( wellBlockInnerBlocks.length >= 1 ) {
+							insertBlocks( wellBlockInnerBlocks, wellBlockIndex + 1 );
 						}
-						return createBlock( 'core/paragraph', {content: attributes.wellText});
-					} else { //if no shortcode wellText, return innerblocks
-						if (wellBlockInnerBlocks.length > 1) { //if more than 1 innerblock, dispatch remaining innerblocks to appear after first innerblock
-							dispatch('core/editor').insertBlocks(wellBlockInnerBlocks.slice(1), wellBlockIndex + 1);
-						}
-						return wellBlockInnerBlocks[0];
+						return createBlock( 'core/paragraph', { content: attributes.wellText } );
+					} //if no shortcode wellText, return innerblocks
+					if ( wellBlockInnerBlocks.length > 1 ) { //if more than 1 innerblock, dispatch remaining innerblocks to appear after first innerblock
+						insertBlocks( wellBlockInnerBlocks.slice( 1 ), wellBlockIndex + 1 );
 					}
+					return wellBlockInnerBlocks[ 0 ];
 				},
 			},
 		],
 	},
 
-	edit: function ({ className, attributes, setAttributes, innerBlocks }) {
-		const handleConvertToCard = () => {
-			const wellBlockInnerBlocks = select('core/editor').getSelectedBlock().innerBlocks;
-			const currentBlockClientId = select('core/editor').getSelectedBlockClientId();
-			const cardBlock = createBlock( 'mayflower-blocks/panel', {cardHeading: false, cardFooter: false, cardType: 'light'}, wellBlockInnerBlocks );
-			const currentIndex = select('core/editor').getBlockIndex(currentBlockClientId);
-			dispatch('core/editor').removeBlock(currentBlockClientId, false);
-			dispatch('core/editor').insertBlock(cardBlock, currentIndex);
-			
-		};
-		return [
-			<div className="alert alert-warning">
-				<p>The <strong>Well</strong> block is no longer available- please use a <strong>Card</strong> block instead.</p>
-				<Button isDefault onClick={handleConvertToCard}>
-					Convert to Card
-				</Button>
-			</div>
-		]
-	},
+	edit: class extends Component {
+		constructor( props ) {
+			super( ...arguments );
+			this.props = props;
+		}
 
+		componentDidMount() {
+			// On component mount, fire so each Well converts into a Card automatically
+			this.handleConvertToCard();
+		}
+
+		/**
+		 * Handles converting Wells into Card blocks
+		 *
+		 * Gets the current Well block clientId and takes it's innerblocks to create a new Card block, then removes the old Well block, and inserts the new Card block
+		 */
+		handleConvertToCard = () => {
+			const currentBlockClientId = this.props.clientId;
+			const wellBlockInnerBlocks = getBlock( currentBlockClientId ).innerBlocks;
+			if ( Array.isArray( wellBlockInnerBlocks ) ) {
+				const cardBlock = createBlock( 'mayflower-blocks/panel', { cardHeading: false, cardFooter: false, cardType: 'light' }, wellBlockInnerBlocks );
+				const currentIndex = getBlockIndex( currentBlockClientId );
+				removeBlock( currentBlockClientId, false );
+				insertBlock( cardBlock, currentIndex );
+			}
+		};
+
+		render() {
+			// Return true because we are not rendering anything new
+			return true;
+		}
+	},
 
 	/**
 	 * The save function defines the way in which the different attributes should be combined
@@ -166,15 +169,14 @@ registerBlockType( 'mayflower-blocks/well', {
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
 
-	save: function( {attributes} ) {
+	save: ( { attributes } ) => {
 		return (
-			<div className = {`well ${attributes.wellSize}`}>
-				{attributes.wellText !== null && attributes.wellText !== '' && attributes.wellText !== undefined ? 
+			<div className={ `well ${ attributes.wellSize }` }>
+				{ attributes.wellText !== null && attributes.wellText !== '' && attributes.wellText !== undefined ?
 					<RichText.Content
-						tagName = "div"
-						value = {attributes.wellText}
-					/>
-				: '' }
+						tagName="div"
+						value={ attributes.wellText }
+					/> : '' }
 				<InnerBlocks.Content />
 			</div>
 		);
