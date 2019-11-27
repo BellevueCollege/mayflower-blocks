@@ -36,11 +36,10 @@ const { createHigherOrderComponent } = wp.compose;
 
 const mayflowerBlocksTab = createHigherOrderComponent( ( BlockListBlock ) => {
 	return ( props ) => {
-		if (props.attributes.tabId && props.name == 'mayflower-blocks/tab-list-tab') {
-			return <li role="presentation" class={props.attributes.tabActive ? 'active' : ''}><BlockListBlock { ...props }/></li>;
-		} else {
-			return <BlockListBlock { ...props } />;
+		if ( props.attributes.tabId && props.name == 'mayflower-blocks/tab-list-tab' ) {
+			return <li role="presentation" className={ props.attributes.tabActive ? 'active' : '' }><BlockListBlock { ...props } /></li>;
 		}
+		return <BlockListBlock { ...props } />;
 	};
 }, 'mayflowerBlocksTab' );
 
@@ -52,33 +51,33 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 	title: __( 'Tab List Tab' ), // Block title.
 	icon: 'category', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
-	parent: ['mayflower-blocks/tab-list'],
+	parent: [ 'mayflower-blocks/tab-list' ],
 
 	attributes: {
 		tabActive: {
 			type: 'boolean',
-			default: false
+			default: false,
 		},
 		tabId: {
 			type: 'string',
 		},
 		tabTitle: {
 			type: 'string',
-			default: ''
+			default: '',
 		},
 		tabDefault: {
 			type: 'boolean',
-			default: false
+			default: false,
 		},
 	},
-	
-	edit: function ({ className, attributes, setAttributes, clientId, isSelected }) {
-		const tabListBlock = select('core/editor').getBlock(select('core/editor').getBlockRootClientId(clientId));
-		const parentTabsBlock = select('core/editor').getBlock(select('core/editor').getBlockRootClientId(tabListBlock.clientId));
+
+	edit: function( { className, attributes, setAttributes, clientId, isSelected } ) {
+		const tabListBlock = select( 'core/editor' ).getBlock( select( 'core/editor' ).getBlockRootClientId( clientId ) );
+		const parentTabsBlock = select( 'core/editor' ).getBlock( select( 'core/editor' ).getBlockRootClientId( tabListBlock.clientId ) );
 		const parentTabsInnerBlocks = parentTabsBlock.innerBlocks;
-		const tabContentBlock = parentTabsInnerBlocks.find(child => {
+		const tabContentBlock = parentTabsInnerBlocks.find( child => {
 			return child.name == 'mayflower-blocks/tab-content';
-		});
+		} );
 
 		/**
 		 * Handles updating the default tab.
@@ -87,48 +86,48 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 		 */
 		const handleUpdateDefaultTab = () => {
 			// Set current tab as default
-			if (attributes.tabDefault == false) {
-				setAttributes({tabDefault: true});
+			if ( attributes.tabDefault == false ) {
+				setAttributes( { tabDefault: true } );
 			}
-			
+
 			// Find other tabs that are set as default and set the tabDefault attribute to false
-			tabListBlock.innerBlocks.forEach(tab => {
-				if (tab.attributes.tabDefault === true) {
-					dispatch('core/editor').updateBlockAttributes(tab.clientId, {tabDefault: false});
+			tabListBlock.innerBlocks.forEach( tab => {
+				if ( tab.attributes.tabDefault === true ) {
+					dispatch( 'core/editor' ).updateBlockAttributes( tab.clientId, { tabDefault: false } );
 				}
-			});
+			} );
 
 			// Set default panel body along with tab
-			tabContentBlock.innerBlocks.forEach(panel => {
+			tabContentBlock.innerBlocks.forEach( panel => {
 				// If other panels are default, set to false
-				if (panel.attributes.tabDefault === true) {
-					dispatch('core/editor').updateBlockAttributes(panel.clientId, {tabDefault: false});
+				if ( panel.attributes.tabDefault === true ) {
+					dispatch( 'core/editor' ).updateBlockAttributes( panel.clientId, { tabDefault: false } );
 				}
 				// Then set default panel if panel tabId matches the default tabId
-				if (panel.attributes.tabId == attributes.tabId) {
-					dispatch('core/editor').updateBlockAttributes(panel.clientId, {tabDefault: true});
+				if ( panel.attributes.tabId == attributes.tabId ) {
+					dispatch( 'core/editor' ).updateBlockAttributes( panel.clientId, { tabDefault: true } );
 				}
-			});
-		}
+			} );
+		};
 
 		// Check if tab is selected and set tabActive attributes to true or false
-		if (isSelected) {
-			setAttributes({tabActive: true});
-			if (Array.isArray(parentTabsInnerBlocks)) {
+		if ( isSelected ) {
+			setAttributes( { tabActive: true } );
+			if ( Array.isArray( parentTabsInnerBlocks ) ) {
 				// Looks for other tabs that were previously active and set it to false
-				tabListBlock.innerBlocks.forEach(tab => {
-					if (tab.attributes.tabId !== attributes.tabId ) {
-						dispatch('core/editor').updateBlockAttributes(tab.clientId, {tabActive: false});
+				tabListBlock.innerBlocks.forEach( tab => {
+					if ( tab.attributes.tabId !== attributes.tabId ) {
+						dispatch( 'core/editor' ).updateBlockAttributes( tab.clientId, { tabActive: false } );
 					}
-				});
+				} );
 				// Sets new active tab panel then looks for other tabs that were previously active and set it to false
-				tabContentBlock.innerBlocks.forEach(panel => {
-					if ( panel.attributes.tabId == attributes.tabId) {
-						dispatch('core/editor').updateBlockAttributes(panel.clientId, {tabActive: true});
+				tabContentBlock.innerBlocks.forEach( panel => {
+					if ( panel.attributes.tabId == attributes.tabId ) {
+						dispatch( 'core/editor' ).updateBlockAttributes( panel.clientId, { tabActive: true } );
 					} else {
-						dispatch('core/editor').updateBlockAttributes(panel.clientId, {tabActive: false});
+						dispatch( 'core/editor' ).updateBlockAttributes( panel.clientId, { tabActive: false } );
 					}
-				});
+				} );
 			}
 		}
 
@@ -137,28 +136,28 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 		 */
 		const handleRemoveTab = () => {
 			// Handles selecting previous or next block when deleting, so the flow of deletion is smoother
-			const nextBlockClientId = select('core/editor').getNextBlockClientId(clientId);
-			const prevBlockClientId = select('core/editor').getPreviousBlockClientId(clientId);
-			if (nextBlockClientId) {
-				dispatch('core/editor').selectBlock(nextBlockClientId);
+			const nextBlockClientId = select( 'core/editor' ).getNextBlockClientId( clientId );
+			const prevBlockClientId = select( 'core/editor' ).getPreviousBlockClientId( clientId );
+			if ( nextBlockClientId ) {
+				dispatch( 'core/editor' ).selectBlock( nextBlockClientId );
 			} else {
-				dispatch('core/editor').selectBlock(prevBlockClientId);
+				dispatch( 'core/editor' ).selectBlock( prevBlockClientId );
 			}
-			
+
 			// Remove the current tab
-			dispatch('core/editor').removeBlock(clientId, false);
-			
+			dispatch( 'core/editor' ).removeBlock( clientId, false );
+
 			// Find the corresponding tab panel and remove it
 			const attachedPanel = tabContentBlock.innerBlocks.find( panel => {
-					return panel.attributes.tabId == attributes.tabId;
-				}
+				return panel.attributes.tabId == attributes.tabId;
+			}
 			);
-			dispatch('core/editor').removeBlock(attachedPanel.clientId, false);
-		}
+			dispatch( 'core/editor' ).removeBlock( attachedPanel.clientId, false );
+		};
 
 		/**
 		 * TabToolBarControl returns a Toolbar component with set default tab and remove buttons to set or remove the tab and corresponding panel.
-		 * 
+		 *
 		 * @return Toolbar component with tab control buttons
 		 * */
 		const TabToolBarControl = () => {
@@ -167,19 +166,19 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 					icon: <Dashicon icon="sticky" />,
 					title: 'Set Default Tab',
 					isActive: attributes.tabDefault,
-					onClick: () => handleUpdateDefaultTab()
+					onClick: () => handleUpdateDefaultTab(),
 				},
 				{
 					icon: <Dashicon icon="trash" />,
 					title: 'Remove',
-					onClick: () => handleRemoveTab()
+					onClick: () => handleRemoveTab(),
 				},
 			];
 
-			return(
-				<Toolbar controls = { controls } />
+			return (
+				<Toolbar controls={ controls } />
 			);
-		}
+		};
 
 		return [
 			<InspectorControls>
@@ -193,34 +192,31 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 								label="Set as default active tab?"
 								help={ attributes.tabDefault ? 'Is the default tab.' : 'Not the default tab.' }
 								checked={ attributes.tabDefault }
-								onChange={ (tabDefault) => {
-									setAttributes({tabDefault});
-									handleUpdateDefaultTab()
-								}}
+								onChange={ ( tabDefault ) => {
+									setAttributes( { tabDefault } );
+									handleUpdateDefaultTab();
+								} }
 							/>
 						</PanelRow>
 					</PanelBody>
 				</Panel>
-			</InspectorControls>
-			,
-				<BlockControls>
-					<TabToolBarControl/>
-				</BlockControls>
-			,
+			</InspectorControls>,
+			<BlockControls>
+				<TabToolBarControl />
+			</BlockControls>,
 			<Fragment>
-				<a className={className} aria-controls={`#${attributes.tabId}`} role="tab" data-toggle="tab"> 
+				<a className={ className } aria-controls={ `#${ attributes.tabId }` } role="tab" data-toggle="tab">
 					<RichText
-						formattingControls = {['']}
-						placeholder = "Enter title..."
-						keepPlaceholderOnFocus = "true"
-						value = {attributes.tabTitle}
-						onChange = {(tabTitle) => setAttributes({ tabTitle })}
+						formattingControls={ [ '' ] }
+						placeholder="Enter title..."
+						keepPlaceholderOnFocus="true"
+						value={ attributes.tabTitle }
+						onChange={ ( tabTitle ) => setAttributes( { tabTitle } ) }
 					/>
 				</a>
-			</Fragment>
-		]
+			</Fragment>,
+		];
 	},
-
 
 	/**
 	 * The save function defines the way in which the different attributes should be combined
@@ -234,49 +230,49 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 	save: function( { attributes } ) {
 		const className = getBlockDefaultClassName( 'mayflower-blocks/tab-list-tab' );
 		return (
-			<li role="presentation" className={`${className} nav-item`}> 
-				<a className={`nav-link ${attributes.tabDefault ? ' active' : ''}`} href={`#${attributes.tabId}`} aria-controls={`#${attributes.tabId}`} role="tab" data-toggle="tab"> 
+			<li role="presentation" className={ `${ className } nav-item` }>
+				<a className={ `nav-link ${ attributes.tabDefault ? ' active' : '' }` } id={ `tab_link_${ attributes.tabId }` } href={ `#tab_${ attributes.tabId }` } aria-controls={ `tab_${ attributes.tabId }` } role="tab" data-toggle="tab">
 					<RichText.Content
-						value = {attributes.tabTitle}
+						value={ attributes.tabTitle }
 					/>
 				</a>
 			</li>
 		);
 	},
 
-	deprecated: [
-		        {
-					attributes: {
-						tabActive: {
-							type: 'boolean',
-							default: false
-						},
-						tabId: {
-							type: 'string',
-						},
-						tabTitle: {
-							type: 'string',
-							default: ''
-						},
-						tabDefault: {
-							type: 'boolean',
-							default: false
-						},
-					},
-		
-		            save: function( { attributes } ) {
-						const className = getBlockDefaultClassName( 'mayflower-blocks/tab-list-tab' );
-						return (
-							<li role="presentation" className={`${className} ${attributes.tabDefault ? ' active' : ''}`}> 
-								<a href={`#${attributes.tabId}`} aria-controls={`#${attributes.tabId}`} role="tab" data-toggle="tab"> 
-									<RichText.Content
-										value = {attributes.tabTitle}
-									/>
-								</a>
-							</li>
-						);
-					},
-		        }
-		    ]
-		
+	deprecated: [
+		{
+			attributes: {
+				tabActive: {
+					type: 'boolean',
+					default: false,
+				},
+				tabId: {
+					type: 'string',
+				},
+				tabTitle: {
+					type: 'string',
+					default: '',
+				},
+				tabDefault: {
+					type: 'boolean',
+					default: false,
+				},
+			},
+
+			save: function( { attributes } ) {
+				const className = getBlockDefaultClassName( 'mayflower-blocks/tab-list-tab' );
+				return (
+					<li role="presentation" className={ `${ className } ${ attributes.tabDefault ? ' active' : '' }` }>
+						<a href={ `#${ attributes.tabId }` } aria-controls={ `#${ attributes.tabId }` } role="tab" data-toggle="tab">
+							<RichText.Content
+								value={ attributes.tabTitle }
+							/>
+						</a>
+					</li>
+				);
+			},
+		},
+	],
+
 } );
