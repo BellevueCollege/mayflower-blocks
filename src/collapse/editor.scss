@@ -5,6 +5,15 @@
  * which makes it higher in priority.
  */
 
-.wp-block-mayflower-blocks-collapse {
-
+ .wp-block div[class^="wp-block-"] {
+    [data-type="mayflower-blocks/collapse"] {
+        .card {
+            padding: 0;
+            max-width: 100%;
+        }
+        .card-body {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+    }
 }

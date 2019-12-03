@@ -9,14 +9,10 @@
 // import './style.scss';
 import './editor.scss';
 
-
-
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText, InspectorControls, InnerBlocks } = wp.editor;
-const { SelectControl } = wp.components;
+const { InnerBlocks } = wp.editor;
 const { Fragment } = wp.element;
-
 
 /**
  * Register: aa Gutenberg Block.
@@ -32,7 +28,6 @@ const { Fragment } = wp.element;
  *                             registered; otherwise `undefined`.
  */
 
-
 registerBlockType( 'mayflower-blocks/collapsibles', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Collapsibles' ), // Block title.
@@ -40,23 +35,26 @@ registerBlockType( 'mayflower-blocks/collapsibles', {
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 	keywords: [ 'collapse', 'accordion' ],
 	description: 'Create accordion-style collapsing modules in a variety of colors.',
-	attributes: {
-	},
-	
-	edit: function ({ className }) {
 
-		return [
+	attributes: {
+		currentBlockClientId: {
+			type: 'string',
+			default: '',
+		},
+	},
+
+	edit: function( { className, clientId, setAttributes } ) {
+		setAttributes( { currentBlockClientId: clientId } );
+		return (
 			<Fragment>
-				<p class="block-name">Collapsibles Block</p>
-				<div className={className}>
-					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-						<InnerBlocks allowedBlocks = {['mayflower-blocks/collapse']}/>
+				<div className={ className }>
+					<div className="accordion" id={ `accordion_${ clientId }` }>
+						<InnerBlocks allowedBlocks={ [ 'mayflower-blocks/collapse' ] } />
 					</div>
 				</div>
 			</Fragment>
-		]
+		);
 	},
-
 
 	/**
 	 * The save function defines the way in which the different attributes should be combined
@@ -67,13 +65,26 @@ registerBlockType( 'mayflower-blocks/collapsibles', {
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
 
-	save: function() {
+	save: function( { attributes } ) {
 		return (
-			<div className="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-				<InnerBlocks.Content/>
+			<div className="accordion" id={ `accordion_${ attributes.currentBlockClientId }` }>
+				<InnerBlocks.Content />
 			</div>
 		);
 	},
+
+	deprecated: [
+		{
+			attributes: {},
+			save: function() {
+				return (
+					<div className="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+						<InnerBlocks.Content />
+					</div>
+				);
+			},
+		},
+	],
 
 	//Existing bootstrap collapsibles shortcode transformed into its block counterpart.
 	//Allows use of [collapsibles][/collapsibles]
@@ -83,7 +94,7 @@ registerBlockType( 'mayflower-blocks/collapsibles', {
 			{
 				type: 'shortcode',
 				tag: 'collapsibles',
-			}
-		]
+			},
+		],
 	},
 } );
