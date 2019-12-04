@@ -13,10 +13,9 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { InspectorControls } = wp.editor;
-const { SelectControl, ServerSideRender } = wp.components;
+const { SelectControl } = wp.components;
 const { Component } = wp.element;
-const { apiFetch } = wp;
+const { apiFetch, serverSideRender: ServerSideRender } = wp;
 
 /**
  * Register: aa Gutenberg Block.
@@ -39,26 +38,28 @@ registerBlockType( 'mayflower-blocks/tablepress', {
 	category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 
 	attributes: {
+		/* id for apiFetch and php */
 		postId: {
 			type: 'string',
-			default: 'select'
+			default: 'select',
 		},
+		/* id for shortcodes */
 		tableId: {
 			type: 'string',
 		},
 		select: {
 			type: 'boolean',
-			default: false
-		}
+			default: false,
+		},
 	},
 
 	edit: class extends Component {
-		constructor(props) {
-			super(...arguments);
+		constructor( props ) {
+			super( ...arguments );
 			this.props = props;
 			this.state = {
-				tableList: []
-			}
+				tableList: [],
+			};
 		}
 
 		componentDidMount() {
@@ -71,16 +72,15 @@ registerBlockType( 'mayflower-blocks/tablepress', {
 		 * Sets tableList with array of tables from API
 		 */
 		handleTableFetch = () => {
-			let tableArray = [{label: "Select Table", value: "select"}];
+			const tableArray = [ { label: 'Select Table', value: 'select' } ];
 			apiFetch( { path: '/wp/v2/tablepress_table' } ).then( table => {
-				table.forEach(t => tableArray.push({label: t.title.rendered, value: t.id}));
-				this.setState({tableList: tableArray});
-			});
-			
+				table.forEach( t => tableArray.push( { label: t.title.rendered, value: t.id } ) );
+				this.setState( { tableList: tableArray } );
+			} );
 		}
 
 		render() {
-			const { setAttributes, attributes, className, isSelected} = this.props;
+			const { setAttributes, attributes, className, isSelected } = this.props;
 			const { tableList } = this.state;
 
 			/**
@@ -89,51 +89,58 @@ registerBlockType( 'mayflower-blocks/tablepress', {
 			 * Sets attributes so select control with tables shows
 			 */
 			const handleShowSelectControl = () => {
-				setAttributes({select: true});
-				setAttributes({tableId: ''});
-			}
+				setAttributes( { select: true } );
+				setAttributes( { tableId: '' } );
+			};
 
 			// Select control for returned tables from REST API
 			let selectControls;
 			// Checks whether to show controls
-			if ( isSelected || (!isSelected && attributes.postId === undefined || attributes.postId === 'select') ) {
+			if ( isSelected || ( ! isSelected && attributes.postId === undefined ) || ( ! isSelected && attributes.postId === 'select' ) ) {
 				// Checks to make sure a tableId isn't defined or the user doesn't want to select a new table
-				if( (attributes.tableId === undefined || '' ) || attributes.select === true) {
+				if ( ( attributes.tableId === undefined || '' ) || attributes.select === true ) {
 					selectControls = (
-						<div class="controls">
-							<SelectControl
-								label = "Choose Tablepress Table"
-								value = {attributes.postId}
-								options = {tableList}
-								onChange = {(postId) => setAttributes({ postId })}
-							/>
+						<div className="card">
+							<div className="card-body">
+								<SelectControl
+									label="Choose Tablepress Table"
+									value={ attributes.postId }
+									options={ tableList }
+									onChange={ ( postId ) => setAttributes( { postId } ) }
+								/>
+							</div>
 						</div>
-						)
-					}
+					);
+				}
 			}
 
 			// Button to click that shows select control on a transformed shortcode block
 			let selectDifferentTable;
 			// Checks if there is a table id and is selected, then show button
 			if ( attributes.tableId && isSelected ) {
-				selectDifferentTable = ( <div class="controls"><button type="button" class="btn btn-default" onClick={handleShowSelectControl}>Select Different Table</button></div> );
+				selectDifferentTable = ( <div className="card">
+					<div className="card-body"><button type="button" className="btn btn-primary" onClick={ handleShowSelectControl }>Select Different Table</button></div>
+				</div> );
 			}
 
-			return [
-				<InspectorControls>
-				</InspectorControls>
-				,
-				<div class={className}>
-					{ selectControls }
+			const tableAlertNoTables = (
+				<div className="alert alert-warning" role="alert">
+					There are no Tablepress tables. <a href="/wp-admin/admin.php?page=tablepress_add" aria-label="Create a new Tablepress table" target="_blank">Create a table</a>.
+				</div>
+			);
+
+			return (
+				<div className={ className }>
+					{ tableList.length <= 1 ? tableAlertNoTables : selectControls }
 					{ selectDifferentTable }
-					<div class="editor-only">
+					<div className="editor-only">
 						<ServerSideRender
-							block = "mayflower-blocks/tablepress"
-							attributes = { attributes }
+							block="mayflower-blocks/tablepress"
+							attributes={ attributes }
 						/>
 					</div>
 				</div>
-			];
+			);
 		}
 	},
 
@@ -156,7 +163,7 @@ registerBlockType( 'mayflower-blocks/tablepress', {
 					},
 				},
 			},
-		]
+		],
 	},
 } );
 
