@@ -85,6 +85,11 @@ registerBlockType( 'mayflower-blocks/course', {
 	},
 
 	edit: function( { setAttributes, attributes, className, isSelected, clientId } ) {
+		if ( attributes.subject.endsWith( '&amp;' ) ) {
+			const subjectRegEx = attributes.subject.replace( /&amp;/g, '&' );
+			setAttributes( { subject: subjectRegEx, item: attributes.item } );
+		}
+
 		// Update attributes from within children components
 		const handleSubjectUpdate = ( newSubject ) => {
 			setAttributes( { subject: newSubject, item: 'select' } );
