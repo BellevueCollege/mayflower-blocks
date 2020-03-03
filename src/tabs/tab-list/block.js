@@ -102,7 +102,7 @@ registerBlockType( 'mayflower-blocks/tab-list', {
 		return [
 			<ul className={`${className} nav nav-tabs`} role="tablist">
 				<InnerBlocks allowedBlocks={['mayflower-blocks/tab-list-tab']}/>
-				<li role="presentation">
+				<li role="presentation" class="tab-inserter">
 					<Button onClick={addTab} className="add-tab">
 						<Dashicon icon="insert" />
 						{ currentBlockData.innerBlocks.length == 0 ? <span>Add Tab</span> : '' }

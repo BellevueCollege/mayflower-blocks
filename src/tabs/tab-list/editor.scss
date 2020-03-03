@@ -39,6 +39,10 @@
         float: left;
         border: 1px solid transparent;
 
+        &.tab-inserter {
+            margin-top: 14px;
+        }
+
         button.add-tab {
             padding: 10px 15px;
             color: #555555;
