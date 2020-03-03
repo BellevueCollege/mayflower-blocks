@@ -190,16 +190,19 @@ registerBlockType('mayflower-blocks/column', {
 			dispatch('core/editor').updateBlockAttributes(parentBlockClientId, { childIsEditing: false });
 		}
 
+		const Column = () => (
+			attributes.gridColumnClass &&
+				attributes.isEditing !== true ?
+					<Disabled>
+						<InnerBlocks />
+					</Disabled>
+			: <InnerBlocks />
+		)
+
 		const ColumnWithTooltip = () => (
 			<Tooltip text="Select to edit" position="bottom center">
 				<div aria-label="Select to edit">
-				{ attributes.gridColumnClass &&
-					attributes.isEditing !== true ?
-						<Disabled>
-							<InnerBlocks />
-						</Disabled>
-					: <InnerBlocks />
-				}
+					<Column/>
 				</div>
 			</Tooltip>
 		);
@@ -277,7 +280,11 @@ registerBlockType('mayflower-blocks/column', {
 			</BlockControls> : ''
 			,
 			<div className={className}>
+			{
+				attributes.isEditing ?
+				<Column/> :
 				<ColumnWithTooltip/>
+			}
 			</div>
 		]
 	},
