@@ -12,7 +12,7 @@ import './editor.scss';
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { InspectorControls, InnerBlocks, BlockControls } = wp.editor;
-const { SelectControl, Button, Disabled, Toolbar, Panel, PanelBody, PanelRow, SVG, Path, G} = wp.components;
+const { SelectControl, Button, Disabled, Toolbar, Panel, PanelBody, PanelRow, SVG, Path, G, Tooltip } = wp.components;
 const { select, dispatch } = wp.data;
 const { createHigherOrderComponent } = wp.compose;
 
@@ -190,6 +190,23 @@ registerBlockType('mayflower-blocks/column', {
 			dispatch('core/editor').updateBlockAttributes(parentBlockClientId, { childIsEditing: false });
 		}
 
+		const Column = () => (
+			attributes.gridColumnClass &&
+				attributes.isEditing !== true ?
+					<Disabled>
+						<InnerBlocks />
+					</Disabled>
+			: <InnerBlocks />
+		)
+
+		const ColumnWithTooltip = () => (
+			<Tooltip text="Select to edit" position="bottom center">
+				<div aria-label="Select to edit">
+					<Column/>
+				</div>
+			</Tooltip>
+		);
+
 		return [
 			<InspectorControls>
 				<Panel> 
@@ -263,13 +280,11 @@ registerBlockType('mayflower-blocks/column', {
 			</BlockControls> : ''
 			,
 			<div className={className}>
-				{ attributes.gridColumnClass &&
-					attributes.isEditing !== true ?
-						<Disabled>
-							<InnerBlocks />
-						</Disabled>
-					: <InnerBlocks />
-				}
+			{
+				attributes.isEditing ?
+				<Column/> :
+				<ColumnWithTooltip/>
+			}
 			</div>
 		]
 	},

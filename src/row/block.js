@@ -71,7 +71,7 @@ registerBlockType('mayflower-blocks/row', {
 					let gridColumnSize = (12 % ( attributes.childColumns + 1 ) == 0 ) ? ( 12 / ( attributes.childColumns + 1 ) ) : 4;
 
 					//Creates a new block and saves a block object to columnBlock
-					const paragraphBlock = createBlock('core/paragraph', { content: '', placeholder: 'Select a column block to start editing or remove the column.' });
+					const paragraphBlock = createBlock('core/paragraph', { content: '' });
 					const columnBlock = createBlock('mayflower-blocks/column', { gridColumnClass: 'md', gridColumnSize: gridColumnSize, siblingColumns: attributes.childColumns + 1 }, [paragraphBlock]);
 
 					// Insert columnBlock to the row block appending to the last index of columns
