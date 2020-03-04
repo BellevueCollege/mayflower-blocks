@@ -12,6 +12,11 @@
             display: none;
         }
 
+        > div.editor-block-list__block-edit > div[data-block] {
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+
         &.block-editor-block-list__block {
             &.is-selected {
                 > .editor-block-list__block-edit {

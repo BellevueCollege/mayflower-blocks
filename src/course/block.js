@@ -6,10 +6,8 @@
  */
 
 //  Import CSS.
-import './style.scss';
+// import './style.scss';
 import './editor.scss';
-
-
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
@@ -44,11 +42,11 @@ registerBlockType( 'mayflower-blocks/course', {
 	attributes: {
 		subject: {
 			type: 'string',
-			default: 'select'
+			default: 'select',
 		},
 		item: {
 			type: 'string',
-			default: 'select'
+			default: 'select',
 		},
 		description: {
 			type: 'boolean',
@@ -80,80 +78,82 @@ registerBlockType( 'mayflower-blocks/course', {
 						shortcode: ( { named: { description } } ) => {
 							return description;
 						},
-					}
+					},
 				},
 			},
-		]
+		],
 	},
-	
-	edit: function ({setAttributes, attributes, className, isSelected, clientId}) {
-		
-		// Update attributes from within children components
-		const handleSubjectUpdate = (newSubject) => {
-			setAttributes({subject: newSubject, item: 'select'});
-		}
-		const handleItemUpdate = (newItem) => {
-			setAttributes({item: newItem});
+
+	edit: function( { setAttributes, attributes, className, isSelected, clientId } ) {
+		if ( attributes.subject.endsWith( '&amp;' ) ) {
+			const subjectRegEx = attributes.subject.replace( /&amp;/g, '&' );
+			setAttributes( { subject: subjectRegEx, item: attributes.item } );
 		}
 
+		// Update attributes from within children components
+		const handleSubjectUpdate = ( newSubject ) => {
+			setAttributes( { subject: newSubject, item: 'select' } );
+		};
+		const handleItemUpdate = ( newItem ) => {
+			setAttributes( { item: newItem } );
+		};
+
 		let selectControls;
-		if (isSelected || (select('core/editor').isBlockSelected(clientId) == false && (attributes.subject == 'select' || attributes.item == 'select'))) {
+		if ( isSelected || ( select( 'core/editor' ).isBlockSelected( clientId ) === false && ( attributes.subject === 'select' || attributes.item === 'select' ) ) ) {
 			selectControls = (
-			<div class="controls">
-				<ClassSubjectSelect
-					attributes = {attributes}
-					onSubjectUpdate = {handleSubjectUpdate}
-				/> 
-				<ClassItemSelect
-					attributes = {attributes}
-					onItemUpdate = {handleItemUpdate}
-				/>
-			</div>
-			)
+				<div className="controls">
+					<ClassSubjectSelect
+						attributes={ attributes }
+						onSubjectUpdate={ handleSubjectUpdate }
+					/>
+					<ClassItemSelect
+						attributes={ attributes }
+						onItemUpdate={ handleItemUpdate }
+					/>
+				</div>
+			);
 		}
 
 		let helpBox;
-		if (isSelected || (select('core/editor').isBlockSelected(clientId) == false && (attributes.subject == 'select' || attributes.item == 'select'))) {
-			if (attributes.subject == 'select') {
+		if ( isSelected || ( select( 'core/editor' ).isBlockSelected( clientId ) === false && ( attributes.subject === 'select' || attributes.item === 'select' ) ) ) {
+			if ( attributes.subject === 'select' ) {
 				helpBox = (
-					<p class="editor-only alert alert-info">
+					<p className="editor-only alert alert-info">
 						<strong>Notice:</strong> please select a subject to view courses.
 					</p>
 				);
+			} else if ( attributes.item === 'select' ) {
+				helpBox = (
+					<p className="editor-only alert alert-info">
+						<strong>Notice:</strong> please select a course if there are courses available.
+					</p>
+				);
 			} else {
-				if (attributes.item == 'select') {
-					helpBox = (
-						<p class="editor-only alert alert-info">
-							<strong>Notice:</strong> please select a course if there are courses available.
-						</p>
-					);
-				} else {
-					helpBox = (
-						<span></span>
-					);
-				}
+				helpBox = (
+					<span></span>
+				);
 			}
 		}
-		
+
 		return (
 			<Fragment>
 				<InspectorControls>
 					<CheckboxControl
 						label="Display Course Description"
-						checked={attributes.description}
-						onChange={(description) => setAttributes({ description })}
+						checked={ attributes.description }
+						onChange={ ( description ) => setAttributes( { description } ) }
 					/>
 				</InspectorControls>
 
-				<div class={className}>
+				<div className={ className }>
 
 					{ helpBox }
 					{ selectControls }
-					
+
 					<Disabled>
 						<ServerSideRender
 							block="mayflower-blocks/course"
-							attributes= { attributes }
+							attributes={ attributes }
 						/>
 					</Disabled>
 				</div>
