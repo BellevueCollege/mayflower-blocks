@@ -16,12 +16,9 @@
     .row {
         margin: 0 15px;
         
-        >.editor-inner-blocks {
-            >.editor-block-list__layout {
+        >.block-editor-inner-blocks {
+            >.block-editor-block-list__layout {
                 >.block-list-appender {
-                    clear: both;
-                    margin: 0 3rem;
-                    padding: 1em 0;
                     display: none;
                 }
             }
@@ -34,6 +31,7 @@
         flex-wrap: wrap;
 
         button {
+            height: 100%;
             flex: 1;
             clear: both;
             font-size: 1em;
