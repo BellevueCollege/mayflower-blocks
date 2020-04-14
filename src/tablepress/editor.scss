@@ -1,0 +1,26 @@
+.wp-block[data-type="mayflower-blocks/tablepress"] {
+	.wp-block-mayflower-blocks-tablepress {
+		.editor-only {
+			margin-top: 1em;
+			display: block;
+		}
+
+		.controls {
+			pointer-events: auto;
+			border: 1px solid black;
+			border-radius: 4px;
+			background: #eee;
+
+			display: flex;
+
+			& > div {
+				flex: 1 1 auto;
+				margin: 1em;
+			}
+
+			& > button {
+				margin: 1em;
+			}
+		}
+	}
+}

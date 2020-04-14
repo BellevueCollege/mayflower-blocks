@@ -12,6 +12,7 @@
 import './child-pages/block.js';
 import './staff/block.js';
 import './course/block.js';
+import './tablepress/block.js';
 
 // Bootstrap Blocks
 import './alert/block.js';

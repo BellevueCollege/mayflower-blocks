@@ -36,6 +36,7 @@ registerBlockType('mayflower-blocks/row', {
 	title: __('Row'), // Block title.
 	icon: 'schedule', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
+	keywords: [ __( 'grid' ), __( 'columns' ),],
 
 	attributes: {
 		childIsEditing: {
