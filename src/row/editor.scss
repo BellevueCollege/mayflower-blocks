@@ -30,10 +30,11 @@
         }
     }
 
-    >.editor-inner-blocks {
-        >.editor-block-list__layout {
+    >.block-editor-inner-blocks {
+        >.block-editor-block-list__layout {
+            display: flex; // Fixes columns so they don'ts stack
             >.block-list-appender {
-                display: none;
+                display: none; // Removes the add innerblock appender button
             }
         }
     }
@@ -43,7 +44,9 @@
         flex-wrap: wrap;
 
         button {
+            height: 100%;
             flex: 1;
+            flex-basis: auto;
             clear: both;
             font-size: 1em;
             padding: 1em;
