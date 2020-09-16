@@ -18,12 +18,27 @@ class Mayflower_Blocks_Course {
 	 * Fetch Course JSON data from API
 	 */
 	private function fetch_json() {
-		// Build request URL
-		// Example: https://www.bellevuecollege.edu/data/api/v1/course/ACCT/101
-		$api_url = $this->api_base_url . urlencode( $this->subject ) . '/'. urlencode( $this->number );
-		
-		// Get raw data from API
-		$raw_data = wp_remote_get( $api_url );
+
+		$key = esc_attr( 'course-' . $this->subject . $this->number );
+
+		$raw_data = get_site_transient( $key );
+
+		if ( ! $raw_data ) {
+
+			// Build request URL
+			// Example: https://www.bellevuecollege.edu/data/api/v1/course/ACCT/101
+			$api_url = $this->api_base_url . urlencode( $this->subject ) . '/'. urlencode( $this->number );
+
+
+			// Get raw data from API
+			$raw_data = wp_remote_get( $api_url );
+
+			if ( is_array( $raw_data ) ) {
+				set_site_transient( $key, $raw_data, 15 * 60 ); // 15 mins
+			}
+
+		}
+
 
 		// Return JSON if successful, otherwise return false
 		return is_array( $raw_data ) ? json_decode( $raw_data['body'] ) : false;
@@ -36,7 +51,6 @@ class Mayflower_Blocks_Course {
 
 		// Fetch JSON
 		$raw = $this->fetch_json();
-		
 		// Make sure that data has been returned
 		if ( isset( $raw->course ) ) {
 			// Build model
@@ -61,11 +75,11 @@ class Mayflower_Blocks_Course {
 		$this->load_course();
 
 		$course_data = $this->data;
-				
+
 		if ( $course_data ) { //if there is course data, return course information
 			$title = $course_data['subject'] . ' '
-			. $course_data['number'] . ': ' 
-			. $course_data['title'] . ' - ' 
+			. $course_data['number'] . ': '
+			. $course_data['title'] . ' - '
 			. ( $course_data['variable'] ? 'variable' : $course_data['credits'] ) . ' credits';
 
 			$url = $this->link_base_url . $course_data['subject'] .
