@@ -90,8 +90,8 @@ require_once plugin_dir_path( __FILE__ ) . 'tablepress/block.php';
 /**
  * Filter wp_kses to add support for the aria attributes we use
  */
-if ( ! function_exists( 'mayflower_block_add_allowed_tags' ) ) {
-    function mayflower_block_add_allowed_tags( $tags ) {
+if ( ! function_exists( 'mayflower_g4_block_add_allowed_tags' ) ) {
+    function mayflower_g4_block_add_allowed_tags( $tags ) {
         $new = [
             'div' => [
                 'aria-multiselectable' => true,
@@ -100,10 +100,16 @@ if ( ! function_exists( 'mayflower_block_add_allowed_tags' ) ) {
                 'aria-expanded' => true,
                 'aria-controls' => true,
             ],
+            'button' => [
+                'aria-expanded' => true,
+                'aria-controls' => true,
+            ]
         ];
         $tags['div'] = array_merge( $new['div'], $tags['div'] );
         $tags['a'] = array_merge( $new['a'], $tags['a'] );
+        $tags['button'] = array_merge( $new['button'], $tags['button'] );
         return $tags;
+
     }
-    add_filter( 'wp_kses_allowed_html', 'mayflower_block_add_allowed_tags' );
+    add_filter( 'wp_kses_allowed_html', 'mayflower_g4_block_add_allowed_tags' );
 }
