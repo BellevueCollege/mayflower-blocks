@@ -4,18 +4,19 @@
  * CSS for just Backend enqueued after style.scss
  * which makes it higher in priority.
  */
-
 .wp-block-mayflower-blocks-course {
 
+	padding: 1em .5em;
+	border: 1px dashed #aaa;
+
 	.editor-only {
-		margin-top: 1em;
 		display: block;
 	}
 
 	.controls {
 		pointer-events: auto;
 		border: 1px solid black;
-		border-radius: 4px;
+		border-radius: 2px;
 		background: #eee;
 
 		display: flex;
@@ -24,5 +25,13 @@
 			flex: 1 1 auto;
 			margin: 1em;
 		}
+	}
+}
+.is-selected .wp-block-mayflower-blocks-course {
+	border: 0;
+	padding: 0;
+
+	.components-disabled {
+		padding: 1rem;
 	}
 }
