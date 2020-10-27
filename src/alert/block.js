@@ -236,7 +236,7 @@ registerBlockType( 'mayflower-blocks/alert', {
 					{ attributes.alertText !== null && attributes.alertText !== '' && attributes.alertText !== undefined ?
 						<RichText
 							tagName="div"
-							formattingControls={ [ 'bold', 'italic', 'link' ] }
+							allowedFormats={ [ 'bold', 'italic', 'link' ] }
 							placeholder="Enter text or add blocks below..."
 							keepPlaceholderOnFocus="true"
 							value={ attributes.alertText }

@@ -191,7 +191,7 @@ registerBlockType( 'mayflower-blocks/button', {
 				<RichText
 					tagName="span"
 					className={ `btn btn-${ attributes.buttonType } ${ attributes.buttonBlock ? 'btn-block' : '' } ${ attributes.buttonSize }` }
-					formattingControls={ [ 'bold', 'italic' ] }
+					allowedFormats={ [ 'bold', 'italic' ] }
 					value={ attributes.buttonText }
 					onChange={ ( buttonText ) => setAttributes( { buttonText } ) }
 				/>
