@@ -9,13 +9,10 @@
 // import './style.scss';
 import './editor.scss';
 
-
-
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType, createBlock } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText } = wp.editor;
+const { RichText } = wp.blockEditor;
 const { select, dispatch } = wp.data;
-
 
 /**
  * Register: aa Gutenberg Block.
@@ -31,20 +28,20 @@ const { select, dispatch } = wp.data;
  *                             registered; otherwise `undefined`.
  */
 
-
 registerBlockType( 'mayflower-blocks/lead', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Lead' ), // Block title.
+	description: __( 'Block to make text a little bit larger. Should be used for the introductory sentence on a page.' ),
 	icon: 'testimonial', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 
 	attributes: {
 		leadText: {
 			type: 'string',
-			default: ''
+			default: '',
 		},
 	},
-	
+
 	//Existing bootstrap lead shortcode transformed into its block counterpart.
 	//Allows use of [lead][/lead]
 	transforms: {
@@ -56,10 +53,10 @@ registerBlockType( 'mayflower-blocks/lead', {
 					// Lead Text
 					leadText: {
 						type: 'string',
-						shortcode: (attrs, { content }) => {
+						shortcode: ( attrs, { content } ) => {
 							// Content returns the whole shortcode, so we need to match only shortcode content
-							let filtered = content.replace(/(\[lead.*?\]\s*)|(\s*\[\/lead\])/gmi, '');
-							
+							const filtered = content.replace( /(\[lead.*?\]\s*)|(\s*\[\/lead\])/gmi, '' );
+
 							// Return filtered content if there was a match, otherwise return blank string
 							return filtered ? filtered : '';
 						},
@@ -90,38 +87,36 @@ registerBlockType( 'mayflower-blocks/lead', {
 				type: 'block',
 				blocks: [ 'mayflower-blocks/well' ],
 				transform: function( attributes ) {
-					const paragraphBlock = createBlock( 'core/paragraph', {content: attributes.leadText});
-					return createBlock( 'mayflower-blocks/well', attributes, [paragraphBlock]);
+					const paragraphBlock = createBlock( 'core/paragraph', { content: attributes.leadText } );
+					return createBlock( 'mayflower-blocks/well', attributes, [ paragraphBlock ] );
 				},
 			},
 			{
 				type: 'block',
 				blocks: [ 'mayflower-blocks/alert' ],
 				transform: function( attributes ) {
-					const paragraphBlock = createBlock( 'core/paragraph', {content: attributes.leadText});
-					return createBlock( 'mayflower-blocks/alert', attributes, [paragraphBlock]);
+					const paragraphBlock = createBlock( 'core/paragraph', { content: attributes.leadText } );
+					return createBlock( 'mayflower-blocks/alert', attributes, [ paragraphBlock ] );
 				},
 			},
 		],
 	},
 
-	edit: function ({ className, attributes, setAttributes }) {
-
+	edit: function( { className, attributes, setAttributes } ) {
 		return [
-			<div className={className}>
+			<div className={ className }>
 				<RichText
-					tagName = "div"
-					className = "lead"
-					formattingControls = {['bold', 'italic', 'link']}
-					placeholder = "Enter text..."
-					keepPlaceholderOnFocus = "true"
-					value = {attributes.leadText}
-					onChange = {(leadText) => setAttributes({ leadText })}
+					tagName="div"
+					className="lead"
+					allowedFormats={ [ 'bold', 'italic', 'link' ] }
+					placeholder="Enter text..."
+					keepPlaceholderOnFocus="true"
+					value={ attributes.leadText }
+					onChange={ ( leadText ) => setAttributes( { leadText } ) }
 				/>
-			</div>
-		]
+			</div>,
+		];
 	},
-
 
 	/**
 	 * The save function defines the way in which the different attributes should be combined
@@ -132,12 +127,12 @@ registerBlockType( 'mayflower-blocks/lead', {
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
 
-	save: function( {attributes} ) {
+	save: function( { attributes } ) {
 		return (
 			<RichText.Content
-				tagName = "div"
-				className = "lead"
-				value = {attributes.leadText}
+				tagName="div"
+				className="lead"
+				value={ attributes.leadText }
 			/>
 		);
 	},

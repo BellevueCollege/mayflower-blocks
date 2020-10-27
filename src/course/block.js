@@ -11,7 +11,7 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { CheckboxControl, Disabled } = wp.components;
+const { CheckboxControl, Disabled, PanelBody, PanelRow } = wp.components;
 const { serverSideRender: ServerSideRender } = wp;
 const { InspectorControls } = wp.blockEditor;
 const { Fragment } = wp.element;
@@ -134,11 +134,15 @@ registerBlockType( 'mayflower-blocks/course', {
 		return (
 			<Fragment>
 				<InspectorControls>
-					<CheckboxControl
-						label="Display Course Description"
-						checked={ attributes.description }
-						onChange={ ( description ) => setAttributes( { description } ) }
-					/>
+					<PanelBody title="Display Options">
+						<PanelRow>
+							<CheckboxControl
+								label="Display Course Description"
+								checked={ attributes.description }
+								onChange={ ( description ) => setAttributes( { description } ) }
+							/>
+						</PanelRow>
+					</PanelBody>
 				</InspectorControls>
 
 				<div className={ className }>
