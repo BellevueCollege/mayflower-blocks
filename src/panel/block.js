@@ -59,6 +59,10 @@ registerBlockType( 'mayflower-blocks/panel', {
 			type: 'string',
 			default: 'h2',
 		},
+		cardLightBg: {
+			type: 'boolean',
+			default: false,
+		},
 		cardFooter: {
 			type: 'boolean',
 			default: true,
@@ -230,14 +234,21 @@ registerBlockType( 'mayflower-blocks/panel', {
 						</PanelRow>
 						<PanelRow>
 							<ToggleControl
-								label="Toggle Panel Heading"
+								label="Use Light Background for Card Body"
+								checked={ attributes.cardLightBg }
+								onChange={ ( cardLightBg ) => setAttributes( { cardLightBg } ) }
+							/>
+						</PanelRow>
+						<PanelRow>
+							<ToggleControl
+								label="Show Card Header"
 								checked={ attributes.cardHeading }
 								onChange={ ( cardHeading ) => setAttributes( { cardHeading } ) }
 							/>
 						</PanelRow>
 						<PanelRow>
 							<ToggleControl
-								label="Toggle Panel Footer"
+								label="Show Card Footer"
 								checked={ attributes.cardFooter }
 								onChange={ ( cardFooter ) => setAttributes( { cardFooter } ) }
 							/>
@@ -277,7 +288,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 						/> :
 						'' }
 
-					<div className="card-body">
+					<div className={ 'card-body' + ( attributes.cardLightBg === true ? ' bg-light text-dark' : '' ) }>
 						{ attributes.cardText !== null && attributes.cardText !== '' && attributes.cardText !== undefined ?
 							<RichText
 								tagName="div"
@@ -335,7 +346,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 						/> :
 					'' }
 
-				<div className="card-body">
+				<div className={ 'card-body' + ( attributes.cardLightBg === true ? ' bg-light text-dark' : '' ) }>
 					{ attributes.cardText !== null && attributes.cardText !== '' && attributes.cardText !== undefined ?
 						<RichText.Content
 							tagName="div"
