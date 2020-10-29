@@ -9,14 +9,10 @@
 import './style.scss';
 import './editor.scss';
 
-
-
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType, createBlock } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText, InspectorControls, InnerBlocks } = wp.editor;
-const { SelectControl, ToggleControl, Toolbar, Panel, PanelBody, PanelRow, SVG, Path, G} = wp.components;
-
-
+const { RichText, InspectorControls, InnerBlocks } = wp.blockEditor;
+const { SelectControl, ToggleControl, Toolbar, Panel, PanelBody, PanelRow, SVG, Path, G } = wp.components;
 
 /**
  * Register: aa Gutenberg Block.
@@ -32,7 +28,6 @@ const { SelectControl, ToggleControl, Toolbar, Panel, PanelBody, PanelRow, SVG, 
  *                             registered; otherwise `undefined`.
  */
 
-
 registerBlockType( 'mayflower-blocks/panel', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Card' ), // Block title.
@@ -45,11 +40,11 @@ registerBlockType( 'mayflower-blocks/panel', {
 		},
 		cardType: {
 			type: 'string',
-			default: 'default'
+			default: 'default',
 		},
 		cardHeading: {
 			type: 'boolean',
-			default: true
+			default: true,
 		},
 		cardHeadingText: {
 			type: 'string',
@@ -58,23 +53,23 @@ registerBlockType( 'mayflower-blocks/panel', {
 		},
 		cardHeadingTag: {
 			type: 'string',
-			default: 'h2'
+			default: 'h2',
 		},
 		activeHeadingClass: {
 			type: 'string',
-			default: 'h2'
+			default: 'h2',
 		},
 		cardFooter: {
 			type: 'boolean',
-			default: true
+			default: true,
 		},
 		cardFooterText: {
 			type: 'string',
 			source: 'html',
 			selector: '.card-footer',
-		}
+		},
 	},
-	
+
 	//Existing bootstrap card shortcode transformed into its block counterpart.
 	//Allows use of [panel type="" heading="" footer=""][/panel]
 	transforms: {
@@ -86,10 +81,10 @@ registerBlockType( 'mayflower-blocks/panel', {
 					// Panel Text
 					cardText: {
 						type: 'string',
-						shortcode: (attrs, { content }) => {
+						shortcode: ( attrs, { content } ) => {
 							// Content returns the whole shortcode, so we need to match only shortcode content
-							let filtered = content.replace(/(\[panel.*?\]\s*)|(\s*\[\/panel\])/gmi, '');
-							
+							const filtered = content.replace( /(\[panel.*?\]\s*)|(\s*\[\/panel\])/gmi, '' );
+
 							// Return filtered content if there was a match, otherwise return blank string
 							return filtered ? filtered : '';
 						},
@@ -98,7 +93,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 					// Panel Type/Bootstrap Class
 					cardType: {
 						type: 'string',
-						shortcode: ({ named: { type } }) => {
+						shortcode: ( { named: { type } } ) => {
 							return type;
 						},
 					},
@@ -106,7 +101,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 					//Panel Header
 					cardHeadingText: {
 						type: 'string',
-						shortcode: ({ named: { heading } }) => {
+						shortcode: ( { named: { heading } } ) => {
 							return heading;
 						},
 					},
@@ -114,7 +109,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 					//Panel Footer
 					cardFooterText: {
 						type: 'string',
-						shortcode: ({ named: { footer } }) => {
+						shortcode: ( { named: { footer } } ) => {
 							return footer;
 						},
 					},
@@ -127,25 +122,25 @@ registerBlockType( 'mayflower-blocks/panel', {
 					// Well Text
 					cardText: {
 						type: 'string',
-						shortcode: (attrs, { content }) => {
+						shortcode: ( attrs, { content } ) => {
 							// Content returns the whole shortcode, so we need to match only shortcode content
-							let filtered = content.replace(/(\[well.*?\]\s*)|(\s*\[\/well\])/gmi, '');
-							
+							const filtered = content.replace( /(\[well.*?\]\s*)|(\s*\[\/well\])/gmi, '' );
+
 							// Return filtered content if there was a match, otherwise return blank string
 							return filtered ? filtered : '';
 						},
 					},
 					cardHeading: {
 						type: 'boolean',
-						default: false
+						default: false,
 					},
 					cardFooter: {
 						type: 'boolean',
-						default: false
+						default: false,
 					},
 					cardType: {
 						type: 'string',
-						default: 'light'
+						default: 'light',
 					},
 				},
 			},
@@ -153,9 +148,9 @@ registerBlockType( 'mayflower-blocks/panel', {
 				type: 'block',
 				blocks: [ 'core/paragraph' ],
 				transform: ( attributes, innerBlocks, content ) => {
-					const paragraphBlock = createBlock( 'core/paragraph', {content: content} );
+					const paragraphBlock = createBlock( 'core/paragraph', { content: content } );
 					//return createBlock( 'mayflower-blocks/panel', attributes, [paragraphBlock]);
-					return createBlock( 'mayflower-blocks/panel', {cardHeading: false, cardFooter: false, cardType: 'light'},  )
+					return createBlock( 'mayflower-blocks/panel', { cardHeading: false, cardFooter: false, cardType: 'light' }, );
 				},
 			},
 
@@ -163,51 +158,48 @@ registerBlockType( 'mayflower-blocks/panel', {
 		to: [
 			{
 
-			}
-		]
+			},
+		],
 	},
 
-	edit: function ({ className, attributes, setAttributes }) {
-
+	edit: function( { className, attributes, setAttributes } ) {
 		/**
 		 * HeadingStyleControl returns a Toolbar component with heading levels that changes via on click and updates the card block's heading.
 		 * Will only show if a card heading is toggled on.
-		 * 
+		 *
 		 * @return Toolbar component with heading levels 2-6 and paragraph
 		 * */
 		const HeadingStyleControl = () => {
-			function createClassControl ( headingStyle ) {
-
+			function createClassControl( headingStyle ) {
 				// get the Toolbar control style name and output the corresponding HTML tag
-				let style = (headingStyle == 'Paragraph' ? 'p' : 'h' + headingStyle[headingStyle.length - 1]);
+				const style = ( headingStyle == 'Paragraph' ? 'p' : 'h' + headingStyle[ headingStyle.length - 1 ] );
 
 				// save the SVGs
 				const svgHeading = <SVG xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><Path d="M12.5 4v5.2h-5V4H5v13h2.5v-5.2h5V17H15V4"></Path></SVG>;
-				const svgParagraph = <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none" width="20" height="20"/><G><Path d="M15 2H7.54c-.83 0-1.59.2-2.28.6-.7.41-1.25.96-1.65 1.65C3.2 4.94 3 5.7 3 6.52s.2 1.58.61 2.27c.4.69.95 1.24 1.65 1.64.69.41 1.45.61 2.28.61h.43V17c0 .27.1.51.29.71.2.19.44.29.71.29.28 0 .51-.1.71-.29.2-.2.3-.44.3-.71V5c0-.27.09-.51.29-.71.2-.19.44-.29.71-.29s.51.1.71.29c.19.2.29.44.29.71v12c0 .27.1.51.3.71.2.19.43.29.71.29.27 0 .51-.1.71-.29.19-.2.29-.44.29-.71V4H15c.27 0 .5-.1.7-.3.2-.19.3-.43.3-.7s-.1-.51-.3-.71C15.5 2.1 15.27 2 15 2z"/></G></SVG>;
-				
+				const svgParagraph = <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none" width="20" height="20" /><G><Path d="M15 2H7.54c-.83 0-1.59.2-2.28.6-.7.41-1.25.96-1.65 1.65C3.2 4.94 3 5.7 3 6.52s.2 1.58.61 2.27c.4.69.95 1.24 1.65 1.64.69.41 1.45.61 2.28.61h.43V17c0 .27.1.51.29.71.2.19.44.29.71.29.28 0 .51-.1.71-.29.2-.2.3-.44.3-.71V5c0-.27.09-.51.29-.71.2-.19.44-.29.71-.29s.51.1.71.29c.19.2.29.44.29.71v12c0 .27.1.51.3.71.2.19.43.29.71.29.27 0 .51-.1.71-.29.19-.2.29-.44.29-.71V4H15c.27 0 .5-.1.7-.3.2-.19.3-.43.3-.7s-.1-.51-.3-.71C15.5 2.1 15.27 2 15 2z" /></G></SVG>;
+
 				// check if the heading style is Paragraph or a Heading, and return the corresponding toolbar object
-				if ( headingStyle == 'Paragraph' ){
+				if ( headingStyle == 'Paragraph' ) {
 					return {
 						icon: svgParagraph,
 						title: headingStyle,
 						isActive: attributes.cardHeadingTag === style,
 						onClick: () => setAttributes( { cardHeadingTag: style, activeHeadingClass: style } ),
 					};
-				} else {
-					return {
-						subscript: style.charAt(1),
-						icon: svgHeading,
-						title: headingStyle,
-						isActive: attributes.cardHeadingTag === style,
-						onClick: () => setAttributes( { cardHeadingTag: style, activeHeadingClass: style } ),
-					};
 				}
-			};
+				return {
+					subscript: style.charAt( 1 ),
+					icon: svgHeading,
+					title: headingStyle,
+					isActive: attributes.cardHeadingTag === style,
+					onClick: () => setAttributes( { cardHeadingTag: style, activeHeadingClass: style } ),
+				};
+			}
 
-			return(
+			return (
 				<Toolbar controls={ [ 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6', 'Paragraph' ].map( createClassControl ) } />
 			);
-		}
+		};
 
 		return [
 			<InspectorControls>
@@ -219,8 +211,8 @@ registerBlockType( 'mayflower-blocks/panel', {
 						<PanelRow>
 							<SelectControl
 								label="Theme Style"
-								value={attributes.cardType}
-								options={[
+								value={ attributes.cardType }
+								options={ [
 									{ label: 'Default', value: 'default' },
 									{ label: 'Primary (BC Blue)', value: 'primary' },
 									{ label: 'Secondary (Gray)', value: 'secondary' },
@@ -230,94 +222,92 @@ registerBlockType( 'mayflower-blocks/panel', {
 									{ label: 'Danger (Red)', value: 'danger' },
 									{ label: 'Light', value: 'light' },
 									{ label: 'Dark', value: 'dark' },
-								]}
-								onChange={(cardType) => { 
-									setAttributes({ cardType });
-								}}
+								] }
+								onChange={ ( cardType ) => {
+									setAttributes( { cardType } );
+								} }
 							/>
 						</PanelRow>
 						<PanelRow>
 							<ToggleControl
 								label="Toggle Panel Heading"
-								checked={attributes.cardHeading}
-								onChange={(cardHeading) => setAttributes({ cardHeading })}
+								checked={ attributes.cardHeading }
+								onChange={ ( cardHeading ) => setAttributes( { cardHeading } ) }
 							/>
 						</PanelRow>
 						<PanelRow>
 							<ToggleControl
 								label="Toggle Panel Footer"
-								checked={attributes.cardFooter}
-								onChange={(cardFooter) => setAttributes({ cardFooter })}
+								checked={ attributes.cardFooter }
+								onChange={ ( cardFooter ) => setAttributes( { cardFooter } ) }
 							/>
 						</PanelRow>
 					</PanelBody>
 				</Panel>
 
-				{attributes.cardHeading == true ?
+				{ attributes.cardHeading == true ?
 					<Panel>
 						<PanelBody
 							title="Heading Style"
 							initialOpen={ true }
 						>
 							<PanelRow>
-								<HeadingStyleControl/>
+								<HeadingStyleControl />
 							</PanelRow>
 						</PanelBody>
-					</Panel>
-				: ''} 	
-			</InspectorControls>
-			,
-			<div className={className}>
-				<div className = {'card bg-' + attributes.cardType + (
-					attributes.cardType !== 'default' && 
+					</Panel> :
+					'' }
+			</InspectorControls>,
+			<div className={ className }>
+				<div className={ 'card bg-' + attributes.cardType + (
+					attributes.cardType !== 'default' &&
 					attributes.cardType !== 'light' &&
-					attributes.cardType !== 'info'
-					? ' text-white' : '')}>
+					attributes.cardType !== 'info' ?
+						' text-white' : '' ) }>
 
-					{attributes.cardHeading == true ? 
+					{ attributes.cardHeading == true ?
 						<RichText
-							tagName = {attributes.cardHeadingTag}
-							className = "card-header"
-							formattingControls = {['bold', 'italic', 'link']}
-							placeholder = "Enter heading text..."
-							keepPlaceholderOnFocus = "true"
-							value = {attributes.cardHeadingText}
-							onChange = {(cardHeadingText) => setAttributes({ cardHeadingText })}
-						/>
-					: ''}
+							tagName={ attributes.cardHeadingTag }
+							className="card-header"
+							allowedFormats={ [ 'bold', 'italic', 'link' ] }
+							placeholder="Enter heading text..."
+							keepPlaceholderOnFocus="true"
+							value={ attributes.cardHeadingText }
+							onChange={ ( cardHeadingText ) => setAttributes( { cardHeadingText } ) }
+						/> :
+						'' }
 
 					<div className="card-body">
-						{attributes.cardText !== null && attributes.cardText !== '' && attributes.cardText !== undefined ? 
+						{ attributes.cardText !== null && attributes.cardText !== '' && attributes.cardText !== undefined ?
 							<RichText
-								tagName = "div"
-								formattingControls = {['bold', 'italic', 'link']}
-								placeholder = "Enter text..."
-								keepPlaceholderOnFocus = "true"
-								value = {attributes.cardText}
-								onChange = {(cardText) => setAttributes({ cardText })}
-							/>
-						: '' }
-						<InnerBlocks/>
+								tagName="div"
+								allowedFormats={ [ 'bold', 'italic', 'link' ] }
+								placeholder="Enter text..."
+								keepPlaceholderOnFocus="true"
+								value={ attributes.cardText }
+								onChange={ ( cardText ) => setAttributes( { cardText } ) }
+							/> :
+							'' }
+						<InnerBlocks />
 					</div>
 
-					{attributes.cardFooter == true ? 
-						<div className = "card-footer">
+					{ attributes.cardFooter == true ?
+						<div className="card-footer">
 							<RichText
-								tagName = "div"
-								formattingControls = {['bold', 'italic', 'link']}
-								placeholder = "Enter footer text..."
-								keepPlaceholderOnFocus = "true"
-								value = {attributes.cardFooterText}
-								onChange = {(cardFooterText) => setAttributes({ cardFooterText })}
+								tagName="div"
+								allowedFormats={ [ 'bold', 'italic', 'link' ] }
+								placeholder="Enter footer text..."
+								keepPlaceholderOnFocus="true"
+								value={ attributes.cardFooterText }
+								onChange={ ( cardFooterText ) => setAttributes( { cardFooterText } ) }
 							/>
-						</div>
-					: ''}
-					
-				</div>
-			</div>
-		]
-	},
+						</div> :
+						'' }
 
+				</div>
+			</div>,
+		];
+	},
 
 	/**
 	 * The save function defines the way in which the different attributes should be combined
@@ -328,41 +318,41 @@ registerBlockType( 'mayflower-blocks/panel', {
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
 
-	save: function( {attributes} ) {
+	save: function( { attributes } ) {
 		return (
-			<div className = {'card bg-' + attributes.cardType + (
-				attributes.cardType !== 'default' && 
+			<div className={ 'card bg-' + attributes.cardType + (
+				attributes.cardType !== 'default' &&
 				attributes.cardType !== 'light' &&
-				attributes.cardType !== 'info'
-				? ' text-white' : '')}>
+				attributes.cardType !== 'info' ?
+					' text-white' : '' ) }>
 
-				{attributes.cardHeading == true ? 
+				{ attributes.cardHeading == true ?
 					attributes.cardHeadingText == null || attributes.cardHeadingText == '' ? '' :
 					<RichText.Content
-						tagName = {attributes.cardHeadingTag}
-						value = {attributes.cardHeadingText}
-						className = "card-header"
-					/>
-				: ''}
+							tagName={ attributes.cardHeadingTag }
+							value={ attributes.cardHeadingText }
+							className="card-header"
+						/> :
+					'' }
 
 				<div className="card-body">
-					{attributes.cardText !== null && attributes.cardText !== '' && attributes.cardText !== undefined ? 
+					{ attributes.cardText !== null && attributes.cardText !== '' && attributes.cardText !== undefined ?
 						<RichText.Content
-							tagName = "div"
-							value = {attributes.cardText}
-						/>
-					: '' }
-					<InnerBlocks.Content/>
+							tagName="div"
+							value={ attributes.cardText }
+						/> :
+						'' }
+					<InnerBlocks.Content />
 				</div>
-				
-				{attributes.cardFooter == true ?
+
+				{ attributes.cardFooter == true ?
 					attributes.cardFooterText == null || attributes.cardFooterText == '' ? '' :
 					<RichText.Content
-						tagName = "div"
-						className="card-footer"
-						value = {attributes.cardFooterText}
-					/>
-				: ''}
+							tagName="div"
+							className="card-footer"
+							value={ attributes.cardFooterText }
+						/> :
+					'' }
 
 			</div>
 		);
@@ -376,32 +366,32 @@ registerBlockType( 'mayflower-blocks/panel', {
 				},
 				panelType: {
 					type: 'string',
-					default: 'default'
+					default: 'default',
 				},
 				panelHeading: {
 					type: 'boolean',
-					default: true
+					default: true,
 				},
 				panelHeadingText: {
 					type: 'string',
 				},
 				panelHeadingClass: {
 					type: 'string',
-					default: 'h2'
+					default: 'h2',
 				},
 				activeHeadingClass: {
 					type: 'string',
-					default: 'h2'
+					default: 'h2',
 				},
 				panelFooter: {
 					type: 'boolean',
-					default: true
+					default: true,
 				},
 				panelFooterText: {
 					type: 'string',
-				}
+				},
 			},
-			migrate( { 
+			migrate( {
 				panelText,
 				panelType,
 				panelHeading,
@@ -409,7 +399,7 @@ registerBlockType( 'mayflower-blocks/panel', {
 				panelHeadingClass,
 				activeHeadingClass,
 				panelFooter,
-				panelFooterText
+				panelFooterText,
 			 } ) {
 				return {
 					cardText: panelText,
@@ -419,49 +409,48 @@ registerBlockType( 'mayflower-blocks/panel', {
 					cardHeadingTag: panelHeadingClass,
 					activeHeadingClass: activeHeadingClass,
 					cardFooter: panelFooter,
-					cardFooterText: panelFooterText
+					cardFooterText: panelFooterText,
 				};
 			},
-			
-				
-			save: function( {attributes} ) {
+
+			save: function( { attributes } ) {
 				return (
-					<div className = {`panel panel-${attributes.panelType}`}>
-		
-						{attributes.panelHeading == true ? 
+					<div className={ `panel panel-${ attributes.panelType }` }>
+
+						{ attributes.panelHeading == true ?
 							attributes.panelHeadingText == null || attributes.panelHeadingText == '' ? '' :
-							<div className = "panel-heading">
-								<RichText.Content
-									tagName = {attributes.panelHeadingClass}
-									style = {{margin: '0'}}
-									value = {attributes.panelHeadingText}
-								/>
-							</div>
-						: ''}
-		
+							<div className="panel-heading">
+									<RichText.Content
+									tagName={ attributes.panelHeadingClass }
+									style={ { margin: '0' } }
+									value={ attributes.panelHeadingText }
+									/>
+								</div> :
+							'' }
+
 						<div className="panel-body">
-							{attributes.panelText !== null && attributes.panelText !== '' && attributes.panelText !== undefined ? 
+							{ attributes.panelText !== null && attributes.panelText !== '' && attributes.panelText !== undefined ?
 								<RichText.Content
-									tagName = "div"
-									value = {attributes.panelText}
-								/>
-							: '' }
-							<InnerBlocks.Content/>
+									tagName="div"
+									value={ attributes.panelText }
+								/> :
+								'' }
+							<InnerBlocks.Content />
 						</div>
-						
-						{attributes.panelFooter == true ?
+
+						{ attributes.panelFooter == true ?
 							attributes.panelFooterText == null || attributes.panelFooterText == '' ? '' :
-							<div className = "panel-footer">
-								<RichText.Content
-									tagName = "div"
-									value = {attributes.panelFooterText}
-								/>
-							</div>
-						: ''}
-		
+							<div className="panel-footer">
+									<RichText.Content
+									tagName="div"
+									value={ attributes.panelFooterText }
+									/>
+								</div> :
+							'' }
+
 					</div>
 				);
 			},
-		}
-	]
+		},
+	],
 } );
