@@ -12,7 +12,7 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { InspectorControls, InnerBlocks, BlockControls } = wp.editor;
+const { InspectorControls, InnerBlocks, BlockControls } = wp.blockEditor;
 const { SelectControl, Button, Disabled, Toolbar, Panel, PanelBody, PanelRow, SVG, Path, G } = wp.components;
 const { select, dispatch } = wp.data;
 const { createHigherOrderComponent } = wp.compose;
@@ -77,9 +77,9 @@ registerBlockType( 'mayflower-blocks/column', {
 
 	edit: function( { className, attributes, setAttributes } ) {
 		//Instantiate Column Data
-		const currentBlockClientId = select( 'core/editor' ).getSelectedBlockClientId(); // return this block's client id
-		const parentBlockClientId = select( 'core/editor' ).getBlockRootClientId( currentBlockClientId ); //get parent's client id
-		const parentBlockData = select( 'core/editor' ).getBlock( parentBlockClientId ); // get parent's data; includes children and attributes
+		const currentBlockClientId = select( 'core/block-editor' ).getSelectedBlockClientId(); // return this block's client id
+		const parentBlockClientId = select( 'core/block-editor' ).getBlockRootClientId( currentBlockClientId ); //get parent's client id
+		const parentBlockData = select( 'core/block-editor' ).getBlock( parentBlockClientId ); // get parent's data; includes children and attributes
 		let parentBlockChildren;
 
 		/**
@@ -112,24 +112,24 @@ registerBlockType( 'mayflower-blocks/column', {
 		 * When a column block gets removed, the function also adjusts the width of each column block under the row block to fit each new column
 		 */
 		const handleRemoveColumnBlock = () => {
-			dispatch( 'core/editor' ).removeBlock( currentBlockClientId, false );
-			dispatch( 'core/editor' ).updateBlockAttributes( parentBlockClientId, { childColumns: attributes.siblingColumns - 1 } ); // Updates the parent
+			dispatch( 'core/block-editor' ).removeBlock( currentBlockClientId, false );
+			dispatch( 'core/block-editor' ).updateBlockAttributes( parentBlockClientId, { childColumns: attributes.siblingColumns - 1 } ); // Updates the parent
 
-			const parentBlockDataChildren = select( 'core/editor' ).getBlock( parentBlockClientId ).innerBlocks; // get parent's children
+			const parentBlockDataChildren = select( 'core/block-editor' ).getBlock( parentBlockClientId ).innerBlocks; // get parent's children
 
 			if ( Array.isArray( parentBlockDataChildren ) ) {
 				//Performs a check on all siblings to see how many columns there are and sets the sibling columns size to adjust to the newly removed column
 				parentBlockDataChildren.forEach( sibling => {
 					//update all siblings that a sibling has been removed
-					dispatch( 'core/editor' ).updateBlockAttributes( sibling.clientId, { siblingColumns: attributes.siblingColumns - 1 } );
+					dispatch( 'core/block-editor' ).updateBlockAttributes( sibling.clientId, { siblingColumns: attributes.siblingColumns - 1 } );
 
 					// set the column size if children is divisible equally by 12 columns, else set it to size of 4 (5 columns)
 					if ( 12 % ( attributes.siblingColumns - 1 ) === 0 ) { // sets size for 1, 2, 3, 4, 6 columns
-						dispatch( 'core/editor' ).updateBlockAttributes( sibling.clientId, { gridColumnSize: ( 12 / ( attributes.siblingColumns - 1 ) ) } );
+						dispatch( 'core/block-editor' ).updateBlockAttributes( sibling.clientId, { gridColumnSize: ( 12 / ( attributes.siblingColumns - 1 ) ) } );
 					}
 					//if a sibling is the 5th column after the 6th column is removed, then update the attributes to the new gridColumnSize
 					if ( sibling.clientId === parentBlockDataChildren[ parentBlockDataChildren.length - 1 ].clientId ) {
-						dispatch( 'core/editor' ).updateBlockAttributes( parentBlockDataChildren[ parentBlockDataChildren.length - 1 ].clientId, { gridColumnSize: 4 } );
+						dispatch( 'core/block-editor' ).updateBlockAttributes( parentBlockDataChildren[ parentBlockDataChildren.length - 1 ].clientId, { gridColumnSize: 4 } );
 					}
 				} );
 			}
@@ -155,13 +155,13 @@ registerBlockType( 'mayflower-blocks/column', {
 				// If each sibling is not the current child, then set visibility to false
 				parentBlockChildren.forEach( sibling => {
 					if ( sibling.clientId !== currentBlockClientId ) {
-						dispatch( 'core/editor' ).updateBlockAttributes( sibling.clientId, { isVisible: false } );
+						dispatch( 'core/block-editor' ).updateBlockAttributes( sibling.clientId, { isVisible: false } );
 					}
 				} );
 			}
 
 			// Tell parent a child is selected for editing
-			dispatch( 'core/editor' ).updateBlockAttributes( parentBlockClientId, { childIsEditing: true } );
+			dispatch( 'core/block-editor' ).updateBlockAttributes( parentBlockClientId, { childIsEditing: true } );
 		};
 
 		/**
@@ -179,13 +179,13 @@ registerBlockType( 'mayflower-blocks/column', {
 				// If each sibling is not the current child, then set visibility to true
 				parentBlockChildren.forEach( sibling => {
 					if ( sibling.clientId !== currentBlockClientId ) {
-						dispatch( 'core/editor' ).updateBlockAttributes( sibling.clientId, { isVisible: true } );
+						dispatch( 'core/block-editor' ).updateBlockAttributes( sibling.clientId, { isVisible: true } );
 					}
 				} );
 			}
 
 			// tell parent child is no longer selected
-			dispatch( 'core/editor' ).updateBlockAttributes( parentBlockClientId, { childIsEditing: false } );
+			dispatch( 'core/block-editor' ).updateBlockAttributes( parentBlockClientId, { childIsEditing: false } );
 		};
 
 		return [
@@ -235,18 +235,18 @@ registerBlockType( 'mayflower-blocks/column', {
 
 						{ attributes.isEditing === true ?
 							<PanelRow>
-								<Button isDefault onClick={ handleCloseColumnBlock }>
+								<Button isSecondary onClick={ handleCloseColumnBlock }>
 									Save &amp; Close Column
 								</Button>
 							</PanelRow>							:
 							<PanelRow>
-								<Button isDefault onClick={ handleEditColumnBlock }>
+								<Button isSecondary onClick={ handleEditColumnBlock }>
 									Edit Column
 								</Button>
 							</PanelRow>
 						}
 						<PanelRow>
-							<Button isDefault onClick={ handleRemoveColumnBlock }>
+							<Button isSecondary onClick={ handleRemoveColumnBlock }>
 								Remove Column
 							</Button>
 						</PanelRow>
@@ -261,9 +261,9 @@ registerBlockType( 'mayflower-blocks/column', {
 				{ attributes.gridColumnClass &&
 					attributes.isEditing !== true ?
 					<Disabled>
+							<InnerBlocks />
+						</Disabled> :
 						<InnerBlocks />
-					</Disabled> :
-					<InnerBlocks />
 				}
 			</div>,
 		];

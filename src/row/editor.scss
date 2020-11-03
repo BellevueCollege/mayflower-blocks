@@ -9,12 +9,14 @@
 
 
  .wp-block[data-type="mayflower-blocks/row"] div[class="wp-block-mayflower-blocks-row"]{
-    padding: 0;
+	padding: 0;
+	border: 1px solid #ccc;
 
     & > .editor-inner-blocks.block-editor-inner-blocks > .editor-block-list__layout.block-editor-block-list__layout {
         display: flex;
         flex-wrap: wrap;
-        border: 2px dotted #eee;
+		border: 2px dotted #eee;
+		border-radius: 2px;
 
         &::before {
             content: 'Row';
