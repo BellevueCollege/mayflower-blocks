@@ -193,7 +193,7 @@ registerBlockType( 'mayflower-blocks/collapse', {
 					</div>
 
 					<div id={ `collapse_${ attributes.currentBlockClientId }` } className={ `collapse${ ( attributes.expanded ? ' show' : '' ) }` } aria-labelledby={ `heading_${ attributes.currentBlockClientId }` } data-parent={ `#accordion_${ attributes.parentBlockClientId }` }>
-						<div className={ 'card-body' + ( attributes.cardLightBg === true ? ' bg-light text-dark' : '' ) }>
+						<div className={ 'card-body' + ( attributes.collapseLightBg === true ? ' bg-light text-dark' : '' ) }>
 							{ attributes.collapseText !== null && attributes.collapseText !== '' && attributes.collapseText !== undefined ?
 								<RichText.Content
 									tagName="div"
