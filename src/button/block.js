@@ -219,6 +219,14 @@ registerBlockType( 'mayflower-blocks/button', {
 			/>
 		);
 	},
+	example: {
+		attributes: {
+			buttonText: 'Sign Up Now',
+			buttonLink: '#',
+			buttonType: 'primary',
+			buttonSize: 'btn-lg',
+		},
+	},
 
 	deprecated: [
 		/**

@@ -271,4 +271,10 @@ registerBlockType( 'mayflower-blocks/alert', {
 			</div>
 		);
 	},
+	example: {
+		attributes: {
+			alertClass: 'danger',
+			alertText: __( '<strong>Danger:</strong> This content is very important!' ),
+		},
+	},
 } );

@@ -37,6 +37,7 @@ import ClassItemSelect from './ClassItemSelect';
 registerBlockType( 'mayflower-blocks/course', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'BC Course' ), // Block title.
+	description: __( 'Display basic course information, pulling directly from the Class Schedule so details are always correct' ),
 	icon: 'welcome-learn-more', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 
@@ -164,5 +165,12 @@ registerBlockType( 'mayflower-blocks/course', {
 	save() {
 		// Rendering in PHP
 		return null;
+	},
+	example: {
+		attributes: {
+			subject: 'ENGL&',
+			item: '101',
+			description: true,
+		},
 	},
 } );
