@@ -12,9 +12,10 @@
 	.set-link-href {
 		padding: .5em .5em .25em .5em;
 		margin: 0 .5em 0 0;
-		background: #eee;
-		border-radius: 0px 5px 5px 5px;
-		
+		background: #efefef;
+		border-radius: 0px 2px 2px 2px;
+		border: 1px solid black;
+
 	}
 	.components-base-control__help {
 		font-size: .9em;

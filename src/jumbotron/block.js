@@ -9,13 +9,9 @@
 // import './style.scss';
 import './editor.scss';
 
-
-
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText, InnerBlocks } = wp.editor;
-
-
+const { RichText, InnerBlocks } = wp.blockEditor;
 
 /**
  * Register: aa Gutenberg Block.
@@ -31,7 +27,6 @@ const { RichText, InnerBlocks } = wp.editor;
  *                             registered; otherwise `undefined`.
  */
 
-
 registerBlockType( 'mayflower-blocks/jumbotron', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Jumbotron' ), // Block title.
@@ -44,9 +39,9 @@ registerBlockType( 'mayflower-blocks/jumbotron', {
 		},
 		jumbotronTitle: {
 			type: 'string',
-		}
+		},
 	},
-	
+
 	//Existing bootstrap jumbotron shortcode transformed into its block counterpart.
 	//Allows use of [jumbotron title=""][/jumbotron]
 	transforms: {
@@ -58,10 +53,10 @@ registerBlockType( 'mayflower-blocks/jumbotron', {
 					// Jumbotron Text
 					jumbotronText: {
 						type: 'string',
-						shortcode: (attrs, { content }) => {
+						shortcode: ( attrs, { content } ) => {
 							// Content returns the whole shortcode, so we need to match only shortcode content
-							let filtered = content.replace(/(\[jumbotron.*?\]\s*)|(\s*\[\/jumbotron\])/gmi, '');
-							
+							const filtered = content.replace( /(\[jumbotron.*?\]\s*)|(\s*\[\/jumbotron\])/gmi, '' );
+
 							// Return filtered content if there was a match, otherwise return blank string
 							return filtered ? filtered : '';
 						},
@@ -70,44 +65,42 @@ registerBlockType( 'mayflower-blocks/jumbotron', {
 					// Jumbotron Type/Bootstrap Class
 					jumbotronTitle: {
 						type: 'string',
-						shortcode: ({ named: { title = 'title' } }) => {
+						shortcode: ( { named: { title = 'title' } } ) => {
 							return title;
 						},
 					},
 				},
-			}
-		]
+			},
+		],
 	},
 
-	edit: function ({ className, attributes, setAttributes }) {
-
+	edit: function( { className, attributes, setAttributes } ) {
 		return [
-			<div className={className}>
-				<div className = 'jumbotron'>
+			<div className={ className }>
+				<div className="jumbotron">
 					<RichText
-						tagName = "h1"
-						formattingControls = {['bold', 'italic', 'link']}
-						placeholder = "Enter a headline..."
-						keepPlaceholderOnFocus = "true"
-						value = {attributes.jumbotronTitle}
-						onChange = {(jumbotronTitle) => setAttributes({ jumbotronTitle })}
+						tagName="h1"
+						allowedFormats={ [ 'bold', 'italic', 'link' ] }
+						placeholder="Enter a headline..."
+						keepPlaceholderOnFocus="true"
+						value={ attributes.jumbotronTitle }
+						onChange={ ( jumbotronTitle ) => setAttributes( { jumbotronTitle } ) }
 					/>
-					{attributes.jumbotronText !== null && attributes.jumbotronText !== '' && attributes.jumbotronText !== undefined ? 
+					{ attributes.jumbotronText !== null && attributes.jumbotronText !== '' && attributes.jumbotronText !== undefined ?
 						<RichText
-							tagName = "p"
-							formattingControls = {['bold', 'italic', 'link']}
-							placeholder = "Enter text or add blocks below..."
-							keepPlaceholderOnFocus = "true"
-							value = {attributes.jumbotronText}
-							onChange = {(jumbotronText) => setAttributes({ jumbotronText })}
-						/>
-					: '' }
-					<InnerBlocks allowedBlocks = {[ 'core/paragraph', 'mayflower-blocks/button', 'core/heading', 'core/list']}/>
+							tagName="p"
+							allowedFormats={ [ 'bold', 'italic', 'link' ] }
+							placeholder="Enter text or add blocks below..."
+							keepPlaceholderOnFocus="true"
+							value={ attributes.jumbotronText }
+							onChange={ ( jumbotronText ) => setAttributes( { jumbotronText } ) }
+						/> :
+						'' }
+					<InnerBlocks allowedBlocks={ [ 'core/paragraph', 'mayflower-blocks/button', 'core/heading', 'core/list' ] } />
 				</div>
-			</div>
-		]
+			</div>,
+		];
 	},
-
 
 	/**
 	 * The save function defines the way in which the different attributes should be combined
@@ -118,16 +111,16 @@ registerBlockType( 'mayflower-blocks/jumbotron', {
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
 
-	save: function( {attributes} ) {
+	save: function( { attributes } ) {
 		return (
-			<div className = 'jumbotron'>
+			<div className="jumbotron">
 				<RichText.Content
-					tagName = "h1"
-					value = {attributes.jumbotronTitle}
+					tagName="h1"
+					value={ attributes.jumbotronTitle }
 				/>
 				<RichText.Content
-					tagName = "p"
-					value = {attributes.jumbotronText}
+					tagName="p"
+					value={ attributes.jumbotronText }
 				/>
 				<InnerBlocks.Content />
 			</div>

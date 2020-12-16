@@ -5,5 +5,8 @@
  */
 
 div.wp-block-mayflower-blocks-collapse div.wp-block-mayflower-blocks-panel {
-    margin-bottom: 20px; // Re-add margin bottom because it gets overrided if nested in a Collapse block
+    margin-bottom: 1em; // Re-add margin bottom because it gets overrided if nested in a Collapse block
+}
+.wp-block-mayflower-blocks-panel .card-body > *:last-child {
+	margin-bottom: 0;
 }

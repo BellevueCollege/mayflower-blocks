@@ -6,13 +6,13 @@
  */
 
 // Import CSS.
-// import './style.scss';
+import './style.scss';
 import './editor.scss';
 import React from 'react';
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { RichText, InspectorControls, InnerBlocks } = wp.blockEditor;
-const { SelectControl, ToggleControl } = wp.components;
+const { SelectControl, ToggleControl, PanelBody, PanelRow } = wp.components;
 const { select } = wp.data;
 const { getBlockRootClientId, hasSelectedInnerBlock } = select( 'core/block-editor' );
 const { omit } = lodash;
@@ -52,6 +52,10 @@ registerBlockType( 'mayflower-blocks/collapse', {
 			type: 'string',
 			default: 'default',
 		},
+		collapseLightBg: {
+			type: 'boolean',
+			default: false,
+		},
 		expanded: {
 			type: 'boolean',
 			default: false,
@@ -80,34 +84,48 @@ registerBlockType( 'mayflower-blocks/collapse', {
 
 		return [
 			<InspectorControls>
-				<hr />
-				<SelectControl
-					label="Collapse Style"
-					value={ attributes.collapseClass }
-					options={ [
-						{ label: 'Default', value: 'default' },
-						{ label: 'Primary (BC Blue)', value: 'primary' },
-						{ label: 'Secondary (Gray)', value: 'secondary' },
-						{ label: 'Info (Light Blue)', value: 'info' },
-						{ label: 'Success (Green)', value: 'success' },
-						{ label: 'Warning (Yellow)', value: 'warning' },
-						{ label: 'Danger (Red)', value: 'danger' },
-						{ label: 'Light', value: 'light' },
-						{ label: 'Dark', value: 'dark' },
-					] }
-					onChange={ ( collapseClass ) => {
-						setAttributes( { collapseClass } );
-					} }
-				/>
-				<hr />
-				<ToggleControl
-					label="Start Expanded"
-					help={ attributes.expanded ? 'Module will start out in an expanded state' : 'Module will start out in a collapsed state' }
-					checked={ attributes.expanded }
-					onChange={ ( expanded ) => {
-						setAttributes( { expanded } );
-					} }
-				/>
+				<PanelBody
+					title="Card Style"
+					initialOpen={ true }
+				>
+					<PanelRow>
+						<SelectControl
+							label="Collapse Style"
+							value={ attributes.collapseClass }
+							options={ [
+								{ label: 'Default', value: 'default' },
+								{ label: 'Primary (BC Blue)', value: 'primary' },
+								{ label: 'Secondary (Gray)', value: 'secondary' },
+								{ label: 'Info (Light Blue)', value: 'info' },
+								{ label: 'Success (Green)', value: 'success' },
+								{ label: 'Warning (Yellow)', value: 'warning' },
+								{ label: 'Danger (Red)', value: 'danger' },
+								{ label: 'Light', value: 'light' },
+								{ label: 'Dark', value: 'dark' },
+							] }
+							onChange={ ( collapseClass ) => {
+								setAttributes( { collapseClass } );
+							} }
+						/>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Use Light Background for Card Body"
+							checked={ attributes.collapseLightBg }
+							onChange={ ( collapseLightBg ) => setAttributes( { collapseLightBg } ) }
+						/>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Start Expanded"
+							help={ attributes.expanded ? 'Module will start out in an expanded state' : 'Module will start out in a collapsed state' }
+							checked={ attributes.expanded }
+							onChange={ ( expanded ) => {
+								setAttributes( { expanded } );
+							} }
+						/>
+					</PanelRow>
+				</PanelBody>
 			</InspectorControls>,
 			<div className={ 'card bg-' + attributes.collapseClass + (
 				attributes.collapseClass !== 'default' &&
@@ -127,7 +145,7 @@ registerBlockType( 'mayflower-blocks/collapse', {
 				</div>
 				{ ( isSelected || hasSelectedInnerBlock( attributes.currentBlockClientId ) === true || attributes.expanded ) &&
 				<div id={ `collapse_${ attributes.currentBlockClientId }` } className="collapse show" aria-labelledby={ `heading_${ attributes.currentBlockClientId }` } data-parent={ `#accordion_${ parentClientId }` }>
-					<div className="card-body">
+					<div className={ 'card-body' + ( attributes.collapseLightBg === true ? ' bg-light text-dark' : '' ) }>
 						{ attributes.collapseText !== null && attributes.collapseText !== '' && attributes.collapseText !== undefined ?
 							<RichText
 								tagName="div"
@@ -175,7 +193,7 @@ registerBlockType( 'mayflower-blocks/collapse', {
 					</div>
 
 					<div id={ `collapse_${ attributes.currentBlockClientId }` } className={ `collapse${ ( attributes.expanded ? ' show' : '' ) }` } aria-labelledby={ `heading_${ attributes.currentBlockClientId }` } data-parent={ `#accordion_${ attributes.parentBlockClientId }` }>
-						<div className="card-body">
+						<div className={ 'card-body' + ( attributes.collapseLightBg === true ? ' bg-light text-dark' : '' ) }>
 							{ attributes.collapseText !== null && attributes.collapseText !== '' && attributes.collapseText !== undefined ?
 								<RichText.Content
 									tagName="div"
