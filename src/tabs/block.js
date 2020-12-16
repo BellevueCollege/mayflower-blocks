@@ -44,7 +44,7 @@ registerBlockType( 'mayflower-blocks/tabs', {
 	edit: function( { className } ) {
 		return (
 			<div className={ className }>
-				<InnerBlocks template={ TEMPLATE } />
+				<InnerBlocks allowedBlocks={ [] } template={ TEMPLATE } />
 			</div>
 		);
 	},
