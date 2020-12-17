@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 /**
  * BLOCK: Collapse
  *
@@ -11,7 +12,7 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType, getBlockDefaultClassName } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { RichText, InspectorControls, BlockControls } = wp.editor;
+const { RichText, InspectorControls, BlockControls } = wp.blockEditor;
 const { Toolbar, ToggleControl, Panel, PanelBody, PanelRow, Dashicon } = wp.components;
 const { select, dispatch } = wp.data;
 const { Fragment } = wp.element;
@@ -36,7 +37,7 @@ const { createHigherOrderComponent } = wp.compose;
 
 const mayflowerBlocksTab = createHigherOrderComponent( ( BlockListBlock ) => {
 	return ( props ) => {
-		if ( props.attributes.tabId && props.name == 'mayflower-blocks/tab-list-tab' ) {
+		if ( props.attributes.tabId && props.name === 'mayflower-blocks/tab-list-tab' ) {
 			return <li role="presentation" className={ props.attributes.tabActive ? 'active' : '' }><BlockListBlock { ...props } /></li>;
 		}
 		return <BlockListBlock { ...props } />;
@@ -72,11 +73,11 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 	},
 
 	edit: function( { className, attributes, setAttributes, clientId, isSelected } ) {
-		const tabListBlock = select( 'core/editor' ).getBlock( select( 'core/editor' ).getBlockRootClientId( clientId ) );
-		const parentTabsBlock = select( 'core/editor' ).getBlock( select( 'core/editor' ).getBlockRootClientId( tabListBlock.clientId ) );
+		const tabListBlock = select( 'core/block-editor' ).getBlock( select( 'core/block-editor' ).getBlockRootClientId( clientId ) );
+		const parentTabsBlock = select( 'core/block-editor' ).getBlock( select( 'core/block-editor' ).getBlockRootClientId( tabListBlock.clientId ) );
 		const parentTabsInnerBlocks = parentTabsBlock.innerBlocks;
 		const tabContentBlock = parentTabsInnerBlocks.find( child => {
-			return child.name == 'mayflower-blocks/tab-content';
+			return child.name === 'mayflower-blocks/tab-content';
 		} );
 
 		/**
@@ -86,14 +87,14 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 		 */
 		const handleUpdateDefaultTab = () => {
 			// Set current tab as default
-			if ( attributes.tabDefault == false ) {
+			if ( attributes.tabDefault === false ) {
 				setAttributes( { tabDefault: true } );
 			}
 
 			// Find other tabs that are set as default and set the tabDefault attribute to false
 			tabListBlock.innerBlocks.forEach( tab => {
 				if ( tab.attributes.tabDefault === true ) {
-					dispatch( 'core/editor' ).updateBlockAttributes( tab.clientId, { tabDefault: false } );
+					dispatch( 'core/block-editor' ).updateBlockAttributes( tab.clientId, { tabDefault: false } );
 				}
 			} );
 
@@ -101,11 +102,11 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 			tabContentBlock.innerBlocks.forEach( panel => {
 				// If other panels are default, set to false
 				if ( panel.attributes.tabDefault === true ) {
-					dispatch( 'core/editor' ).updateBlockAttributes( panel.clientId, { tabDefault: false } );
+					dispatch( 'core/block-editor' ).updateBlockAttributes( panel.clientId, { tabDefault: false } );
 				}
 				// Then set default panel if panel tabId matches the default tabId
-				if ( panel.attributes.tabId == attributes.tabId ) {
-					dispatch( 'core/editor' ).updateBlockAttributes( panel.clientId, { tabDefault: true } );
+				if ( panel.attributes.tabId === attributes.tabId ) {
+					dispatch( 'core/block-editor' ).updateBlockAttributes( panel.clientId, { tabDefault: true } );
 				}
 			} );
 		};
@@ -117,15 +118,15 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 				// Looks for other tabs that were previously active and set it to false
 				tabListBlock.innerBlocks.forEach( tab => {
 					if ( tab.attributes.tabId !== attributes.tabId ) {
-						dispatch( 'core/editor' ).updateBlockAttributes( tab.clientId, { tabActive: false } );
+						dispatch( 'core/block-editor' ).updateBlockAttributes( tab.clientId, { tabActive: false } );
 					}
 				} );
 				// Sets new active tab panel then looks for other tabs that were previously active and set it to false
 				tabContentBlock.innerBlocks.forEach( panel => {
-					if ( panel.attributes.tabId == attributes.tabId ) {
-						dispatch( 'core/editor' ).updateBlockAttributes( panel.clientId, { tabActive: true } );
+					if ( panel.attributes.tabId === attributes.tabId ) {
+						dispatch( 'core/block-editor' ).updateBlockAttributes( panel.clientId, { tabActive: true } );
 					} else {
-						dispatch( 'core/editor' ).updateBlockAttributes( panel.clientId, { tabActive: false } );
+						dispatch( 'core/block-editor' ).updateBlockAttributes( panel.clientId, { tabActive: false } );
 					}
 				} );
 			}
@@ -136,29 +137,29 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 		 */
 		const handleRemoveTab = () => {
 			// Handles selecting previous or next block when deleting, so the flow of deletion is smoother
-			const nextBlockClientId = select( 'core/editor' ).getNextBlockClientId( clientId );
-			const prevBlockClientId = select( 'core/editor' ).getPreviousBlockClientId( clientId );
+			const nextBlockClientId = select( 'core/block-editor' ).getNextBlockClientId( clientId );
+			const prevBlockClientId = select( 'core/block-editor' ).getPreviousBlockClientId( clientId );
 			if ( nextBlockClientId ) {
-				dispatch( 'core/editor' ).selectBlock( nextBlockClientId );
+				dispatch( 'core/block-editor' ).selectBlock( nextBlockClientId );
 			} else {
-				dispatch( 'core/editor' ).selectBlock( prevBlockClientId );
+				dispatch( 'core/block-editor' ).selectBlock( prevBlockClientId );
 			}
 
 			// Remove the current tab
-			dispatch( 'core/editor' ).removeBlock( clientId, false );
+			dispatch( 'core/block-editor' ).removeBlock( clientId, false );
 
 			// Find the corresponding tab panel and remove it
 			const attachedPanel = tabContentBlock.innerBlocks.find( panel => {
-				return panel.attributes.tabId == attributes.tabId;
+				return panel.attributes.tabId === attributes.tabId;
 			}
 			);
-			dispatch( 'core/editor' ).removeBlock( attachedPanel.clientId, false );
+			dispatch( 'core/block-editor' ).removeBlock( attachedPanel.clientId, false );
 		};
 
 		/**
 		 * TabToolBarControl returns a Toolbar component with set default tab and remove buttons to set or remove the tab and corresponding panel.
 		 *
-		 * @return Toolbar component with tab control buttons
+		 * @return {Object} Toolbar component with tab control buttons
 		 * */
 		const TabToolBarControl = () => {
 			const controls = [
@@ -207,7 +208,7 @@ registerBlockType( 'mayflower-blocks/tab-list-tab', {
 			<Fragment>
 				<a className={ className } aria-controls={ `#${ attributes.tabId }` } role="tab" data-toggle="tab">
 					<RichText
-						formattingControls={ [ '' ] }
+						allowedFormats={ [ '' ] }
 						placeholder="Enter title..."
 						keepPlaceholderOnFocus="true"
 						value={ attributes.tabTitle }

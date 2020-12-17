@@ -8,9 +8,10 @@
 	box-sizing: border-box;
 	border: 1px solid #ccc;
     border-radius: 5px;
-	margin-top: 1em;
+    margin-top: 1em;
+    padding: 1.5rem;
     
-    .wp-block-mayflower-blocks-tabs > .editor-inner-blocks > .editor-block-list__layout > div > div.editor-default-block-appender {
+    .wp-block-mayflower-blocks-tabs > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-list-appender {
         display: none;
     }
 }

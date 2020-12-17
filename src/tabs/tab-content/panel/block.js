@@ -11,7 +11,7 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType, getBlockDefaultClassName } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { InnerBlocks } = wp.editor;
+const { InnerBlocks } = wp.blockEditor;
 const { Fragment } = wp.element;
 const { createHigherOrderComponent } = wp.compose;
 
@@ -33,7 +33,7 @@ const { createHigherOrderComponent } = wp.compose;
 // corresponding bootstrap and CSS classes and prevent block stacking
 const mayflowerBlocksPanel = createHigherOrderComponent( ( BlockListBlock ) => {
 	return ( props ) => {
-		if ( props.attributes.tabId && props.name == 'mayflower-blocks/tab-content-panel' ) {
+		if ( props.attributes.tabId && props.name === 'mayflower-blocks/tab-content-panel' ) {
 			return <div role="tabpanel" className={ `tab-pane ${ props.attributes.tabActive ? 'active' : '' }` } id={ props.attributes.tabId }><BlockListBlock { ...props } /></div>;
 		}
 		return <BlockListBlock { ...props } />;
@@ -66,11 +66,11 @@ registerBlockType( 'mayflower-blocks/tab-content-panel', {
 	},
 
 	edit: function() {
-		return [
+		return (
 			<Fragment>
 				<InnerBlocks />
-			</Fragment>,
-		];
+			</Fragment>
+		);
 	},
 
 	/**
