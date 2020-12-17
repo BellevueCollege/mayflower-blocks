@@ -68,7 +68,9 @@ registerBlockType( 'mayflower-blocks/tab-content-panel', {
 	edit: function() {
 		return (
 			<Fragment>
-				<InnerBlocks />
+				<InnerBlocks
+					templateLock={ false }
+				/>
 			</Fragment>
 		);
 	},
