@@ -12,6 +12,7 @@ import './editor.scss';
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType, getBlockDefaultClassName } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { InnerBlocks } = wp.blockEditor;
+const { select } = wp.data;
 
 /**
  * Register: aa Gutenberg Block.
@@ -38,6 +39,24 @@ registerBlockType( 'mayflower-blocks/tab-content', {
 	},
 
 	edit: function() {
+		// Prevent backspace from removing first paragraph because if it gets removed, the user can't add new paragraphs
+		// Credit to https://wordpress.stackexchange.com/a/353496
+		document.body.addEventListener( 'keydown', function( event ) {
+			if ( ( event.key === 'Backspace' ) ) {
+				const selectionStart = select( 'core/block-editor' ).getSelectionStart();
+
+				const notInEditableBlock = ! ( 'offset' in selectionStart );
+
+				const cursorIsAtBeginningOfEditableBlock = notInEditableBlock ? false : selectionStart.offset === 0;
+
+				const currentBlockIsFirstChild = select( 'core/block-editor' ).getPreviousBlockClientId() === null;
+
+				if ( ( notInEditableBlock ) || ( cursorIsAtBeginningOfEditableBlock && currentBlockIsFirstChild ) ) {
+					event.preventDefault();
+				}
+			}
+		} );
+
 		return (
 			<div className="tab-content">
 				<InnerBlocks allowedBlocks={ [ 'mayflower-blocks/tab-content-panel' ] } />
