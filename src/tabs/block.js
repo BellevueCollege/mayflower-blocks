@@ -11,12 +11,12 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { InnerBlocks } = wp.editor;
+const { InnerBlocks } = wp.blockEditor;
 
 const TEMPLATE = [
-	['mayflower-blocks/tab-list', {}, []],
-	['mayflower-blocks/tab-content', {}, []],
-]
+	[ 'mayflower-blocks/tab-list', {}, [] ],
+	[ 'mayflower-blocks/tab-content', {}, [] ],
+];
 
 /**
  * Register: aa Gutenberg Block.
@@ -32,7 +32,6 @@ const TEMPLATE = [
  *                             registered; otherwise `undefined`.
  */
 
-
 registerBlockType( 'mayflower-blocks/tabs', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
 	title: __( 'Tabs' ), // Block title.
@@ -41,16 +40,14 @@ registerBlockType( 'mayflower-blocks/tabs', {
 
 	attributes: {
 	},
-	
-	edit: function ({ className }) {
 
-		return [
-			<div className={className}>
-				<InnerBlocks template={TEMPLATE}/>
+	edit: function( { className } ) {
+		return (
+			<div className={ className }>
+				<InnerBlocks template={ TEMPLATE } />
 			</div>
-		]
+		);
 	},
-
 
 	/**
 	 * The save function defines the way in which the different attributes should be combined
@@ -63,11 +60,23 @@ registerBlockType( 'mayflower-blocks/tabs', {
 
 	save: function() {
 		return (
-			<div>
-				<InnerBlocks.Content/>
+			<div className="card">
+				<InnerBlocks.Content />
 			</div>
 		);
 	},
+
+	deprecated: [
+		{
+			save: function() {
+				return (
+					<div>
+						<InnerBlocks.Content />
+					</div>
+				);
+			},
+		},
+	],
 
 	//Existing bootstrap tabs shortcode transformed into its block counterpart.
 	//Allows use of [tabs][/tabs]
@@ -77,7 +86,7 @@ registerBlockType( 'mayflower-blocks/tabs', {
 			{
 				type: 'shortcode',
 				tag: 'tabs',
-			}
-		]
+			},
+		],
 	},
 } );

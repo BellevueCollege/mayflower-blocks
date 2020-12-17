@@ -5,7 +5,7 @@
  * which makes it higher in priority.
  */
 
-.wp-block[data-type="mayflower-blocks/tab-content"] {
+ .wp-block[data-type="mayflower-blocks/tab-content"] {
 
     > .editor-block-list__insertion-point {
         display: none;
@@ -25,18 +25,11 @@
                     display: none;
                 }
             }
-        }
-        > .editor-block-list__block-edit {
-            .tab-content {
-                > .editor-inner-blocks {
-                    > .editor-block-list__layout {
-                        > .block-list-appender {
-                            display: none;
-                        }
-                    }
-                }
-            }
-        }
+        } 
+    }
+
+    .tab-content > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-list-appender {
+        display: none;
     }
 
     li[role="presentation"] {
