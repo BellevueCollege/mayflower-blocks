@@ -49,7 +49,7 @@ registerBlockType( 'mayflower-blocks/tabs', {
 				<InnerBlocks
 					template={ TEMPLATE }
 					allowedBlocks={ ALLOWED_BLOCKS }
-					templateLock={ 'all' }
+					templateLock={ 'select' }
 				/>
 			</div>
 		);

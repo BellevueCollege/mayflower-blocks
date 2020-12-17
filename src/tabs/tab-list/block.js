@@ -107,6 +107,7 @@ registerBlockType( 'mayflower-blocks/tab-list', {
 					allowedBlocks={ [ 'mayflower-blocks/tab-list-tab' ] }
 					templateLock={ false }
 					renderAppender={ false }
+					orientation="horizontal"
 				/>
 				<li role="presentation">
 					<Button onClick={ addTab } className="add-tab">
