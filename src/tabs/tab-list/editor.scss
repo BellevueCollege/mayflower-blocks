@@ -4,19 +4,7 @@
  * CSS for just Backend enqueued after style.scss
  * which makes it higher in priority.
  */
-
- .wp-block div[class^="wp-block-"] {
-    [data-type="mayflower-blocks/column"] {
-        // Makes sure insertion points when a tab is nested in a column doesn't show unnecessarily
-        .wp-block[data-type="mayflower-blocks/tab-list"] {
-            > .editor-block-list__insertion-point {
-                display: none;
-            }
-        }
-    }
-}
-
-.wp-block[data-type="mayflower-blocks/tab-list"] {
+ .wp-block[data-type="mayflower-blocks/tab-list"] {
     flex-direction: row;
     flex-wrap: wrap;
 
@@ -44,16 +32,13 @@
     }
 
     ul.nav-tabs {
+        margin-left: 0;
         align-items: center; 
     }
     
     ul.nav-tabs li[role="presentation"] {
         float: left;
         border: 1px solid transparent;
-
-        &.tab-inserter {
-            margin-top: 14px;
-        }
 
         button.add-tab {
             padding: 10px 15px;
@@ -68,6 +53,10 @@
 
             span {
                 margin-left: 10px;
+            }
+
+            span.dashicon {
+                margin-left: 0px;
             }
         }
 

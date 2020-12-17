@@ -91,8 +91,10 @@ registerBlockType( 'mayflower-blocks/tab-list', {
 					return child.name === 'mayflower-blocks/tab-content';
 				} );
 				if ( tabContentBlock ) {
+					// Create paragraph block so that panel has empty space to add new blocks and we can disable block inserts on main tabs block
+					const paragraphBlock = createBlock( 'core/paragraph', { content: '', placeholder: '' } );
 					// Create a panel body with the tabId to put into tab content list
-					const panelBlock = createBlock( 'mayflower-blocks/tab-content-panel', { tabId: tabClientId, tabActive: tabContentBlock.innerBlocks.length === 0 ? true : false, tabDefault: tabContentBlock.innerBlocks.length === 0 ? true : false } );
+					const panelBlock = createBlock( 'mayflower-blocks/tab-content-panel', { tabId: tabClientId, tabActive: tabContentBlock.innerBlocks.length === 0 ? true : false, tabDefault: tabContentBlock.innerBlocks.length === 0 ? true : false }, [ paragraphBlock ] );
 					// Add new panel body into tab content list
 					dispatch( 'core/block-editor' ).insertBlock( panelBlock, tabContentBlock.innerBlocks.length, tabContentBlock.clientId );
 				}

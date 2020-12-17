@@ -7,14 +7,11 @@
 
  .wp-block div[class^="wp-block-"] {
     .wp-block[data-type="mayflower-blocks/tab-list-tab"] {
+        margin-top: 0;
+        margin-bottom: 0;
 
         > .editor-block-list__insertion-point {
             display: none;
-        }
-
-        > div.editor-block-list__block-edit > div[data-block] {
-            margin-top: 10px;
-            margin-bottom: 0;
         }
 
         &.block-editor-block-list__block {
@@ -67,10 +64,5 @@
         }
     }
  }
-
-
-.wp-block-mayflower-blocks-tab-list-tab {
-
-}
 
 
