@@ -4,7 +4,7 @@
  * CSS for just Backend enqueued after style.scss
  * which makes it higher in priority.
  */
-.wp-block[data-type="mayflower-blocks/tab-content-panel"] {
+ .wp-block[data-type="mayflower-blocks/tab-content-panel"] {
 
     > .editor-block-list__insertion-point {
         display: none;
