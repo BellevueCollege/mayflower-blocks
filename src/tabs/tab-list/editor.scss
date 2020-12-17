@@ -6,7 +6,9 @@
  */
  .wp-block[data-type="mayflower-blocks/tab-list"] {
     flex-direction: row;
-    flex-wrap: wrap;
+	flex-wrap: wrap;
+	margin-top: 0;
+	margin-bottom: 0;
 
     .block-list-appender {
         display: none;
@@ -33,9 +35,10 @@
 
     ul.nav-tabs {
         margin-left: 0;
-        align-items: center; 
+        align-items: center;
+		background: #ccc;
     }
-    
+
     ul.nav-tabs li[role="presentation"] {
         float: left;
         border: 1px solid transparent;

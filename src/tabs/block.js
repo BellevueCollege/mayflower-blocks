@@ -18,6 +18,8 @@ const TEMPLATE = [
 	[ 'mayflower-blocks/tab-content', {}, [] ],
 ];
 
+const ALLOWED_BLOCKS = [ 'mayflower-blocks/tab-list' ];
+
 /**
  * Register: aa Gutenberg Block.
  *
@@ -44,7 +46,11 @@ registerBlockType( 'mayflower-blocks/tabs', {
 	edit: function( { className } ) {
 		return (
 			<div className={ className }>
-				<InnerBlocks allowedBlocks={ [] } template={ TEMPLATE } />
+				<InnerBlocks
+					template={ TEMPLATE }
+					allowedBlocks={ ALLOWED_BLOCKS }
+					templateLock={ 'select' }
+				/>
 			</div>
 		);
 	},
