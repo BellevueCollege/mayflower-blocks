@@ -11,7 +11,7 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType, getBlockDefaultClassName } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { InnerBlocks } = wp.editor;
+const { InnerBlocks } = wp.blockEditor;
 const { Fragment } = wp.element;
 const { createHigherOrderComponent } = wp.compose;
 
@@ -33,11 +33,10 @@ const { createHigherOrderComponent } = wp.compose;
 // corresponding bootstrap and CSS classes and prevent block stacking
 const mayflowerBlocksPanel = createHigherOrderComponent( ( BlockListBlock ) => {
 	return ( props ) => {
-		if (props.attributes.tabId && props.name == 'mayflower-blocks/tab-content-panel'){
-			return <div role="tabpanel" className={`tab-pane ${props.attributes.tabActive ? 'active' : ''}`} id={props.attributes.tabId}><BlockListBlock { ...props }/></div>;
-		} else {
-			return <BlockListBlock { ...props } />;
+		if ( props.attributes.tabId && props.name === 'mayflower-blocks/tab-content-panel' ) {
+			return <div role="tabpanel" className={ `tab-pane ${ props.attributes.tabActive ? 'active' : '' }` } id={ props.attributes.tabId }><BlockListBlock { ...props } /></div>;
 		}
+		return <BlockListBlock { ...props } />;
 	};
 }, 'mayflowerBlocksPanel' );
 
@@ -49,32 +48,30 @@ registerBlockType( 'mayflower-blocks/tab-content-panel', {
 	title: __( 'Tab Content Panel' ), // Block title.
 	icon: 'category', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
-	parent: ['mayflower-blocks/tab-content'],
+	parent: [ 'mayflower-blocks/tab-content' ],
 
 	attributes: {
 		tabActive: {
 			type: 'boolean',
-			default: false
+			default: false,
 		},
 		tabDefault: {
 			type: 'boolean',
-			default: false
+			default: false,
 		},
 		tabId: {
 			type: 'string',
-			default: ''
+			default: '',
 		},
 	},
-	
-	edit: function () {
 
-		return [
+	edit: function() {
+		return (
 			<Fragment>
-				<InnerBlocks/>
+				<InnerBlocks />
 			</Fragment>
-		]
+		);
 	},
-
 
 	/**
 	 * The save function defines the way in which the different attributes should be combined
@@ -86,11 +83,39 @@ registerBlockType( 'mayflower-blocks/tab-content-panel', {
 	 */
 
 	save: function( { attributes } ) {
-		const className = getBlockDefaultClassName('mayflower-blocks/tab-content-panel');
-		return (		
-			<div role="tabpanel" className={`${className} tab-pane${attributes.tabDefault == true ? ' active' : ''}`} id={attributes.tabId}>
-				<InnerBlocks.Content/>
+		const className = getBlockDefaultClassName( 'mayflower-blocks/tab-content-panel' );
+		return (
+			<div role="tabpanel" aria-labelledby={ `tab_link_${ attributes.tabId }` } className={ `${ className } tab-pane${ attributes.tabDefault === true ? ' active' : '' }` } id={ `tab_${ attributes.tabId }` }>
+				<InnerBlocks.Content />
 			</div>
 		);
 	},
+
+	deprecated: [
+		{
+			attributes: {
+				tabActive: {
+					type: 'boolean',
+					default: false,
+				},
+				tabDefault: {
+					type: 'boolean',
+					default: false,
+				},
+				tabId: {
+					type: 'string',
+					default: '',
+				},
+			},
+
+			save: function( { attributes } ) {
+				const className = getBlockDefaultClassName( 'mayflower-blocks/tab-content-panel' );
+				return (
+					<div role="tabpanel" className={ `${ className } tab-pane${ attributes.tabDefault === true ? ' active' : '' }` } id={ `${ attributes.tabId }` }>
+						<InnerBlocks.Content />
+					</div>
+				);
+			},
+		},
+	],
 } );
