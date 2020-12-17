@@ -59,7 +59,11 @@ registerBlockType( 'mayflower-blocks/tab-content', {
 
 		return (
 			<div className="tab-content">
-				<InnerBlocks allowedBlocks={ [ 'mayflower-blocks/tab-content-panel' ] } />
+				<InnerBlocks
+					allowedBlocks={ [ 'mayflower-blocks/tab-content-panel' ] }
+					renderAppender={ false }
+					templateLock={ false }
+				/>
 			</div>
 		);
 	},
