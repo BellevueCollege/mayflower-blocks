@@ -6,6 +6,7 @@
  */
 
 .wp-block[data-type="mayflower-blocks/tab-content"] {
+	margin: .1rem 1rem;
 
     > .editor-block-list__insertion-point {
         display: none;
@@ -25,7 +26,7 @@
                     display: none;
                 }
             }
-        } 
+        }
     }
 
     .tab-content > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-list-appender {
@@ -46,5 +47,5 @@
             display: block;
         }
     }
-    
+
 }
