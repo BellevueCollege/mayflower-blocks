@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function mayflower_blocks_render_block_course( $attributes, $content ) {
-	$course = new Mayflower_Blocks_Course( $attributes['subject'], $attributes['item'], $attributes['description'] );
+	$course = new Mayflower_Blocks_Course( wp_specialchars_decode($attributes['subject']), $attributes['item'], $attributes['description'] );
 	return $course->output();
 }
 
