@@ -273,7 +273,8 @@ registerBlockType( 'mayflower-blocks/panel', {
 				<div className={ 'card bg-' + attributes.cardType + (
 					attributes.cardType !== 'default' &&
 					attributes.cardType !== 'light' &&
-					attributes.cardType !== 'info' ?
+					attributes.cardType !== 'info' &&
+					attributes.cardType !== 'warning' ?
 						' text-white' : '' ) }>
 
 					{ attributes.cardHeading == true ?
@@ -334,7 +335,8 @@ registerBlockType( 'mayflower-blocks/panel', {
 			<div className={ 'card bg-' + attributes.cardType + (
 				attributes.cardType !== 'default' &&
 				attributes.cardType !== 'light' &&
-				attributes.cardType !== 'info' ?
+				attributes.cardType !== 'info' &&
+				attributes.cardType !== 'warning' ?
 					' text-white' : '' ) }>
 
 				{ attributes.cardHeading == true ?
