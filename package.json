@@ -1,6 +1,6 @@
 {
   "name": "mayflower-blocks-cgb-guten-block",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "private": true,
   "scripts": {
     "start": "cgb-scripts start --mode dev",
@@ -11,6 +11,6 @@
     "cgb-scripts": "^1.23.1",
     "imagesloaded": "^4.1.4",
     "masonry-layout": "^4.2.2",
-    "npm": "^6.14.9"
+    "npm": "^6.14.14"
   }
 }

@@ -79,7 +79,7 @@ function mayflower_block_categories( $categories, $post ) {
         )
     );
 }
-add_filter( 'block_categories', 'mayflower_block_categories', 10, 2 );
+add_filter( 'block_categories_all', 'mayflower_block_categories', 10, 2 );
 
 // Hook in PHP based block functionality
 require_once plugin_dir_path( __FILE__ ) . 'child-pages/block.php';

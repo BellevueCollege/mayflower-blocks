@@ -1,0 +1,18 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+	"phpcs.enable": false,
+	"phpcs.composerJsonPath":"composer.json",
+	"phpcs.standard": "WordPress",
+	"phpcbf.onsave": false,
+	"phpcbf.documentFormattingProvider": true,
+	"phpcbf.debug": false,
+	"phpcbf.standard": "WordPress",
+	"phpcbf.executablePath": "/Users/taija.tevia-clark/GitProjects/mayflower-blocks/vendor/bin/phpcbf",
+	"editor.formatOnSave": false,
+	"stylelint.enable": true,
+	"stylelint.autoFixOnSave": true,
+	"eslint.autoFixOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	}
+}
