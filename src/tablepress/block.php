@@ -10,7 +10,7 @@ function mayflower_blocks_render_block_tablepress( $attributes ) {
         $tablepress_options = json_decode(get_option('tablepress_tables'));
         $tablepress_table_posts = $tablepress_options->table_post;
         $tables_array = get_object_vars($tablepress_table_posts);
-    
+
         if ($attributes['postId'] !== 'select') {
                 $table_id = array_search($attributes['postId'], $tables_array);
                 return do_shortcode('[table id=' .  $table_id . '/]');
@@ -22,8 +22,8 @@ function mayflower_blocks_render_block_tablepress( $attributes ) {
     }
 }
 
-register_block_type( 'mayflower-blocks/tablepress', 
-    array( 
+register_block_type( 'mayflower-blocks/tablepress',
+    array(
         'attributes'      => array(
             'postId'      => array(
                 'type'    => 'string'
@@ -41,9 +41,9 @@ register_block_type( 'mayflower-blocks/tablepress',
 /**
  * Add REST API support to TablePress to query through all tables in editor
  */
-add_filter( 'register_post_type_args', 'my_post_type_args', 10, 2 );
- 
-function my_post_type_args( $args, $post_type ) {
+add_filter( 'register_post_type_args', 'register_tablepress_table', 10, 2 );
+
+function register_tablepress_table( $args, $post_type ) {
     if ( 'tablepress_table' === $post_type ) {
         $args['show_in_rest'] = true;
     }
