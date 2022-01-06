@@ -1,7 +1,7 @@
 <?php
 
 class Mayflower_Blocks_Course {
-	private $link_base_url = 'https://www2.bellevuecollege.edu/classes/All/';
+	private $link_base_url = 'https://www.bellevuecollege.edu/classes/All/';
 	private $api_base_url = 'https://www2.bellevuecollege.edu/data/api/v1/course/';
 	private $subject;
 	private $number;
@@ -83,7 +83,7 @@ class Mayflower_Blocks_Course {
 			. $course_data['title'] . ' - '
 			. ( $course_data['variable'] ? 'variable' : $course_data['credits'] ) . ' credits';
 
-			$url = $this->link_base_url . $course_data['subject'] .
+			$url = $this->link_base_url . str_replace( '&', '', $course_data['subject'] ) .
 				( $course_data['common'] ? '%26' : '' ) . '/' .
 				$course_data['number'];
 
