@@ -41,24 +41,24 @@ registerBlockType( 'mayflower-blocks/tablepress', {
 	attributes: {
 		postId: {
 			type: 'string',
-			default: 'select'
+			default: 'select',
 		},
 		tableId: {
 			type: 'string',
 		},
 		select: {
 			type: 'boolean',
-			default: false
-		}
+			default: false,
+		},
 	},
 
 	edit: class extends Component {
-		constructor(props) {
-			super(...arguments);
+		constructor( props ) {
+			super( ...arguments );
 			this.props = props;
 			this.state = {
-				tableList: []
-			}
+				tableList: [],
+			};
 		}
 
 		componentDidMount() {
@@ -71,16 +71,15 @@ registerBlockType( 'mayflower-blocks/tablepress', {
 		 * Sets tableList with array of tables from API
 		 */
 		handleTableFetch = () => {
-			let tableArray = [{label: "Select Table", value: "select"}];
-			apiFetch( { path: '/wp/v2/tablepress_table' } ).then( table => {
-				table.forEach(t => tableArray.push({label: t.title.rendered, value: t.id}));
-				this.setState({tableList: tableArray});
-			});
-			
+			const tableArray = [ { label: 'Select Table', value: 'select' } ];
+			apiFetch( { path: '/wp/v2/tablepress_table?per_page=100' } ).then( table => {
+				table.forEach( t => tableArray.push( { label: t.title.rendered, value: t.id } ) );
+				this.setState( { tableList: tableArray } );
+			} );
 		}
 
 		render() {
-			const { setAttributes, attributes, className, isSelected} = this.props;
+			const { setAttributes, attributes, className, isSelected } = this.props;
 			const { tableList } = this.state;
 
 			/**
@@ -89,50 +88,49 @@ registerBlockType( 'mayflower-blocks/tablepress', {
 			 * Sets attributes so select control with tables shows
 			 */
 			const handleShowSelectControl = () => {
-				setAttributes({select: true});
-				setAttributes({tableId: ''});
-			}
+				setAttributes( { select: true } );
+				setAttributes( { tableId: '' } );
+			};
 
 			// Select control for returned tables from REST API
 			let selectControls;
 			// Checks whether to show controls
-			if ( isSelected || (!isSelected && attributes.postId === undefined || attributes.postId === 'select') ) {
+			if ( isSelected || ( ! isSelected && attributes.postId === undefined || attributes.postId === 'select' ) ) {
 				// Checks to make sure a tableId isn't defined or the user doesn't want to select a new table
-				if( (attributes.tableId === undefined || '' ) || attributes.select === true) {
+				if ( ( attributes.tableId === undefined || '' ) || attributes.select === true ) {
 					selectControls = (
-						<div class="controls">
+						<div className="controls">
 							<SelectControl
-								label = "Choose Tablepress Table"
-								value = {attributes.postId}
-								options = {tableList}
-								onChange = {(postId) => setAttributes({ postId })}
+								label="Choose Tablepress Table"
+								value={ attributes.postId }
+								options={ tableList }
+								onChange={ ( postId ) => setAttributes( { postId } ) }
 							/>
 						</div>
-						)
-					}
+					);
+				}
 			}
 
 			// Button to click that shows select control on a transformed shortcode block
 			let selectDifferentTable;
 			// Checks if there is a table id and is selected, then show button
 			if ( attributes.tableId && isSelected ) {
-				selectDifferentTable = ( <div class="controls"><button type="button" class="btn btn-default" onClick={handleShowSelectControl}>Select Different Table</button></div> );
+				selectDifferentTable = ( <div className="controls"><button type="button" className="btn btn-default" onClick={ handleShowSelectControl }>Select Different Table</button></div> );
 			}
 
 			return [
 				<InspectorControls>
-				</InspectorControls>
-				,
-				<div class={className}>
+				</InspectorControls>,
+				<div className={ className }>
 					{ selectControls }
 					{ selectDifferentTable }
-					<div class="editor-only">
+					<div className="editor-only">
 						<ServerSideRender
-							block = "mayflower-blocks/tablepress"
-							attributes = { attributes }
+							block="mayflower-blocks/tablepress"
+							attributes={ attributes }
 						/>
 					</div>
-				</div>
+				</div>,
 			];
 		}
 	},
@@ -156,7 +154,7 @@ registerBlockType( 'mayflower-blocks/tablepress', {
 					},
 				},
 			},
-		]
+		],
 	},
 } );
 
