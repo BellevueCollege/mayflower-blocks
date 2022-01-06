@@ -73,7 +73,7 @@ registerBlockType( 'mayflower-blocks/tablepress', {
 		 */
 		handleTableFetch = () => {
 			const tableArray = [ { label: 'Select Table', value: 'select' } ];
-			apiFetch( { path: '/wp/v2/tablepress_table' } ).then( table => {
+			apiFetch( { path: '/wp/v2/tablepress_table?per_page=100 ' } ).then( table => {
 				table.forEach( t => tableArray.push( { label: t.title.rendered, value: t.id } ) );
 				this.setState( { tableList: tableArray } );
 			} );
