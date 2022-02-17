@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-const { SelectControl } = wp.components;
+const { ComboboxControl } = wp.components;
 const { Fragment } = wp.element;
 
 class ClassItemSelect extends Component {
@@ -56,11 +56,11 @@ class ClassItemSelect extends Component {
 		  this.handleItemFetch();
 		}
 	  }
-    
+
 	render() {
 		const { error, isLoaded, itemList } = this.state;
 		const { attributes } = this.props;
-		
+
 		let selectItemOptions = [{label: 'Select Course', value: 'select'}];
 
 		if (typeof itemList.courses === 'object'){
@@ -72,7 +72,7 @@ class ClassItemSelect extends Component {
 
 		return (
 			<Fragment>
-                <SelectControl
+                <ComboboxControl
 					label="Course"
 					value= { attributes.item ? attributes.item : 'select' }
 					options= { selectItemOptions }
