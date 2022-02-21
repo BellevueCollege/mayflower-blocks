@@ -11,7 +11,7 @@ import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { InnerBlocks } = wp.blockEditor;
+const { InnerBlocks, ButtonBlockAppender } = wp.blockEditor;
 const { Fragment } = wp.element;
 
 /**
@@ -30,7 +30,7 @@ const { Fragment } = wp.element;
 
 registerBlockType( 'mayflower-blocks/collapsibles', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
-	title: __( 'Collapsibles' ), // Block title.
+	title: __( 'Collapsibles (Accordion)' ), // Block title.
 	icon: 'editor-contract', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'bootstrap-blocks', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 	keywords: [ 'collapse', 'accordion' ],
@@ -49,7 +49,11 @@ registerBlockType( 'mayflower-blocks/collapsibles', {
 			<Fragment>
 				<div className={ className }>
 					<div className="accordion" id={ `accordion_${ clientId }` }>
-						<InnerBlocks allowedBlocks={ [ 'mayflower-blocks/collapse' ] } />
+						<InnerBlocks
+							allowedBlocks={ [ 'mayflower-blocks/collapse' ] }
+							renderAppender={ ( InnerBlocks.ButtonBlockAppender ) }
+							placeholder={ <p className="placeholder">Click the + to add as many Collapse elements as you want to this Collapsibles block.</p> }
+						/>
 					</div>
 				</div>
 			</Fragment>
