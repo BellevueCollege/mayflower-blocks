@@ -352,6 +352,12 @@ registerBlockType( 'mayflower-blocks/collapse', {
 					</div>
 				);
 			},
+			migrate( attributes ) {
+				return {
+					...( attributes ),
+					headingTag: 'h3',
+				};
+			},
 		},
 	],
 
