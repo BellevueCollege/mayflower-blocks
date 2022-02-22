@@ -10,7 +10,7 @@
 	border: 1px dashed #aaa;
 
 	.editor-only {
-		display: block;
+		display: block !important;
 	}
 
 	.controls {

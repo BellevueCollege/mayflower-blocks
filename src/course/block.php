@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function mayflower_blocks_render_block_course( $attributes, $content ) {
-	$course = new Mayflower_Blocks_Course( wp_specialchars_decode($attributes['subject']), $attributes['item'], $attributes['description'] );
+	$course = new Mayflower_Blocks_Course( wp_specialchars_decode($attributes['subject']), $attributes['item'], $attributes['description'], $attributes['headingTag'] );
 	return $course->output();
 }
 
@@ -22,6 +22,10 @@ register_block_type( 'mayflower-blocks/course', array(
 		),
 		'description' => array(
 			'type' => 'boolean'
+		),
+		'headingTag' => array(
+			'type'    => 'string',
+			'default' => 'h2',
 		)
 	),
 	'render_callback' => 'mayflower_blocks_render_block_course',

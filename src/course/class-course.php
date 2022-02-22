@@ -6,12 +6,14 @@ class Mayflower_Blocks_Course {
 	private $subject;
 	private $number;
 	private $description;
+	private $headingTag;
 	private $data;
 
-	function __construct( $subject, $number, $description ) {
+	function __construct( $subject, $number, $description, $headingTag ) {
 		$this->subject = $subject;
 		$this->number = $number;
 		$this->description = $description;
+		$this->headingTag = $headingTag;
 	}
 
 	/**
@@ -93,9 +95,9 @@ class Mayflower_Blocks_Course {
 				. $course_data['number'];
 
 			if ( $this->description ) {
-				return "<h3><a href='$url'>$title</a></h3><p>$description</p><p><a href='$url'>$more</a></p>";
+				return "<$this->headingTag><a href='$url'>$title</a></$this->headingTag><p>$description</p><p><a href='$url'>$more</a></p>";
 			} else {
-				return "<h3><a href='$url'>$title</a></h3>";
+				return "<$this->headingTag><a href='$url'>$title</a></$this->headingTag>";
 			}
 
 		} else {
