@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
-const { ComboboxControl } = wp.components;
-const { Fragment } = wp.element;
+const { SelectControl } = wp.components;
+const { Fragment, useState } = wp.element;
 
 class ClassSubjectSelect extends Component {
 	constructor(props) {
@@ -23,7 +23,7 @@ class ClassSubjectSelect extends Component {
 	}
 
 	componentDidMount() {
-		fetch("https://www2.bellevuecollege.edu/data/api/v1/subjects")
+		fetch("https://www2.bellevuecollege.edu/data/api/v1/subjects?filter=active-credit")
 		.then(res => res.json())
 		.then(
 			(result) => {
@@ -50,20 +50,21 @@ class ClassSubjectSelect extends Component {
 
 		let selectSubjectOptions = [{label: 'Select Subject', value: 'select'}];
 
-		if (typeof classList.subjects === 'object'){
-			let subjects = classList.subjects;
+		if (typeof classList.subjects === 'object' && isLoaded === true) {
+			const subjects = classList.subjects;
 			Object.keys(subjects).forEach(function(key) {
 				selectSubjectOptions.push({label: subjects[key].subject, value: subjects[key].subject});
 			});
+
 		}
 
 		return (
 			<Fragment>
-				<ComboboxControl
+				<SelectControl
 					label="Subject"
 					value= { attributes.subject ? attributes.subject : 'select' }
 					options= { selectSubjectOptions }
-                    onChange = { (newClassSubject) => {this.props.onSubjectUpdate(newClassSubject) } }
+					onChange = { (newClassSubject) => {this.props.onSubjectUpdate(newClassSubject) } }
 				/>
 			</Fragment>
 		)
