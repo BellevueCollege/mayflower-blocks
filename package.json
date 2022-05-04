@@ -1,6 +1,6 @@
 {
   "name": "mayflower-blocks",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "private": true,
   "scripts": {
     "start": "cgb-scripts start --mode dev",
