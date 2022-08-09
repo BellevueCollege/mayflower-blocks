@@ -22,5 +22,15 @@ if ( 'Mayflower G4' === $theme->name || 'Mayflower G4' === $theme->parent_theme 
 	/**
 	 * Block Initializer.
 	 */
-	require_once plugin_dir_path( __FILE__ ) . 'src/init.php';
+	add_action( 'init', 'mayflower_g4_blocks_init' );
+}
+
+function mayflower_g4_blocks_init() {
+	/** List of blocks - should match folder names */
+	$blocks = array(
+		'button',
+	);
+	foreach ( $blocks as $block ) {
+		register_block_type( dirname( __FILE__ ) . "/$block/build/block.json" );
+	}
 }

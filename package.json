@@ -3,15 +3,13 @@
   "version": "2.4.2",
   "private": true,
   "scripts": {
-    "start": "cgb-scripts start --mode dev",
-    "build": "cgb-scripts build",
-    "eject": "cgb-scripts eject"
+    "postinstall": "install-submodules -v && symlink-submodules -v",
+    "postuninstall": "prune-symlinked-submodules -v",
+    "prune": "npm prune && prune-submodules -v && prune-symlinked-submodules -v",
+    "outdated": "npm outdated && outdated-submodules -v",
+    "clean": "clean-submodules -v && rm -rf node_modules"
   },
   "dependencies": {
-    "cgb-scripts": "^1.23.1",
-    "imagesloaded": "^4.1.4",
-    "masonry-layout": "^4.2.2",
-    "node-gyp": "^8.4.1",
-    "npm": "^8.5.1"
+    "submodules": "^3.0.0"
   }
 }
