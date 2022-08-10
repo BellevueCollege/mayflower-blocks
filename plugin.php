@@ -31,6 +31,7 @@ function mayflower_g4_blocks_init() {
 		'alert',
 		'button',
 		'panel',
+		'jumbotron',
 	);
 	foreach ( $blocks as $block ) {
 		register_block_type( dirname( __FILE__ ) . "/$block/build/block.json" );
