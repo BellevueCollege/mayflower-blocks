@@ -1,0 +1,31 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/alert",
+	"version": "1.0.0",
+	"title": "Alert",
+	"category": "bootstrap-blocks",
+	"icon": "warning",
+	"description": "Block for creating text styled as an alert. Should be used sparingly to highlight critical content.",
+	"supports": {
+		"html": true
+	},
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+		"alertText" : {
+			"type": "string",
+			"default": ""
+		},
+		"alertClass" : {
+			"type": "string",
+			"default": "info"
+		},
+		"activeAlert" : {
+			"type": "string",
+			"default": "info"
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+  }

@@ -1,5 +1,4 @@
 import { registerBlockType, createBlock } from '@wordpress/blocks';
-
 const transforms = {
 	from: [
 		{

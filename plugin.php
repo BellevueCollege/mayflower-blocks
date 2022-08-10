@@ -28,6 +28,7 @@ if ( 'Mayflower G4' === $theme->name || 'Mayflower G4' === $theme->parent_theme 
 function mayflower_g4_blocks_init() {
 	/** List of blocks - should match folder names */
 	$blocks = array(
+		'alert',
 		'button',
 		'panel',
 	);
@@ -35,3 +36,17 @@ function mayflower_g4_blocks_init() {
 		register_block_type( dirname( __FILE__ ) . "/$block/build/block.json" );
 	}
 }
+
+function mayflower_block_categories( $categories, $post ) {
+    return array_merge(
+        $categories,
+        array(
+            array(
+                'slug' => 'bootstrap-blocks',
+                'title' => __( 'Bootstrap Blocks', 'bootstrap-blocks' ),
+                'icon'  => 'editor-bold',
+            ),
+        )
+    );
+}
+add_filter( 'block_categories_all', 'mayflower_block_categories', 10, 2 );
