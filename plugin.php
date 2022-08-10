@@ -29,6 +29,7 @@ function mayflower_g4_blocks_init() {
 	/** List of blocks - should match folder names */
 	$blocks = array(
 		'button',
+		'panel',
 	);
 	foreach ( $blocks as $block ) {
 		register_block_type( dirname( __FILE__ ) . "/$block/build/block.json" );
