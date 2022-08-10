@@ -22,6 +22,18 @@
 			"attribute": "href",
 			"selector": "a"
 		},
+		"linkTarget" : {
+			"type": "string",
+			"source": "attribute",
+			"attribute": "target",
+			"selector": "a"
+		},
+		"rel": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "a",
+			"attribute": "rel"
+		},
 		"buttonType" : {
 			"type": "string",
 			"default": "primary"

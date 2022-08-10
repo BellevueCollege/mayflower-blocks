@@ -3,6 +3,7 @@ import './editor.scss';
 import './style.scss';
 import Edit from './edit';
 import deprecated from './deprecated';
+import transforms from './transforms';
 import save from './save';
 
 import { registerBlockType } from '@wordpress/blocks'; // Import registerBlockType() from wp.blocks
@@ -22,6 +23,6 @@ import { registerBlockType } from '@wordpress/blocks'; // Import registerBlockTy
  */
 registerBlockType( 'mayflower-blocks/button', {
 	edit: Edit,
-	//deprecated,
+	deprecated,
 	save,
 } );

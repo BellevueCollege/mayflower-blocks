@@ -1,20 +1,21 @@
-const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType, PlainText } = wp.blocks; // Import registerBlockType() from wp.blocks
-// const { RichText, BlockControls, InspectorControls, AlignmentToolbar } = wp.blockEditor;
+import { __ } from '@wordpress/i18n';
 
-const { getCurrentPostId } = wp.data;
-const {
+
+import { useEffect, useState, useRef } from '@wordpress/element';
+
+import {
 	TextControl,
 	SelectControl,
 	ToggleControl,
-	Toolbar,
+	ToolbarButton,
+	Popover,
 	ToolbarDropdownMenu,
 	SVG,
 	Path,
 	G,
 	PanelBody,
 	PanelRow
-} = wp.components;
+} from '@wordpress/components';
 
 import {
 	useBlockProps,
@@ -22,29 +23,81 @@ import {
 	BlockControls,
 	InspectorControls,
 	AlignmentToolbar,
+	__experimentalLinkControl as LinkControl,
+	__experimentalGetElementClassName,
 } from '@wordpress/block-editor';
+
 
 import './editor.scss';
 import './style.scss';
 
 export default function Edit( props ) {
-	const blockProps = useBlockProps();
+	const ref = useRef();
+	const richTextRef = useRef();
+	const blockProps = useBlockProps( { ref } );
 	const { attributes: {
 		buttonText,
 		buttonLink,
+		linkTarget,
+		rel,
 		buttonType,
 		activeButtonType,
 		buttonAlign,
 		buttonBlock,
 		buttonSize
-	}, setAttributes, isSelected, className } = props;
+	}, setAttributes, isSelected } = props;
+
+	/**
+	 * Link and Unlink Button
+	 *
+	 * Adapted from https://github.com/WordPress/gutenberg/blob/trunk/packages/block-library/src/button/edit.js
+	*/
+	const [ isEditingURL, setIsEditingURL ] = useState( false );
+
+
+	function onToggleOpenInNewTab( value ) {
+		const newLinkTarget = value ? '_blank' : undefined;
+
+		let updatedRel = rel;
+		if ( newLinkTarget && ! rel ) {
+			updatedRel = NEW_TAB_REL;
+		} else if ( ! newLinkTarget && rel === NEW_TAB_REL ) {
+			updatedRel = undefined;
+		}
+
+		setAttributes( {
+			linkTarget: newLinkTarget,
+			rel: updatedRel,
+		} );
+	}
+	const isURLSet = !! buttonLink;
+	const opensInNewTab = linkTarget === '_blank';
+	const NEW_TAB_REL = 'noreferrer noopener';
+	function startEditing( event ) {
+		event.preventDefault();
+		setIsEditingURL( true );
+	}
+	function unlink() {
+		setAttributes( {
+			buttonLink: undefined,
+			linkTarget: undefined,
+			rel: undefined,
+		} );
+		setIsEditingURL( false );
+	}
+	useEffect( () => {
+		if ( ! isSelected ) {
+			setIsEditingURL( false );
+		}
+	}, [ isSelected ] );
+
 
 	/**
 		 * ButtonClassControl returns a Toolbar component with alert classes that changes via on click and updates the alert block's style.
 		 *
 		 * @return Toolbar component with alert classes
 		 * */
-	const ButtonClassControl = () => {
+	const ButtonStyleControl = () => {
 		function createClassControl( buttonClass ) {
 			//Switch checks the class control alertClass and returns the corresponding colorClass to update the SVG icon
 			let colorClass = '';
@@ -100,80 +153,159 @@ export default function Edit( props ) {
 				} />
 		);
 	};
-	// Creates a <p class='wp-block-cgb-block-mayflower-blocks'></p>.
-	let linkEditor;
-	if ( isSelected ) {
-		linkEditor = (
-			<div className="set-link-href">
-				<TextControl
-					label="Target Link"
-					value={ buttonLink }
-					type="url"
-					pattern="https://.*"
-					help="Please type in a valid URL, starting with https://"
-					onChange={ ( buttonLink ) => setAttributes( { buttonLink } ) }
-				/>
-			</div>
+
+	const ButtonSizeControl = () => {
+		return (
+			<ToolbarDropdownMenu
+				label="Size"
+				icon="editor-expand"
+				controls={ [
+					{
+						title: 'Small',
+						icon: 'editor-contract',
+						onClick: () => setAttributes( { buttonSize: 'btn-sm' } ),
+						isActive: buttonSize === 'btn-sm'
+					},
+					{
+						title: 'Medium',
+						icon: 'button',
+						onClick: () => setAttributes( { buttonSize: '' } ),
+						isActive: buttonSize === ''
+					},
+					{
+						title: 'Large',
+						icon: 'editor-expand',
+						onClick: () => setAttributes( { buttonSize: 'btn-lg' } ),
+						isActive: buttonSize === 'btn-lg'
+					}
+				] } />
 		);
 	}
-	return [
-		<BlockControls>
-			<ButtonClassControl />
-		</BlockControls>,
-		<InspectorControls>
-			<PanelBody title="Button Style" >
-				<PanelRow>
-					<SelectControl
-						label="Button Style"
-						value={ buttonType }
-						options={ [
-							{ label: 'Primary (BC Blue)', value: 'primary' },
-							{ label: 'Secondary (Gray)', value: 'secondary' },
-							{ label: 'Info (Light Blue)', value: 'info' },
-							{ label: 'Success (Green)', value: 'success' },
-							{ label: 'Warning (Orange)', value: 'warning' },
-							{ label: 'Danger (Red)', value: 'danger' },
-							{ label: 'Light', value: 'light' },
-							{ label: 'Dark', value: 'dark' },
-						] }
-						onChange={ ( buttonType ) => {
-							setAttributes( { buttonType } );
+	return (
+		<>
+			<BlockControls>
+				<ButtonStyleControl />
+				<ButtonSizeControl />
+
+				<ToolbarButton
+					name="full-width"
+					icon="align-wide"
+					title={ __( 'Display Full-Width' ) }
+					isActive={ buttonBlock ?? false }
+					onClick={ () => setAttributes( { buttonBlock: ! buttonBlock } ) }
+				/>
+
+				{ ! isURLSet && (
+					<ToolbarButton
+						name="link"
+						icon="admin-links"
+						title={ __( 'Link' ) }
+						//shortcut={ displayShortcut.primary( 'k' ) }
+						onClick={ startEditing }
+					/>
+				) }
+				{ isURLSet && (
+					<ToolbarButton
+						name="link"
+						icon="editor-unlink"
+						title={ __( 'Unlink' ) }
+						//shortcut={ displayShortcut.primaryShift( 'k' ) }
+						onClick={ unlink }
+						isActive={ true }
+					/>
+				) }
+			</BlockControls>
+			{ isSelected && ( isEditingURL || isURLSet ) && (
+				<Popover
+					position="bottom center"
+					onClose={ () => {
+						setIsEditingURL( false );
+						richTextRef.current?.focus();
+					} }
+					anchorRef={ ref?.current }
+					focusOnMount={ isEditingURL ? 'firstElement' : false }
+				>
+					<LinkControl
+						className="wp-block-navigation-link__inline-link-input"
+						value={ { url: buttonLink, opensInNewTab } }
+						onChange={ ( {
+							url: newButtonLink = '',
+							opensInNewTab: newOpensInNewTab,
+						} ) => {
+							setAttributes( { buttonLink: newButtonLink } );
+
+							if ( opensInNewTab !== newOpensInNewTab ) {
+								onToggleOpenInNewTab( newOpensInNewTab );
+							}
 						} }
-					/>
-				</PanelRow>
-				<PanelRow>
-					<SelectControl
-						label="Button Size"
-						value={ buttonSize }
-						options={ [
-							{ label: 'Small', value: 'btn-sm' },
-							{ label: 'Standard', value: '' },
-							{ label: 'Large', value: 'btn-lg' },
-						] }
-						onChange={ ( buttonSize ) => {
-							setAttributes( { buttonSize } );
+						onRemove={ () => {
+							unlink();
+							richTextRef.current?.focus();
 						} }
+						forceIsEditingLink={ isEditingURL }
 					/>
-				</PanelRow>
-				<PanelRow>
-					<ToggleControl
-						label="Display as Block (Full-Width)"
-						checked={ buttonBlock }
-						onChange={ ( buttonBlock ) => setAttributes( { buttonBlock } ) }
-					/>
-				</PanelRow>
-			</PanelBody>
-		</InspectorControls>,
-		<div { ...blockProps }>
-			<RichText
-				tagName="span"
-				className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
-				allowedFormats={ [ 'bold', 'italic' ] }
-				value={ buttonText }
-				onChange={ ( buttonText ) => setAttributes( { buttonText } ) }
-			/>
-			{ linkEditor }
-		</div>,
-	];
+
+				</Popover>
+			) }
+			<InspectorControls>
+				<PanelBody title="Button Style" >
+					<PanelRow>
+						<SelectControl
+							label="Button Style"
+							value={ buttonType }
+							options={ [
+								{ label: 'Primary (BC Blue)', value: 'primary' },
+								{ label: 'Secondary (Gray)', value: 'secondary' },
+								{ label: 'Info (Light Blue)', value: 'info' },
+								{ label: 'Success (Green)', value: 'success' },
+								{ label: 'Warning (Orange)', value: 'warning' },
+								{ label: 'Danger (Red)', value: 'danger' },
+								{ label: 'Light', value: 'light' },
+								{ label: 'Dark', value: 'dark' },
+							] }
+							onChange={ ( buttonType ) => {
+								setAttributes( { buttonType } );
+							} }
+						/>
+					</PanelRow>
+					<PanelRow>
+						<SelectControl
+							label="Button Size"
+							value={ buttonSize }
+							options={ [
+								{ label: 'Small', value: 'btn-sm' },
+								{ label: 'Standard', value: '' },
+								{ label: 'Large', value: 'btn-lg' },
+							] }
+							onChange={ ( buttonSize ) => {
+								setAttributes( { buttonSize } );
+							} }
+						/>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Display as Block (Full-Width)"
+							checked={ buttonBlock }
+							onChange={ ( buttonBlock ) => setAttributes( { buttonBlock } ) }
+						/>
+					</PanelRow>
+				</PanelBody>
+			</InspectorControls>
+			<div { ...blockProps }>
+				<RichText
+					ref={ richTextRef }
+					tagName="span"
+					className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
+					allowedFormats={ [ 'bold', 'italic' ] }
+					value={ buttonText }
+					onChange={ ( buttonText ) => setAttributes( { buttonText } ) }
+				/>
+				{ ! isSelected && ! isEditingURL && ! isURLSet  && (
+					<p><strong>Warning! This button has no link!</strong></p>
+				) }
+			</div>
+
+		</>
+	);
 
 }

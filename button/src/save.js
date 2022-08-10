@@ -17,18 +17,24 @@ export default function save( props ) {
 	const { attributes: {
 		buttonText,
 		buttonLink,
+		linkTarget,
+		rel,
 		buttonType,
 		activeButtonType,
 		buttonAlign,
 		buttonBlock,
 		buttonSize
 	} } = props;
+	const disabled = buttonLink === undefined || buttonLink === '' ? true : false;
 	return (
 		<RichText.Content
 			tagName="a"
-			className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
+			className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize } ${ disabled ? 'disabled' : '' }` }
+			target= { linkTarget }
+			rel= { rel }
 			href={ buttonLink }
 			value={ buttonText }
+			aria-disabled={ disabled }
 		/>
 	);
 }
