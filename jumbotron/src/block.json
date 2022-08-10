@@ -8,7 +8,8 @@
 	"icon": "slides",
 	"description": "A button available in a variety of styles. When clicked, opens the configured link.",
 	"supports": {
-		"html": true
+		"html": true,
+		"inserter": false
 	},
 	"textdomain": "mayflower-blocks",
 	"attributes": {

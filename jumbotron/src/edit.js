@@ -4,48 +4,50 @@
 
 import { __ } from '@wordpress/i18n';
 
-
-import {
-	useBlockProps,
-	RichText,
-	InnerBlocks,
-} from '@wordpress/block-editor';
+const { RichText, InnerBlocks } = wp.blockEditor;
+const { Component } = wp.element;
+const { select, dispatch } = wp.data;
+const { insertBlock, insertBlocks, removeBlock } = dispatch( 'core/block-editor' );
+const { getBlock, getBlockIndex, getSelectedBlock } = select( 'core/block-editor' );
 
 import { registerBlockType, createBlock } from '@wordpress/blocks';
 
 import './editor.scss';
 
-export default function Edit( props ) {
-	const blockProps = useBlockProps();
-	const { attributes: {
-		jumbotronText,
-		jumbotronTitle,
-	}, setAttributes, isSelected } = props;
+export default class Edit extends Component {
 
-	return (
-		<div {...blockProps } >
-			<div className="jumbotron">
-				<RichText
-					tagName="h1"
-					allowedFormats={ [ 'bold', 'italic', 'link' ] }
-					placeholder="Enter a headline..."
-					keepPlaceholderOnFocus="true"
-					value={ jumbotronTitle }
-					onChange={ ( jumbotronTitle ) => setAttributes( { jumbotronTitle } ) }
-				/>
-				{ jumbotronText !== null && jumbotronText !== '' && jumbotronText !== undefined ?
-					<RichText
-						tagName="p"
-						allowedFormats={ [ 'bold', 'italic', 'link' ] }
-						placeholder="Enter text or add blocks below..."
-						keepPlaceholderOnFocus="true"
-						value={ jumbotronText }
-						onChange={ ( jumbotronText ) => setAttributes( { jumbotronText } ) }
-					/> :
-					'' }
-				<InnerBlocks allowedBlocks={ [ 'core/paragraph', 'mayflower-blocks/button', 'core/heading', 'core/list' ] } />
-			</div>
-		</div>
-	);
+	constructor( props ) {
+		super( ...arguments );
+		this.props = props;
+	}
+	componentDidMount() {
+		// On component mount, fire so each Well converts into a Card automatically
+		this.handleConvertToCover();
+	}
+
+	handleConvertToCover = () => {
+		const currentBlockClientId = this.props.clientId;
+		const jumbotronBlockInnerBlocks = getBlock( currentBlockClientId ).innerBlocks;
+		const newHeaderBlock = createBlock( 'core/heading', {
+			content: this.props.attributes.jumbotronTitle,
+			level: 2
+		});
+		const innerBlocks = [ newHeaderBlock, ...jumbotronBlockInnerBlocks ];
+		if ( Array.isArray( jumbotronBlockInnerBlocks ) ) {
+			const coverBlock = createBlock(
+				'core/cover', {
+					overlayColor: 'bc-silver',
+					isDark: false,
+				}, innerBlocks );
+			const currentIndex = getBlockIndex( currentBlockClientId );
+			console.log( 'Jumbotron Block is no longer available. Converting to Cover Block.' );
+			removeBlock( currentBlockClientId, false );
+			insertBlock( coverBlock, currentIndex );
+		}
+	};
+	render() {
+		// Return true because we are not rendering anything new
+		return true;
+	}
 
 }
