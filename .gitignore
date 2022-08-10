@@ -19,7 +19,8 @@ wp-content/plugins/hello.php
 node_modules
 .DS_Store
 
-dist
+dist/
+build/
 
 vendor/
 .vscode/
