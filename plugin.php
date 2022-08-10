@@ -34,7 +34,7 @@ function mayflower_g4_blocks_init() {
 		'jumbotron',
 	);
 	foreach ( $blocks as $block ) {
-		register_block_type( dirname( __FILE__ ) . "/$block/build/block.json" );
+		register_block_type( dirname( __FILE__ ) . "/blocks/$block/build/block.json" );
 	}
 }
 
