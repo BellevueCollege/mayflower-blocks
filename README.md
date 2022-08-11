@@ -16,7 +16,7 @@ When you are developing a particular block, `cd` to the block's folder and use t
 
 ```bash
 # Watch for changes:
-npm run watch
+npm run start
 
 # Build the block:
 npm run build
