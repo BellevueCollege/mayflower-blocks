@@ -21,13 +21,17 @@ export default function save( props ) {
 		cardFooter,
 		cardFooterText,
 	} } = props;
-	return (
-		<div className={ 'card bg-' + cardType + (
+	//const blockProps = useBlockProps();
+	const blockProps = useBlockProps.save({
+		className : 'card bg-' + cardType + (
 			cardType !== 'default' &&
 			cardType !== 'light' &&
 			cardType !== 'info' &&
 			cardType !== 'warning' ?
-				' text-white' : '' ) }>
+				' text-white' : '' )
+	});
+	return (
+		<div { ...blockProps } >
 
 			{ cardHeading == true ?
 				cardHeadingText == null || cardHeadingText == '' ? '' :
