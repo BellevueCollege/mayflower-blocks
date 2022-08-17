@@ -1,8 +1,8 @@
 <?php
-// Exit if accessed directly.
-// if ( ! defined( 'ABSPATH' ) ) {
-// 	exit;
-// }
+// if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 function mbg4_child_pages_callback( $attributes ) {
 
