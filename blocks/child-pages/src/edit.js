@@ -2,58 +2,59 @@
  * Block: Card (used to be called Panel)
  */
 
- import { __ } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 
 
- import { useEffect, useState, useRef } from '@wordpress/element';
+import {
+	RadioControl,
+	PanelBody,
+	PanelRow
+} from '@wordpress/components';
 
- import {
-	 TextControl,
-	 SelectControl,
-	 ToggleControl,
-	 ToolbarButton,
-	 Popover,
-	 ToolbarDropdownMenu,
-	 SVG,
-	 Path,
-	 G,
-	 PanelBody,
-	 PanelRow
- } from '@wordpress/components';
-
- import {
-	 useBlockProps,
-	 RichText,
-	 BlockControls,
-	 InspectorControls,
-	 AlignmentToolbar,
-	 __experimentalLinkControl as LinkControl,
-	 __experimentalGetElementClassName,
- } from '@wordpress/block-editor';
+import {
+	useBlockProps,
+	InspectorControls
+} from '@wordpress/block-editor';
 
 
- import './editor.scss';
- import './style.scss';
+import { withSelect } from '@wordpress/data';
 
- export default function Edit( props ) {
-	 const blockProps = useBlockProps();
-	 const { attributes: {
-		 buttonText,
-		 buttonLink,
-		 linkTarget,
-		 rel,
-		 buttonType,
-		 activeButtonType,
-		 buttonAlign,
-		 buttonBlock,
-		 buttonSize
-	 }, setAttributes, isSelected } = props;
-	 return (
-		 <>
-		 	<p { ...blockProps } >I'm a Child Pages Block!</p>
+import './editor.scss';
+import './style.scss';
 
+ // import ListChildPage from './list.js';
+// import GridChildPage from './grid.js';
+// import FluidGridChildPage from './fluid-grid.js';
+// import FluidGridMasonry from './fluid-grid-masonry.js';
 
-		 </>
-	 );
+export default function Edit( props ) {
+	const blockProps = useBlockProps();
+	const { attributes: {
+		pageID,
+		template,
+	}, setAttributes, isSelected } = props;
+	return (
+		<>
+		<InspectorControls>
+			<PanelBody title="Display Options">
+				<PanelRow>
+					<RadioControl
+						label="Child Page Template"
+						selected={ template }
+						options={ [
+							{ label: 'List of Pages', value: 'list' },
+							{ label: 'Simple Grid', value: 'grid' },
+							{ label: 'Fluid Grid', value: 'fluid-grid' },
+						] }
+						onChange={ ( template ) => setAttributes( { template } ) }
+					/>
+				</PanelRow>
+			</PanelBody>
+		</InspectorControls>
+		<div { ...blockProps } >
+			<p>Child Pages!</p>
+		</div>
+	</>
+	);
 
- }
+}

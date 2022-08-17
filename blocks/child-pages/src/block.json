@@ -5,53 +5,19 @@
 	"version": "1.0.0",
 	"title": "Child Pages",
 	"category": "common",
-	"icon": "slides",
-	"description": "A button available in a variety of styles. When clicked, opens the configured link.",
+	"icon": "excerpt-view",
+	"description": "Displays all child pages of the current page in a variety of formats.",
 	"supports": {
 		"html": true
 	},
 	"textdomain": "mayflower-blocks",
 	"attributes": {
-		"buttonText" : {
-			"type": "string",
-			"selector": "a"
-		},
-		"buttonLink" : {
-			"type": "string",
-			"source": "attribute",
-			"attribute": "href",
-			"selector": "a"
-		},
-		"linkTarget" : {
-			"type": "string",
-			"source": "attribute",
-			"attribute": "target",
-			"selector": "a"
-		},
-		"rel": {
-			"type": "string",
-			"source": "attribute",
-			"selector": "a",
-			"attribute": "rel"
-		},
-		"buttonType" : {
-			"type": "string",
-			"default": "primary"
-		},
-		"activeButtonType" : {
-			"type": "string",
-			"default": "primary"
-		},
-		"buttonAlign" : {
+		"pageID" : {
 			"type": "string"
 		},
-		"buttonBlock" : {
-			"type": "boolean",
-			"default": false
-		},
-		"buttonSize" : {
+		"template" : {
 			"type": "string",
-			"default": ""
+			"default": "list"
 		}
 	},
 	"editorScript": "file:./index.js",

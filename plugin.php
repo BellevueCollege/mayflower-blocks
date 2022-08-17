@@ -35,14 +35,14 @@ if ( 'Mayflower G4' === $theme->name || 'Mayflower G4' === $theme->parent_theme 
  */
 function mg4_blocks_init() {
 	/** List of blocks - should match folder names */
-	//mg4_register_block( 'child-pages', true );
-	require_once dirname( __FILE__ ) . '/blocks/child-pages/src/block.php';
-	register_block_type(
-		dirname( __FILE__ ) . '/blocks/child-pages/build/block.json',
-		array(
-			'render_callback' => 'mbg4_child_pages_callback',
-		)
-	);
+	mg4_register_block( 'child-pages', true );
+	// require_once dirname( __FILE__ ) . '/blocks/child-pages/src/block.php';
+	// register_block_type(
+	// 	dirname( __FILE__ ) . '/blocks/child-pages/build/block.json',
+	// 	array(
+	// 		'render_callback' => 'mbg4_child_pages_callback',
+	// 	)
+	// );
 	mg4_register_block( 'alert' );
 	mg4_register_block( 'button' );
 	mg4_register_block( 'panel' );
@@ -68,7 +68,7 @@ function mg4_register_block( $block_name, $dynamic = false ) {
 		register_block_type(
 			"$path/build/block.json",
 			array(
-				'render_callback' => 'mg4_' . str_replace( '-', '_', $block_name ) . '_callback',
+				'render_callback' => 'mbg4_' . str_replace( '-', '_', $block_name ) . '_callback',
 			)
 		);
 	} else {
