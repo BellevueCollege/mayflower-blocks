@@ -1,0 +1,60 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/child-pages",
+	"version": "1.0.0",
+	"title": "Child Pages",
+	"category": "common",
+	"icon": "slides",
+	"description": "A button available in a variety of styles. When clicked, opens the configured link.",
+	"supports": {
+		"html": true
+	},
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+		"buttonText" : {
+			"type": "string",
+			"selector": "a"
+		},
+		"buttonLink" : {
+			"type": "string",
+			"source": "attribute",
+			"attribute": "href",
+			"selector": "a"
+		},
+		"linkTarget" : {
+			"type": "string",
+			"source": "attribute",
+			"attribute": "target",
+			"selector": "a"
+		},
+		"rel": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "a",
+			"attribute": "rel"
+		},
+		"buttonType" : {
+			"type": "string",
+			"default": "primary"
+		},
+		"activeButtonType" : {
+			"type": "string",
+			"default": "primary"
+		},
+		"buttonAlign" : {
+			"type": "string"
+		},
+		"buttonBlock" : {
+			"type": "boolean",
+			"default": false
+		},
+		"buttonSize" : {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+  }
