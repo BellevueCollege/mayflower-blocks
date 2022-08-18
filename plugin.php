@@ -41,6 +41,7 @@ function mg4_blocks_init() {
 	mg4_register_block( 'button' );
 	mg4_register_block( 'panel' );
 	mg4_register_block( 'jumbotron' );
+	mg4_register_block( 'lead' );
 
 	/**
 	 * Only Register TablePress block if TablePress is active.

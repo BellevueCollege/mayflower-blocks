@@ -10,6 +10,8 @@
     "clean": "clean-submodules -v && rm -rf node_modules"
   },
   "dependencies": {
-    "submodules": "^3.0.0"
+    "commander": "^9.4.0",
+    "submodules": "^3.0.0",
+    "yarpm": "^1.1.1"
   }
 }

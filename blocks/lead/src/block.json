@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/lead",
+	"version": "1.0.0",
+	"title": "lead",
+	"category": "common",
+	"icon": "slides",
+	"description": "Block to make text a little bit larger. Should be used for the introductory sentence on a page.",
+	"supports": {
+		"html": true
+	},
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+		"leadText": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+  }
