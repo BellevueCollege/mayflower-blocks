@@ -36,12 +36,22 @@ if ( 'Mayflower G4' === $theme->name || 'Mayflower G4' === $theme->parent_theme 
 function mg4_blocks_init() {
 	/** List of blocks - should match folder names */
 	mg4_register_block( 'child-pages', true );
-	mg4_register_block( 'tablepress', true );
+
 	mg4_register_block( 'alert' );
 	mg4_register_block( 'button' );
 	mg4_register_block( 'panel' );
 	mg4_register_block( 'jumbotron' );
 
+	/**
+	 * Only Register TablePress block if TablePress is active.
+	 */
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	if ( is_plugin_active( 'tablepress/tablepress.php' ) ) {
+		mg4_register_block( 'tablepress', true );
+	}
 
 }
 
