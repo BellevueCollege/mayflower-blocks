@@ -1,18 +1,16 @@
 /**
- * Block: Card (used to be called Panel)
+ * Block: Jumbotron (Deprecated)
  */
 
 import { __ } from '@wordpress/i18n';
 
-const { RichText, InnerBlocks } = wp.blockEditor;
-const { Component } = wp.element;
-const { select, dispatch } = wp.data;
-const { insertBlock, insertBlocks, removeBlock } = dispatch( 'core/block-editor' );
-const { getBlock, getBlockIndex, getSelectedBlock } = select( 'core/block-editor' );
+import { Component } from '@wordpress/element';
+import { select, dispatch } from '@wordpress/data';
+import { createBlock } from '@wordpress/blocks';
 
-import { registerBlockType, createBlock } from '@wordpress/blocks';
 
-import './editor.scss';
+const { insertBlock, removeBlock } = dispatch( 'core/block-editor' );
+const { getBlock, getBlockIndex } = select( 'core/block-editor' );
 
 export default class Edit extends Component {
 
