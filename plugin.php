@@ -36,18 +36,11 @@ if ( 'Mayflower G4' === $theme->name || 'Mayflower G4' === $theme->parent_theme 
 function mg4_blocks_init() {
 	/** List of blocks - should match folder names */
 	mg4_register_block( 'child-pages', true );
-	// require_once dirname( __FILE__ ) . '/blocks/child-pages/src/block.php';
-	// register_block_type(
-	// 	dirname( __FILE__ ) . '/blocks/child-pages/build/block.json',
-	// 	array(
-	// 		'render_callback' => 'mbg4_child_pages_callback',
-	// 	)
-	// );
+	mg4_register_block( 'tablepress', true );
 	mg4_register_block( 'alert' );
 	mg4_register_block( 'button' );
 	mg4_register_block( 'panel' );
 	mg4_register_block( 'jumbotron' );
-	//mg4_register_block( 'child-pages' );
 
 
 }

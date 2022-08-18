@@ -1,0 +1,16 @@
+{
+  "name": "mayflower-blocks--tablepress",
+  "version": "1.0.0",
+  "description": "TablePress Block (Unofficial)",
+  "main": "index.js",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "readme": "grunt readme",
+    "i18n": "grunt i18n"
+  },
+  "author": "Taija Tevia-Clark",
+	"devDependencies": {
+    "@wordpress/scripts": "^22.2.1"
+  }
+}
