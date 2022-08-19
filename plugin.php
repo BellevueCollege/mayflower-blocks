@@ -42,7 +42,8 @@ function mg4_blocks_init() {
 	mg4_register_block( 'panel' );
 	mg4_register_block( 'jumbotron' );
 	mg4_register_block( 'lead' );
-
+	mg4_register_block( 'row' );
+	mg4_register_block( 'column' );
 	/**
 	 * Only Register TablePress block if TablePress is active.
 	 */
