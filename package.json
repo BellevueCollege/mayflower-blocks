@@ -2,16 +2,11 @@
   "name": "mayflower-blocks",
   "version": "2.4.2",
   "private": true,
-  "scripts": {
-    "postinstall": "install-submodules -v && symlink-submodules -v",
-    "postuninstall": "prune-symlinked-submodules -v",
-    "prune": "npm prune && prune-submodules -v && prune-symlinked-submodules -v",
-    "outdated": "npm outdated && outdated-submodules -v",
-    "clean": "clean-submodules -v && rm -rf node_modules"
-  },
-  "dependencies": {
-    "commander": "^9.4.0",
-    "submodules": "^3.0.0",
-    "yarpm": "^1.1.1"
+  "workspaces": [
+    "blocks/*"
+  ],
+  "devDependencies": {
+    "lerna": "^5.4.3",
+    "nx": "^14.5.8"
   }
 }

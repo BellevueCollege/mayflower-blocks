@@ -12,14 +12,14 @@ You can install all NPM packages from the root level with the following command:
 npm install
 ```
 
-When you are developing a particular block, `cd` to the block's folder and use the following commands:
+This project uses [Lerna](https://lerna.js.org/) to distribute commands to submodules. Run the following commands from the root directory to build or watch all submodules:
 
 ```bash
 # Watch for changes:
-npm run start
+npx lerna run start
 
-# Build the block:
-npm run build
+# Build all blocks:
+npx lerna run build
 ```
 
 ## Block Structure
