@@ -1,118 +1,72 @@
 
 import {
-	RichText,
 	useBlockProps,
+	InnerBlocks
 } from '@wordpress/block-editor';
 
-const { __ } = wp.i18n;
+import { __ } from '@wordpress/i18n';
 
 const deprecated = [
 	{
 		attributes: {
-			buttonText: {
+			gridColumnClass: {
 				type: 'string',
-				selector: 'a',
+				default: 'md',
 			},
-			buttonLink: {
-				type: 'string',
-				source: 'attribute',
-				selector: 'a',
-				attribute: 'href',
+			gridColumnSize: {
+				type: 'number',
+				default: 4,
 			},
-			buttonType: {
-				type: 'string',
-				default: 'default',
-			},
-			buttonAlign: {
-				type: 'string',
-			},
-			buttonBlock: {
+			isEditing: {
 				type: 'boolean',
 				default: false,
 			},
-			buttonSize: {
-				type: 'string',
-				default: '',
+			isVisible: {
+				type: 'boolean',
+				default: true,
+			},
+			siblingColumns: {
+				type: 'number',
+				default: 0,
 			},
 		},
 
-		migrate( { buttonText, buttonLink, buttonType, buttonAlign, buttonSize, buttonBlock } ) {
-			return {
-				buttonType: buttonType = 'default' === buttonType ? 'light' : buttonType,
-				buttonSize: buttonSize = 'btn-xs' === buttonType ? 'btn-sm' : buttonSize,
-				buttonText: buttonText,
-				buttonLink: buttonLink,
-				buttonAlign: buttonAlign,
-				buttonBlock: buttonBlock,
-			};
-		},
-
-		isEligible( attributes, innerBlocks ) {
-			if ( 'btn-xs' === attributes.buttonSize || 'default' === attributes.buttonType ) {
-				return true;
+		migrate( attributes, innerBlocks ) {
+			const newAttributes = {};
+			switch ( attributes.gridColumnClass ) {
+				case 'xs':
+					newAttributes.enableXs = true;
+					newAttributes.autoXs = false;
+					newAttributes.columnsXs = attributes.gridColumnSize;
+					break;
+				case 'sm':
+					newAttributes.enableSm = true;
+					newAttributes.autoSm = false;
+					newAttributes.columnsSm = attributes.gridColumnSize;
+					break;
+				case 'md':
+					newAttributes.enableMd = true;
+					newAttributes.autoMd = false;
+					newAttributes.columnsMd = attributes.gridColumnSize;
+					break;
+				case 'lg':
+					newAttributes.enableLg = true;
+					newAttributes.autoLg = false;
+					newAttributes.columnsLg = attributes.gridColumnSize;
+					break;
+				default:
+					break;
 			}
-			return false;
+			return [newAttributes, innerBlocks];
 		},
 
 		save: function( { attributes } ) {
 			return (
-				<RichText.Content
-					tagName="a"
-					className={ `btn btn-${ attributes.buttonType } ${ attributes.buttonBlock ? 'btn-block' : '' } ${ attributes.buttonSize }` }
-					href={ attributes.buttonLink }
-					value={ attributes.buttonText }
-				/>
+				<div className={ `col-${ attributes.gridColumnClass }-${ attributes.gridColumnSize }` }>
+					<InnerBlocks.Content />
+				</div>
 			);
 		},
 	},
-	{
-		attributes: {
-			buttonText: {
-				type: 'string',
-				selector: 'a',
-			},
-			buttonLink: {
-				type: 'string',
-				source: 'attribute',
-				selector: 'a',
-				attribute: 'href',
-			},
-			buttonType: {
-				type: 'string',
-				default: 'default',
-			},
-			buttonAlign: {
-				type: 'string',
-			},
-			buttonBlock: {
-				type: 'boolean',
-				default: false,
-			},
-			buttonSize: {
-				type: 'string',
-				default: '',
-			},
-		},
-		save: function ( props ) {
-			const { attributes: {
-				buttonText,
-				buttonLink,
-				buttonType,
-				activeButtonType,
-				buttonAlign,
-				buttonBlock,
-				buttonSize
-			} } = props;
-			return (
-				<RichText.Content
-					tagName="a"
-					className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
-					href={ buttonLink }
-					value={ buttonText }
-				/>
-			);
-		}
-
-	}
 ]
 export default deprecated;

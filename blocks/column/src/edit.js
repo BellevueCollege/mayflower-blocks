@@ -9,13 +9,8 @@ import { useEffect, useState, useRef, Fragment } from '@wordpress/element';
 import { select, dispatch } from '@wordpress/data';
 
 import {
-	TextControl,
-	SelectControl,
 	ToggleControl,
 	ToolbarButton,
-	Popover,
-	ToolbarDropdownMenu,
-	Toolbar,
 	SVG,
 	Path,
 	G,
@@ -25,7 +20,6 @@ import {
 	Button,
 	Modal,
 	Flex,
-	FlexBlock,
 	FlexItem,
 	Panel,
 	RangeControl
@@ -34,10 +28,8 @@ import {
 
 import {
 	useBlockProps,
-	RichText,
 	BlockControls,
 	InspectorControls,
-	AlignmentToolbar,
 	InnerBlocks,
 } from '@wordpress/block-editor';
 
