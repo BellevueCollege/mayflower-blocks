@@ -12,6 +12,7 @@ import {
 	Flex,
 	FlexItem,
 	Button,
+	ButtonGroup,
 	Card,
 	CardBody,
 	CardHeader,
@@ -79,52 +80,75 @@ export default function Edit( props ) {
 
 					<Flex>
 						<FlexItem>
-							<Button
-								onClick={
-									() => setTemplate(
-										[['mayflower-blocks/column', {}],
-										['mayflower-blocks/column', {}]]
-										)
-									}
-								variant="primary"
-								>
-								{__("Two Columns")}
-							</Button>
+							<p>{__("Insert Equally-Sized Columns:") }</p>
 						</FlexItem>
 						<FlexItem>
-							<Button
-								onClick={
-									() => setTemplate(
-										[
-											['mayflower-blocks/column', {}],
-											['mayflower-blocks/column', {}],
-											['mayflower-blocks/column', {}]
-										]
-										)
-									}
-								variant="primary"
-								>
-								{__("Three Columns")}
-							</Button>
+							<ButtonGroup>
+								<Button
+									onClick={
+										() => setTemplate(
+											[['mayflower-blocks/column', {}],
+											['mayflower-blocks/column', {}]]
+											)
+										}
+									variant="primary"
+									>
+									{__("2 Columns")}
+								</Button>
+								<Button
+									onClick={
+										() => setTemplate(
+											[
+												['mayflower-blocks/column', {}],
+												['mayflower-blocks/column', {}],
+												['mayflower-blocks/column', {}]
+											]
+											)
+										}
+									variant="primary"
+									>
+									{__("3 Columns")}
+								</Button>
+								<Button
+									onClick={
+										() => setTemplate(
+											[
+												['mayflower-blocks/column', {}],
+												['mayflower-blocks/column', {}],
+												['mayflower-blocks/column', {}],
+												['mayflower-blocks/column', {}]
+											]
+											)
+										}
+									variant="primary"
+									>
+									{__("4 Columns")}
+								</Button>
+								<Button
+									onClick={
+										() => setTemplate(
+											[
+												['mayflower-blocks/column', {}],
+												['mayflower-blocks/column', {}],
+												['mayflower-blocks/column', {}],
+												['mayflower-blocks/column', {}],
+												['mayflower-blocks/column', {}],
+												['mayflower-blocks/column', {}]
+											]
+											)
+										}
+									variant="primary"
+									>
+									{__("6 Columns")}
+								</Button>
+							</ButtonGroup>
 						</FlexItem>
+					</Flex>
+					<Flex>
 						<FlexItem>
-							<Button
-								onClick={
-									() => setTemplate(
-										[
-											['mayflower-blocks/column', {}],
-											['mayflower-blocks/column', {}],
-											['mayflower-blocks/column', {}],
-											['mayflower-blocks/column', {}]
-										]
-										)
-									}
-								variant="primary"
-								>
-								{__("Four Columns")}
-							</Button>
+							<p>{__("Two-Column Layouts:") }</p>
 						</FlexItem>
-						<FlexItem>
+						<ButtonGroup>
 							<Button
 								onClick={
 									() => setTemplate(
@@ -136,10 +160,8 @@ export default function Edit( props ) {
 									}
 								variant="primary"
 								>
-								{__("Small on Left")}
+								{__("Small on Left, Large on Right")}
 							</Button>
-						</FlexItem>
-						<FlexItem>
 							<Button
 								onClick={
 									() => setTemplate(
@@ -151,9 +173,9 @@ export default function Edit( props ) {
 									}
 								variant="primary"
 								>
-								{__("Small on Right")}
+								{__("Large on Left, Small on Right")}
 							</Button>
-						</FlexItem>
+						</ButtonGroup>
 					</Flex>
 				</CardBody>
 			</Card>
@@ -167,9 +189,10 @@ export default function Edit( props ) {
 			<BlockControls>
 				<ToolbarButton
 					icon='plus'
-					label='Add Column'
 					onClick={ addColumn }
-				/>
+				>
+					{ __( 'Add Column', 'mayflower-blocks' ) }
+				</ToolbarButton>
 			</BlockControls>
 
 			<div { ...blockProps }>
