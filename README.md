@@ -16,10 +16,10 @@ This project uses [Lerna](https://lerna.js.org/) to distribute commands to submo
 
 ```bash
 # Watch for changes:
-npx lerna run start
+npm start
 
 # Build all blocks:
-npx lerna run build
+npm run build
 ```
 
 ## Block Structure

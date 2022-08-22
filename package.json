@@ -5,6 +5,10 @@
   "workspaces": [
     "blocks/*"
   ],
+	"scripts": {
+		"build" : "npx lerna run build",
+		"start" : "npx lerna run start"
+	},
   "devDependencies": {
     "lerna": "^5.4.3",
     "nx": "^14.5.8"
