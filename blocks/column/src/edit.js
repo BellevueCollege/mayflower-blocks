@@ -199,11 +199,14 @@ export default function Edit( props ) {
 			);
 		}
 		return (
-			<Disabled>
-				<InnerBlocks
-					placeholder={ <div className='text-secondary border border-secondary p-3'>Edit column to add content!</div> }
-				/>
-			</Disabled>
+			<>
+				<Disabled>
+					<InnerBlocks
+						placeholder={ <div className='text-secondary border border-secondary p-3'>Edit column to add content!</div> }
+					/>
+				</Disabled>
+				<div className='overlay'><span aria-hidden="true" class="dashicons dashicons-lock"></span></div>
+			</>
 		);
 
 	}
@@ -218,8 +221,11 @@ export default function Edit( props ) {
 		return (
 			<Fragment>
 				<InspectorControls>
-					<Panel>
+					<Panel header='Column Width Settings'>
 						<PanelBody title="All Screens" initialOpen={ enableXs }>
+							<PanelRow>
+								<p>{ __( "Use with caution! Phone screens are very narrow, and multiple columns of content usually don't work well!") }</p>
+							</PanelRow>
 							<PanelRow>
 								<ToggleControl
 									label="Enable This Breakpoint?"
@@ -249,7 +255,7 @@ export default function Edit( props ) {
 							)}
 
 						</PanelBody>
-						<PanelBody title="Small Tablets and Above" initialOpen={ enableSm }>
+						<PanelBody title="Small Screens and Wider" initialOpen={ enableSm }>
 							<PanelRow>
 								<ToggleControl
 									label="Enable This Breakpoint?"
@@ -279,7 +285,7 @@ export default function Edit( props ) {
 							)}
 
 						</PanelBody>
-						<PanelBody title="Large Tablets and Above" initialOpen={ enableMd }>
+						<PanelBody title="Medium Screens and Wider" initialOpen={ enableMd }>
 							<PanelRow>
 								<ToggleControl
 									label="Enable This Breakpoint?"
@@ -309,7 +315,7 @@ export default function Edit( props ) {
 							)}
 
 						</PanelBody>
-						<PanelBody title="Medium Desktop and Above" initialOpen={ enableLg }>
+						<PanelBody title="Large Screens" initialOpen={ enableLg }>
 							<PanelRow>
 								<ToggleControl
 									label="Enable This Breakpoint?"

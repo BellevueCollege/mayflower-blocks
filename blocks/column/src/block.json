@@ -5,7 +5,7 @@
 	"version": "1.0.0",
 	"title": "Column",
 	"category": "bootstrap-blocks",
-	"icon": "schedule",
+	"icon": "columns",
 	"description": "A column within a row. Used for creating a responsive grid layout.",
 	"parent": [
 		"bootstrap-blocks/row"

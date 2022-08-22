@@ -6,5 +6,38 @@
  */
 
 .row > .block-editor-inner-blocks > .block-editor-block-list__layout {
-    display: flex;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.wp-block-mayflower-blocks-column {
+	&.is-selected > .components-disabled {
+		filter: blur(1px);
+	}
+	& > .overlay {
+		display: none;
+	}
+	&.is-selected > .overlay {
+		display: flex;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, .4);
+		z-index: 1;
+		justify-content: center;
+		align-items: center;
+
+		.dashicons {
+			width: auto;
+			height: auto;
+		}
+		.dashicons:before {
+			color: #fff;
+			font-size: 2em;
+			text-align: center;
+		}
+	}
+
 }
