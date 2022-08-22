@@ -27,9 +27,6 @@
 			"default": 0
 		}
 	},
-	"providesContext": {
-		"mayflower-blocks/columns": "childColumns"
-	},
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css"

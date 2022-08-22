@@ -8,35 +8,19 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState, useRef } from '@wordpress/element';
 
 import {
-	TextControl,
-	SelectControl,
-	ToggleControl,
 	ToolbarButton,
-	Popover,
-	ToolbarDropdownMenu,
-	SVG,
-	Path,
-	G,
-	PanelBody,
-	PanelRow,
 	Flex,
 	FlexItem,
-	FlexBlock,
 	Button,
 	Card,
 	CardBody,
 	CardHeader,
-	CardFooter,
-	CardDivider
 } from '@wordpress/components';
 
 import {
 	useBlockProps,
 	InnerBlocks,
-	RichText,
-	BlockControls,
-	InspectorControls,
-	AlignmentToolbar
+	BlockControls
 } from '@wordpress/block-editor';
 
 import {
@@ -194,7 +178,7 @@ export default function Edit( props ) {
 					orientation="horizontal"
 					placeholder={ <Starter /> }
 					template={ template }
-					renderAppender={false}
+					renderAppender={ false }
 
 				/>
 			</div>
