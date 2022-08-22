@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/well",
+	"version": "1.0.0",
+	"title": "Well",
+	"category": "common",
+	"icon": "slides",
+	"description": "Block that has been converted to cards or panels in bootstrap/g4+",
+	"supports": {
+		"html": true
+	},
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+		
+			"wellText": {
+			  "type": "string",
+			  "default": ""
+			},
+			"wellSize": {
+			  "type": "string",
+			  "default": ""
+			},
+			"activeWell": {
+			  "type": "string",
+			  "default": ""
+			}
+		  
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+  }
