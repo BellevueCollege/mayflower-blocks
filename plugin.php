@@ -42,8 +42,19 @@ function mg4_blocks_init() {
 	mg4_register_block( 'panel' );
 	mg4_register_block( 'jumbotron' );
 	mg4_register_block( 'lead' );
+	mg4_register_block( 'well' );
+
+	// Blocks for Row/Columns
 	mg4_register_block( 'row' );
 	mg4_register_block( 'column' );
+
+	// All the blocks for the Tab block
+	mg4_register_block( 'tab-content-panel' );
+	mg4_register_block( 'tab-content' );
+	mg4_register_block( 'tab-list-tab' );
+	mg4_register_block( 'tab-list' );
+	mg4_register_block( 'tabs' );
+
 	/**
 	 * Only Register TablePress block if TablePress is active.
 	 */
