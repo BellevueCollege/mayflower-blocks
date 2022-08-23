@@ -10,10 +10,6 @@ import {
 	InnerBlocks
 } from '@wordpress/block-editor';
 
-
-import './editor.scss';
-import './style.scss';
-
 export default function Edit( props ) {
 	const blockProps = useBlockProps({
 		className: 'tab-content'

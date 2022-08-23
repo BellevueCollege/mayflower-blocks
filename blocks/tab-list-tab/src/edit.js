@@ -8,10 +8,8 @@ import { Fragment } from '@wordpress/element';
 
 import { select, dispatch } from '@wordpress/data';
 
-import { createBlock, getBlockDefaultClassName } from '@wordpress/blocks';
 
 import { createHigherOrderComponent } from '@wordpress/compose';
-
 
 import {
 	Button,
@@ -29,13 +27,7 @@ import {
 	RichText,
 	BlockControls,
 	InspectorControls,
-	AlignmentToolbar,
-	InnerBlocks
 } from '@wordpress/block-editor';
-
-
-import './editor.scss';
-import './style.scss';
 
 
 const mayflowerBlocksTab = createHigherOrderComponent( ( BlockListBlock ) => {

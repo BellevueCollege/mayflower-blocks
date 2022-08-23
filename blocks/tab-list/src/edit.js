@@ -4,12 +4,9 @@
 
 import { __ } from '@wordpress/i18n';
 
-
-import { useEffect, useState, useRef } from '@wordpress/element';
-
 import { select, dispatch } from '@wordpress/data';
 
-import { createBlock, getBlockDefaultClassName } from '@wordpress/blocks';
+import { createBlock } from '@wordpress/blocks';
 
 
 
@@ -20,16 +17,8 @@ import {
 
 import {
 	useBlockProps,
-	RichText,
-	BlockControls,
-	InspectorControls,
-	AlignmentToolbar,
 	InnerBlocks
 } from '@wordpress/block-editor';
-
-
-import './editor.scss';
-import './style.scss';
 
 export default function Edit( props ) {
 	const blockProps = useBlockProps({

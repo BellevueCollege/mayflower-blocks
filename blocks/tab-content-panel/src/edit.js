@@ -4,12 +4,6 @@
 
 import { __ } from '@wordpress/i18n';
 
-
-
-import { select, dispatch } from '@wordpress/data';
-
-import { createBlock } from '@wordpress/blocks';
-
 import { Fragment } from '@wordpress/element';
 
 import { createHigherOrderComponent } from '@wordpress/compose';
@@ -17,16 +11,9 @@ import { createHigherOrderComponent } from '@wordpress/compose';
 
 import {
 	useBlockProps,
-	RichText,
-	BlockControls,
-	InspectorControls,
-	AlignmentToolbar,
 	InnerBlocks
 } from '@wordpress/block-editor';
 
-
-import './editor.scss';
-import './style.scss';
 
 // Creates a higher order component(HOC) to properly wrap the tab content panel block with the
 // corresponding bootstrap and CSS classes and prevent block stacking
