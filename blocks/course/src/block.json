@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/course",
+	"version": "1.0.0",
+	"title": "Course",
+	"category": "common",
+	"icon": "welcome-learn-more",
+	"description": "Display Bellevue College course information, including subject, number, title, credits, description, and a link to the class schedule and catalog.",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+		"subject": {
+			"type": "string",
+			"default": "select"
+		},
+		"item": {
+			"type": "string",
+			"default": "select"
+		},
+		"description": {
+			"type": "boolean"
+		},
+		"headingTag": {
+			"type": "string",
+			"default": "h2"
+		}
+	},
+	"example": {
+		"attributes": {
+			"subject": "ENGL&",
+			"item": "101",
+			"description": true,
+			"headingTag": "h2"
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

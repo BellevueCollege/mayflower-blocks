@@ -55,6 +55,8 @@ function mg4_blocks_init() {
 	mg4_register_block( 'tab-list' );
 	mg4_register_block( 'tabs' );
 
+	mg4_register_block( 'course', true );
+
 	/**
 	 * Only Register TablePress block if TablePress is active.
 	 */
