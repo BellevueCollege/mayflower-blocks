@@ -55,6 +55,10 @@ function mg4_blocks_init() {
 	mg4_register_block( 'tab-list' );
 	mg4_register_block( 'tabs' );
 
+	// Blocks for the Collapse block 
+	mg4_register_block( 'collapse' );
+	mg4_register_block( 'collapsibles' );
+
 	mg4_register_block( 'course', true );
 
 	/**

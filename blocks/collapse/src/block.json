@@ -1,0 +1,58 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/collapse",
+	"version": "1.0.0",
+	"title": "Collapse",
+	"category": "bootstrap-blocks",
+	"icon": "editor-contract",
+	"description": "Individual collapse elements.",
+	"supports": {
+		"html": true
+	},
+	"parent":[
+		"mayflower-blocks/collpasibles"
+	],
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+		"collapseText": {
+		  "type": "string"
+		},
+		"collapseHeadingText": {
+		  "type": "string",
+		  "source": "html",
+		  "selector": "button"
+		},
+		"collapseClass": {
+		  "type": "string",
+		  "default": "default"
+		},
+		"collapseLightBg": {
+		  "type": "boolean",
+		  "default": false
+		},
+		"expanded": {
+		  "type": "boolean",
+		  "default": false
+		},
+		"currentBlockClientId": {
+		  "type": "string",
+		  "default": ""
+		},
+		"parentBlockClientId": {
+		  "type": "string",
+		  "default": ""
+		},
+		"headingTag": {
+		  "type": "string",
+		  "default": "h3"
+		},
+		"collapseIn": {
+		  "type": "string",
+		  "default": ""
+		}
+	  },
+	  "editorScript": "file:./index.js",
+	  "editorStyle": "file:./index.css",
+	  "style": "file:./style-index.css"
+	}
