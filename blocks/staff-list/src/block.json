@@ -1,0 +1,47 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/staff-list",
+	"version": "1.0.0",
+	"title": "Staff List",
+	"category": "common",
+	"icon": "admin-users",
+	"description": "Display a list of employees from the optional Staff Directory section.",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+		"staffLayout": {
+			"type": "string",
+			"default": ""
+		},
+		"staffPictureToggle": {
+			"type": "boolean",
+			"default": true
+		},
+		"staffPhoneToggle": {
+			"type": "boolean",
+			"default": true
+		},
+		"staffLocationToggle": {
+			"type": "boolean",
+			"default": true
+		},
+		"staffHoursToggle": {
+			"type": "boolean",
+			"default": true
+		},
+		"staffBioToggle": {
+			"type": "boolean",
+			"default": true
+		},
+		"staffMoreToggle": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}
