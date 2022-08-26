@@ -93,10 +93,10 @@ export default function Edit( props ) {
 
 
 	/**
-		 * ButtonClassControl returns a Toolbar component with alert classes that changes via on click and updates the alert block's style.
-		 *
-		 * @return Toolbar component with alert classes
-		 * */
+	 * ButtonClassControl returns a Toolbar component with alert classes that changes via on click and updates the alert block's style.
+	 *
+	 * @return Toolbar component with alert classes
+	 * */
 	const ButtonStyleControl = () => {
 		function createClassControl( buttonClass ) {
 			//Switch checks the class control alertClass and returns the corresponding colorClass to update the SVG icon

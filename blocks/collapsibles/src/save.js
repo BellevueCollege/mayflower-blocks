@@ -17,8 +17,12 @@ export default function save( props ) {
 	const { attributes: {
 		currentBlockClientId,
 	} } = props;
+	const blockProps = useBlockProps.save({
+		className: 'accordion',
+		id: `accordion_${ currentBlockClientId ? currentBlockClientId : 'undefined'}`
+	});
 	return (
-		<div className="accordion" id={ `accordion_${ currentBlockClientId ? currentBlockClientId : 'undefined'}` }>
+		<div { ...blockProps }>
 			<InnerBlocks.Content />
 		</div>
 	);
