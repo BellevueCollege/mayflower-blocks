@@ -217,7 +217,7 @@ export default function Edit( props ) {
 			</InspectorControls>
 			<div {...blockProps}>
 				<div className="card-header" id={ `heading_${ currentBlockClientId }` }>
-					<HeadingTag className="mb-0">
+					<HeadingTag className="mb-0 h6">
 						<RichText
 							tagName="span"
 							allowedFormats={ [ 'bold', 'italic', 'link' ] }
@@ -226,6 +226,11 @@ export default function Edit( props ) {
 							value={ collapseHeadingText }
 							onChange={ ( collapseHeadingText ) => setAttributes( { collapseHeadingText } ) }
 						/>
+						<Tooltip
+							text={ __( "The heading level of this collapse. Doesn't show on the front-end." ) }
+						>
+							<span className="badge badge-info float-right">{ headingTag.toUpperCase() }</span>
+						</Tooltip>
 					</HeadingTag>
 				</div>
 				{ ( isSelected || select('core/block-editor').hasSelectedInnerBlock( currentBlockClientId ) === true || expanded ) &&
