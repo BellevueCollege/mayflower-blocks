@@ -153,6 +153,23 @@ export default function Edit( props ) {
 	setAttributes( { currentBlockClientId: clientId } );
 	setAttributes( { parentBlockClientId: parentClientId } );
 	const HeadingTag = headingTag;
+
+	/**
+	 * Check if ANY child block is currently selected
+	 *
+	 * Credit: https://stackoverflow.com/a/55955285
+	 */
+	function hasSelectedChild(props) {
+		const select = wp.data.select('core/editor');
+		const selected = select.getBlockSelectionStart();
+		const inner = select.getBlock(props.clientId).innerBlocks;
+		for (let i = 0; i < inner.length; i++) {
+			if (inner[i].clientId === selected || inner[i].innerBlocks.length && hasSelectedChild(inner[i])) {
+				return true;
+			}
+		}
+		return false;
+	};
 	return (
 		<>
 			<BlockControls>
@@ -233,24 +250,18 @@ export default function Edit( props ) {
 						</Tooltip>
 					</HeadingTag>
 				</div>
-				{ ( isSelected || select('core/block-editor').hasSelectedInnerBlock( currentBlockClientId ) === true || expanded ) &&
-				<div id={ `collapse_${ currentBlockClientId }` } className="collapse show" aria-labelledby={ `heading_${ currentBlockClientId }` } data-parent={ `#accordion_${ parentClientId }` }>
+				<div
+					id={ `collapse_${ currentBlockClientId }` }
+					className={ `collapse ${ expanded || isSelected || hasSelectedChild( props ) ? 'show' : '' }` }
+					aria-labelledby={ `heading_${ currentBlockClientId }` }
+					data-parent={ `#accordion_${ parentClientId }` }
+				>
 					<div className={ 'card-body' + ( collapseLightBg === true ? ' bg-light text-dark' : '' ) }>
-						{ collapseText !== null && collapseText !== '' && collapseText !== undefined ?
-							<RichText
-								tagName="div"
-								formattingControls={ [ 'bold', 'italic', 'link' ] }
-								placeholder="Enter text or add blocks below..."
-								keepPlaceholderOnFocus="true"
-								value={ collapseText }
-								onChange={ ( collapseText ) => setAttributes( { collapseText } ) }
-							/> : '' }
 						<InnerBlocks />
 					</div>
 				</div>
-				}
 			</div>
-		 </>
-	 );
+		</>
+	);
 
- }
+}
