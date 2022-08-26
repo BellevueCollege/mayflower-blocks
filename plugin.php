@@ -35,31 +35,42 @@ if ( 'Mayflower G4' === $theme->name || 'Mayflower G4' === $theme->parent_theme 
  */
 function mg4_blocks_init() {
 	/** List of blocks - should match folder names */
-	mg4_register_block( 'child-pages', true );
 
-	mg4_register_block( 'alert' );
-	mg4_register_block( 'button' );
-	mg4_register_block( 'panel' );
-	mg4_register_block( 'jumbotron' );
-	mg4_register_block( 'lead' );
-	mg4_register_block( 'well' );
+	// Dynamic Blocks.
+	mbg4_register_block( 'child-pages', true );
+	mbg4_register_block( 'course', true );
 
+	// Static Blocks.
+	mbg4_register_block( 'alert' );
+	mbg4_register_block( 'button' );
+	mbg4_register_block( 'panel' );
+	mbg4_register_block( 'jumbotron' );
+	mbg4_register_block( 'lead' );
+	mbg4_register_block( 'well' );
+
+	//Multi-Block Structures
 	// Blocks for Row/Columns
-	mg4_register_block( 'row' );
-	mg4_register_block( 'column' );
+	mbg4_register_block( 'row' );
+	mbg4_register_block( 'column' );
 
-	// All the blocks for the Tab block
-	mg4_register_block( 'tab-content-panel' );
-	mg4_register_block( 'tab-content' );
-	mg4_register_block( 'tab-list-tab' );
-	mg4_register_block( 'tab-list' );
-	mg4_register_block( 'tabs' );
+ 	// All the blocks for the Tab block
+	mbg4_register_block( 'tab-content-panel' );
+	mbg4_register_block( 'tab-content' );
+	mbg4_register_block( 'tab-list-tab' );
+	mbg4_register_block( 'tab-list' );
+	mbg4_register_block( 'tabs' );
 
-	// Blocks for the Collapse block 
-	mg4_register_block( 'collapse' );
-	mg4_register_block( 'collapsibles' );
+	// Blocks for the Collapse block
+	mbg4_register_block( 'collapse' );
+	mbg4_register_block( 'collapsibles' );
 
-	mg4_register_block( 'course', true );
+	// Specialized Blocks
+	/**
+	 * Register Staff List block if Mayflower is active and Staff List is enabled.
+	 */
+	if ( function_exists( 'mayflower_get_option' ) && true === mayflower_get_option( 'staff_toggle' ) ) {
+		mbg4_register_block( 'staff-list', true );
+	}
 
 	/**
 	 * Only Register TablePress block if TablePress is active.
@@ -69,7 +80,7 @@ function mg4_blocks_init() {
 	}
 
 	if ( is_plugin_active( 'tablepress/tablepress.php' ) ) {
-		mg4_register_block( 'tablepress', true );
+		mbg4_register_block( 'tablepress', true );
 	}
 
 }
@@ -83,7 +94,7 @@ function mg4_blocks_init() {
  *
  * Registers static and dynamic blocks
  */
-function mg4_register_block( $block_name, $dynamic = false ) {
+function mbg4_register_block( $block_name, $dynamic = false ) {
 	$path = dirname( __FILE__ ) . "/blocks/$block_name";
 	if ( $dynamic ) {
 		require "$path/src/block.php";
