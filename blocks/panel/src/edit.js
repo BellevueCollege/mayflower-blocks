@@ -18,6 +18,8 @@ import {
 	SelectControl,
 	ToggleControl,
 	Toolbar,
+	ToolbarButton,
+	ToolbarGroup,
 	Panel,
 	PanelBody,
 	PanelRow,
@@ -53,18 +55,40 @@ export default function Edit( props ) {
 	return (
 		<>
 			<BlockControls>
-				{ cardHeading === true && (
-					<ToolbarBootstrapHeadingLevelSelector
-						values= {  [ 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6', 'Paragraph' ] }
-						active = { cardHeadingTag }
-						onClick = { ( value ) => setAttributes( { cardHeadingTag: value, activeHeadingClass: value } ) }
+				<ToolbarGroup>
+					{ cardHeading === true && (
+						<ToolbarBootstrapHeadingLevelSelector
+							values= {  [ 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6', 'Paragraph' ] }
+							active = { cardHeadingTag }
+							onClick = { ( value ) => setAttributes( { cardHeadingTag: value, activeHeadingClass: value } ) }
+						/>
+					)}
+					<ToolbarBootstrapColorSelector
+						values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
+						active = { cardType }
+						onClick = { ( value ) => setAttributes( { cardType: value } ) }
 					/>
-				)}
-				<ToolbarBootstrapColorSelector
-					values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
-					active = { cardType }
-					onClick = { ( value ) => setAttributes( { cardType: value } ) }
-				/>
+					<ToolbarButton
+						icon="lightbulb"
+						label="Light Background"
+						onClick={ () => setAttributes( { cardLightBg: ! cardLightBg } ) }
+						isActive={ cardLightBg }
+					/>
+				</ToolbarGroup>
+				<ToolbarGroup>
+					<ToolbarButton
+						icon="table-row-before"
+						label = "Display Card Header"
+						onClick={ () => setAttributes( { cardHeading: ! cardHeading } ) }
+						isActive={ cardHeading }
+					/>
+					<ToolbarButton
+						icon="table-row-after"
+						label = "Display Card Footer"
+						onClick={ () => setAttributes( { cardFooter: ! cardFooter } ) }
+						isActive={ cardFooter }
+					/>
+				</ToolbarGroup>
 
 			</BlockControls>
 
