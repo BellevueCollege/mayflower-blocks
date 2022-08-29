@@ -11,7 +11,7 @@ import {
 	RichText,
 	InspectorControls,
 	InnerBlocks,
-	useBlockProps
+	useBlockProps,
 } from '@wordpress/block-editor';
 
 import {
@@ -54,7 +54,7 @@ export default function Edit( props ) {
 
 	return (
 		<>
-			<BlockControls>
+			<BlockControls group="block">
 				<ToolbarGroup>
 					{ cardHeading === true && (
 						<ToolbarBootstrapHeadingLevelSelector
@@ -155,7 +155,7 @@ export default function Edit( props ) {
 						<RichText
 							tagName={ cardHeadingTag }
 							className="card-header"
-							allowedFormats={ [ 'bold', 'italic', 'link' ] }
+							allowedFormats={ [ 'core/bold', 'core/italic', 'core/link' ] }
 							placeholder="Enter heading text..."
 							keepPlaceholderOnFocus="true"
 							value={ cardHeadingText }
@@ -181,7 +181,7 @@ export default function Edit( props ) {
 						<div className="card-footer">
 							<RichText
 								tagName="div"
-								allowedFormats={ [ 'bold', 'italic', 'link' ] }
+								allowedFormats={ [ 'core/bold', 'core/italic', 'core/link' ] }
 								placeholder="Enter footer text..."
 								keepPlaceholderOnFocus="true"
 								value={ cardFooterText }
