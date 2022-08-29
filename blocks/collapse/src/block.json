@@ -5,54 +5,54 @@
 	"version": "1.0.0",
 	"title": "Collapse",
 	"category": "bootstrap-blocks",
-	"icon": "editor-contract",
-	"description": "Individual collapse elements.",
+	"icon": "block-default",
+	"description": "Individual collapse element inside an Accordion block.",
 	"supports": {
-		"html": true
+		"html": false
 	},
 	"parent":[
-		"mayflower-blocks/collpasibles"
+		"mayflower-blocks/collapsibles"
 	],
 	"textdomain": "mayflower-blocks",
 	"attributes": {
 		"collapseText": {
-		  "type": "string"
+		"type": "string"
 		},
 		"collapseHeadingText": {
-		  "type": "string",
-		  "source": "html",
-		  "selector": "button"
+		"type": "string",
+		"source": "html",
+		"selector": "button"
 		},
 		"collapseClass": {
-		  "type": "string",
-		  "default": "default"
+		"type": "string",
+		"default": "default"
 		},
 		"collapseLightBg": {
-		  "type": "boolean",
-		  "default": false
+		"type": "boolean",
+		"default": false
 		},
 		"expanded": {
-		  "type": "boolean",
-		  "default": false
+		"type": "boolean",
+		"default": false
 		},
 		"currentBlockClientId": {
-		  "type": "string",
-		  "default": ""
+		"type": "string",
+		"default": ""
 		},
 		"parentBlockClientId": {
-		  "type": "string",
-		  "default": ""
+		"type": "string",
+		"default": ""
 		},
 		"headingTag": {
-		  "type": "string",
-		  "default": "h3"
+		"type": "string",
+		"default": "h3"
 		},
 		"collapseIn": {
-		  "type": "string",
-		  "default": ""
+		"type": "string",
+		"default": ""
 		}
-	  },
-	  "editorScript": "file:./index.js",
-	  "editorStyle": "file:./index.css",
-	  "style": "file:./style-index.css"
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
 	}

@@ -10,6 +10,9 @@
     "i18n": "grunt i18n"
   },
   "author": "Taija Tevia-Clark",
+	"dependencies": {
+		"shared-elements": "file:../shared-elements"
+	},
 	"devDependencies": {
     "@wordpress/scripts": "^22.2.1"
   }

@@ -27,6 +27,8 @@ import {
 	__experimentalGetElementClassName,
 } from '@wordpress/block-editor';
 
+import { ToolbarBootstrapColorSelector } from 'shared-elements/toolbar';
+
 
 import './editor.scss';
 import './style.scss';
@@ -91,69 +93,6 @@ export default function Edit( props ) {
 		}
 	}, [ isSelected ] );
 
-
-	/**
-	 * ButtonClassControl returns a Toolbar component with alert classes that changes via on click and updates the alert block's style.
-	 *
-	 * @return Toolbar component with alert classes
-	 * */
-	const ButtonStyleControl = () => {
-		function createClassControl( buttonClass ) {
-			//Switch checks the class control alertClass and returns the corresponding colorClass to update the SVG icon
-			let colorClass = '';
-			switch ( buttonClass ) {
-				case 'primary':
-					colorClass = '#003D79';
-					break;
-				case 'secondary':
-					colorClass = '#6c757d';
-					break;
-				case 'info':
-					colorClass = '#afd7ff';
-					break;
-				case 'success':
-					colorClass = '#317131';
-					break;
-				case 'warning':
-					colorClass = '#F2C01E';
-					break;
-				case 'danger':
-					colorClass = '#C4122F';
-					break;
-				case 'light':
-					colorClass = '#f8f9fa';
-					break;
-				case 'dark':
-					colorClass = '#343a40';
-					break;
-				default:
-					colorClass = '#31708f';
-					break;
-			}
-
-			return {
-				icon: <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-					<G>
-						<Path fill={ colorClass } d="M21.125,2H4.875C2.182,2,0,4.182,0,6.875v12.25C0,21.818,2.182,24,4.875,24h16.25,C23.818,24,26,21.818,26,19.125V6.875C26,4.182,23.818,2,21.125,2z" />
-					</G>
-				</SVG>,
-				title: buttonClass.charAt( 0 ).toUpperCase() + buttonClass.slice( 1 ),
-				isActive: activeButtonType === buttonClass,
-				onClick: () => setAttributes( { buttonType: buttonClass, activeButtonType: buttonClass } ),
-			};
-		}
-
-		return (
-			<ToolbarDropdownMenu
-				label="Color"
-				icon="color-picker"
-				controls={
-					[ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ]
-					.map( createClassControl )
-				} />
-		);
-	};
-
 	const ButtonSizeControl = () => {
 		return (
 			<ToolbarDropdownMenu
@@ -184,7 +123,14 @@ export default function Edit( props ) {
 	return (
 		<>
 			<BlockControls>
-				<ButtonStyleControl />
+				<ToolbarBootstrapColorSelector
+					values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
+					active={ buttonType }
+					onClick={ ( value ) => setAttributes( {
+						buttonType: value,
+						activeButtonType: value
+					} ) }
+				/>
 				<ButtonSizeControl />
 
 				<ToolbarButton

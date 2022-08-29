@@ -4,8 +4,6 @@
 
 import { __ } from '@wordpress/i18n';
 
-
-
 import {
 	SelectControl,
 	ToolbarGroup,
@@ -24,6 +22,8 @@ import {
 	InnerBlocks
 } from '@wordpress/block-editor';
 
+import { ToolbarBootstrapColorSelector } from 'shared-elements/toolbar';
+
 
 import './editor.scss';
 import './style.scss';
@@ -37,55 +37,10 @@ export default function Edit( props ) {
 
 	}, setAttributes, isSelected } = props;
 
-	/**
-		 * AlertClassControl returns a Toolbar component with alert classes that changes via on click and updates the alert block's style.
-		 *
-		 * @return Toolbar component with alert classes
-		 * */
-	const AlertClassControl = () => {
-		function createClassControl( alertClass ) {
-			//Switch checks the class control alertClass and returns the corresponding colorClass to update the SVG icon
-			let colorClass = '';
-			switch ( alertClass ) {
-				case 'info':
-					colorClass = '#31708f';
-					break;
-				case 'success':
-					colorClass = '#3c763d';
-					break;
-				case 'warning':
-					colorClass = '#8a6d3b';
-					break;
-				case 'danger':
-					colorClass = '#a94442';
-					break;
-				default:
-					colorClass = '#31708f';
-					break;
-			}
-
-			return {
-				icon: <SVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-					<circle fill="white" cx="10" cy="10" r="10" />
-					<G>
-						<Path fill={ colorClass } d="M10 2c4.42 0 8 3.58 8 8s-3.58 8-8 8-8-3.58-8-8 3.58-8 8-8zm1.13 9.38l.35-6.46H8.52l.35 6.46h2.26zm-.09 3.36c.24-.23.37-.55.37-.96 0-.42-.12-.74-.36-.97s-.59-.35-1.06-.35-.82.12-1.07.35-.37.55-.37.97c0 .41.13.73.38.96.26.23.61.34 1.06.34s.8-.11 1.05-.34z" />
-					</G>
-				</SVG>,
-				title: alertClass.charAt( 0 ).toUpperCase() + alertClass.slice( 1 ),
-				isActive: activeAlert === alertClass,
-				onClick: () => setAttributes( { alertClass: alertClass, activeAlert: alertClass } ),
-			};
-		}
-
-		return (
-			<ToolbarGroup controls={ [ 'info', 'success', 'warning', 'danger' ].map( createClassControl ) } />
-		);
-	};
-
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title="Alert Style" >
+				<PanelBody title="Alert Style" initialOpen={false}>
 					<PanelRow>
 						<SelectControl
 							label="Alert Style"
@@ -105,7 +60,13 @@ export default function Edit( props ) {
 			</InspectorControls>
 
 			<BlockControls>
-				<AlertClassControl />
+				<ToolbarBootstrapColorSelector
+					values= { [ 'info', 'success', 'warning', 'danger' ] }
+					label={ __( 'Alert Style' ) }
+					onClick={ ( alertClass ) => {
+						setAttributes( { alertClass: alertClass, activeAlert: alertClass } );
+					} }
+				/>
 			</BlockControls>
 
 			<div { ...blockProps }>
