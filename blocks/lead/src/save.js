@@ -14,11 +14,14 @@ export default function save( props ) {
 	const { attributes: {
 		leadText
 	} } = props;
+	const blockProps = useBlockProps.save({
+		className: 'lead'
+	});
 	return (
 		<RichText.Content
-		tagName="div"
-		className="lead"
-		value={ leadText }
-	/>
+			tagName="div"
+			value={ leadText }
+			{ ...blockProps }
+		/>
 	);
 }
