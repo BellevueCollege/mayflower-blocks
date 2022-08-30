@@ -42,7 +42,7 @@
 		},
 		"cardFooter": {
 			"type": "boolean",
-			"default": false
+			"default": true
 		},
 		"cardFooterText": {
 			"type": "string",
