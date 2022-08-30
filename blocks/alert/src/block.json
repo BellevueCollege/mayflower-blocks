@@ -25,7 +25,20 @@
 			"default": "info"
 		}
 	},
+	"example": {
+		"attributes": {
+			"alertClass": "danger"
+		},
+		"innerBlocks": [
+			{
+				"name": "core/paragraph",
+				"attributes": {
+					"content": "This content is very important!"
+				}
+			}
+		]
+	},
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css"
-  }
+}

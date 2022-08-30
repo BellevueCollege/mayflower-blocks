@@ -4,7 +4,7 @@
 	"name": "mayflower-blocks/panel",
 	"version": "1.0.0",
 	"title": "Card (Panel)",
-	"category": "common",
+	"category": "bootstrap-blocks",
 	"icon": "align-center",
 	"description": "The card block allows content to be displayed in a card format, optionally with a header and footer.",
 	"supports": {
@@ -50,7 +50,27 @@
 			"selector": ".card-footer"
 		}
 	},
+	"example":{
+		"attributes": {
+			"cardType": "default",
+			"cardHeading": true,
+			"cardHeadingText": "Card Heading",
+			"cardHeadingTag": "h2",
+			"activeHeadingClass": "h2",
+			"cardLightBg": false,
+			"cardFooter": true,
+			"cardFooterText": "Card Footer"
+		},
+		"innerBlocks": [
+			{
+				"name": "core/paragraph",
+				"attributes": {
+					"content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+				}
+			}
+		]
+	},
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css"
-  }
+}

@@ -4,7 +4,7 @@
 	"name": "mayflower-blocks/child-pages",
 	"version": "1.0.0",
 	"title": "Child Pages",
-	"category": "common",
+	"category": "theme",
 	"icon": "excerpt-view",
 	"description": "Displays all child pages of the current page in a variety of formats.",
 	"supports": {

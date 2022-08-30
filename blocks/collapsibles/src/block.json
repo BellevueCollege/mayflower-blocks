@@ -33,20 +33,6 @@
 						}
 					}
 				]
-			},
-			{
-				"name" : "mayflower-blocks/collapse",
-				"attributes": {
-					"collapseHeadingText": "Item 1",
-					"expanded": false
-				}
-			},
-			{
-				"name" : "mayflower-blocks/collapse",
-				"attributes": {
-					"collapseHeadingText": "Item 1",
-					"expanded": false
-				}
 			}
 		]
 	},

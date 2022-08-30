@@ -4,7 +4,7 @@
 	"name": "mayflower-blocks/course",
 	"version": "1.0.0",
 	"title": "Course",
-	"category": "common",
+	"category": "embeds",
 	"icon": "welcome-learn-more",
 	"description": "Display Bellevue College course information, including subject, number, title, credits, description, and a link to the class schedule and catalog.",
 	"supports": {

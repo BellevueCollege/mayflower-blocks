@@ -4,8 +4,8 @@
 	"name": "mayflower-blocks/lead",
 	"version": "1.0.0",
 	"title": "lead",
-	"category": "common",
-	"icon": "slides",
+	"category": "bootstrap-blocks",
+	"icon": "testimonial",
 	"description": "Block to make text a little bit larger. Should be used for the introductory sentence on a page.",
 	"supports": {
 		"html": true
@@ -17,7 +17,12 @@
 			"default": ""
 		}
 	},
+	"example": {
+		"attributes": {
+			"leadText": "This is a lead paragraph. Text is slightly larger than normal!"
+		}
+	},
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css"
-  }
+}
