@@ -3,10 +3,14 @@
 	"apiVersion": 2,
 	"name": "mayflower-blocks/lead",
 	"version": "1.0.0",
-	"title": "lead",
+	"title": "Intro Text (Lead)",
 	"category": "bootstrap-blocks",
 	"icon": "testimonial",
 	"description": "Block to make text a little bit larger. Should be used for the introductory sentence on a page.",
+	"keywords": [
+		"lead",
+		"intro"
+	],
 	"supports": {
 		"html": true
 	},
