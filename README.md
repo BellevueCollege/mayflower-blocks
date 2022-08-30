@@ -42,7 +42,9 @@ Any PHP files are included in the Source file.
 
 ## CI/CD Status:
 **Dev:** [![Build Status](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_apis/build/status/Mayflower%20Blocks?branchName=dev)](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_build/latest?definitionId=31&branchName=dev)
+**Trunk:** [![Build Status](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_apis/build/status/Mayflower%20Blocks?branchName=trunk)](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_build/latest?definitionId=31&branchName=trunk)
 
-
+## Suggested Commit Style
+[![emoji-log](https://cdn.rawgit.com/ahmadawais/stuff/ca97874/emoji-log/flat.svg)](https://github.com/ahmadawais/Emoji-Log/)
 
 
