@@ -1,0 +1,13 @@
+
+.wp-block-mayflower-blocks-staff-list {
+
+	/* Prevent Interaction */
+	border: 1px solid #eee;
+	padding: .5rem;
+
+	/* Over-ride Block Editor Styles */
+	.card {
+		padding: 0;
+		margin-top: 0;
+	}
+}

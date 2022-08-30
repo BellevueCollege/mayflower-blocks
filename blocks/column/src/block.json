@@ -1,0 +1,82 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/column",
+	"version": "1.0.0",
+	"title": "Column",
+	"category": "bootstrap-blocks",
+	"icon": "columns",
+	"description": "A column within a row. Used for creating a responsive grid layout.",
+	"parent": [
+		"bootstrap-blocks/row"
+	],
+	"supports": {
+		"html": false
+	},
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+		"enableXs": {
+			"type": "boolean",
+			"default": false
+		},
+		"autoXs": {
+			"type": "boolean",
+			"default": true
+		},
+		"columnsXs": {
+			"type": "number",
+			"default": 12,
+			"min": "1",
+			"max": "12",
+			"description": "The number of columns to use on extra small screens (mobile phones, tablets)."
+		},
+		"enableSm": {
+			"type": "boolean",
+			"default": false
+		},
+		"autoSm": {
+			"type": "boolean",
+			"default": true
+		},
+		"columnsSm": {
+			"type": "number",
+			"default": 6,
+			"min": "1",
+			"max": "12",
+			"description": "The number of columns to use for small screens (up to 576px)."
+		},
+		"enableMd": {
+			"type": "boolean",
+			"default": true
+		},
+		"autoMd": {
+			"type": "boolean",
+			"default": true
+		},
+		"columnsMd": {
+			"type": "number",
+			"default": 6,
+			"min": "1",
+			"max": "12",
+			"description": "The number of columns to use for medium screens (from 576px up)."
+		},
+		"enableLg": {
+			"type": "boolean",
+			"default": false
+		},
+		"autoLg": {
+			"type": "boolean",
+			"default": true
+		},
+		"columnsLg": {
+			"type": "number",
+			"default": 6,
+			"min": "1",
+			"max": "12",
+			"description": "The number of columns to use for large screens (from 768px up)."
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

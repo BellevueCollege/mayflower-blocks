@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/collapsibles",
+	"version": "1.0.0",
+	"title": "Collapsibles (Accordion)",
+	"category": "bootstrap-blocks",
+	"icon": "editor-contract",
+	"description": "Create accordion-style collapsing modules in a variety of colors.",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+		"currentBlockClientId": {
+		"type": "string",
+		"default": ""
+		}
+	},
+	"example": {
+		"innerBlocks":[
+			{
+				"name" : "mayflower-blocks/collapse",
+				"attributes": {
+					"collapseHeadingText": "Item 1",
+					"expanded": true
+				},
+				"innerBlocks": [
+					{
+						"name": "core/paragraph",
+						"attributes": {
+							"content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel aliquam aliquam, nunc nisl aliquet nisl, eget aliquam nisl lorem quis nisl. Sed euismod, nisl vel aliquam aliquam, nunc nisl aliquet nisl, eget aliquam nisl lorem quis nisl."
+						}
+					}
+				]
+			}
+		]
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

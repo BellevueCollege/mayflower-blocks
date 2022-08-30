@@ -1,0 +1,40 @@
+/**
+ * #.# Common SCSS
+ *
+ * Can include things like variables and mixins
+ * that are used across the project.
+*/
+
+// Colors.
+$black: rgb(41, 41, 41);
+$white: #f4f4f4;
+$gray: #dedede;
+$green: #bada55;
+$red: orangered;
+
+
+/* Colors */
+$brand-primary:         #003D79; // BC Brand Primary Blue
+$brand-success:         #317131; // Darkened to meet a11y AA requirements
+$brand-info:            #afd7ff; // Lightened BC Brand Blue to meet a11y requirements
+$brand-warning:         #F2C01E; // BC Brand Yellow
+$brand-danger:          #C4122F; // BC Brand Red
+
+$btn-info-color:        #162F57;
+$btn-warning-color:     #000;
+$btn-warning-border:    #E36F1E; //BC Brand Orange
+
+$bg-color: #F5F5F5;
+
+/* Typography */
+$font-body: Helvetica, Arial, sans-serif;
+$font-heading: Georgia, "Times New Roman", Times, serif;
+$font-monospace: Monaco, Menlo, Consolas, "Courier New", monospace;
+$std-line-height: 1.66666667em;
+$std-margin: 1em;
+$sm-margin: calc($std-margin/3);
+
+// Bootstrap Breakpoints
+$breakpoint-bs-sm: 48em;
+$breakpoint-bs-md: 62em;
+$breakpoint-bs-lg: 75em;

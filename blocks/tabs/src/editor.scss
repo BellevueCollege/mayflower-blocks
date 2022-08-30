@@ -1,0 +1,107 @@
+
+/**
+* #.# Editor Styles
+*
+* CSS for just Backend enqueued after style.scss
+* which makes it higher in priority.
+*/
+.wp-block-mayflower-blocks-tabs {
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+/**
+* Tab List
+*/
+.wp-block-mayflower-blocks-tab-list {
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	align-items: center;
+	background: #ccc;
+
+	li[role="presentation"] {
+		float: left;
+		border: 1px solid transparent;
+
+		button.add-tab {
+			padding: 10px 15px;
+			color: #555555;
+			border-radius: 4px 4px 0 0;
+			align-items: center;
+			&:hover {
+				border: 1px solid #ddd;
+				border-bottom-color: transparent;
+				margin: -1px;
+			}
+
+			span {
+				margin-left: 10px;
+			}
+
+			span.dashicon {
+				margin-left: 0px;
+			}
+		}
+
+		a {
+			text-decoration: none;
+			box-shadow: none;
+			margin-right: 2px;
+			line-height: 1.428571429;
+			position: relative;
+			display: block;
+			padding: 10px 15px;
+			border-radius: 4px 4px 0 0;
+		}
+
+		&.active a.wp-block-mayflower-blocks-tab-list-tab {
+			color: #555555;
+			background-color: #fff;
+			border: 1px solid #ddd;
+			border-bottom-color: transparent;
+			margin: -1px;
+		}
+	}
+}
+
+/**
+* Tab List Tab
+*/
+
+.wp-block-mayflower-blocks-tab-list-tab {
+	margin-top: 0;
+	margin-bottom: 0;
+
+
+	&.has-warning {
+		> .editor-block-list__block-edit {
+			> div[role="toolbar"].editor-block-contextual-toolbar {
+				> .editor-block-toolbar {
+					> div > div.components-toolbar > div > button.editor-block-settings-menu__toggle {
+						display: block;
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+* Tab Content
+*/
+.wp-block-mayflower-blocks-tab-content {
+	margin: .1rem 1rem !important;
+
+
+	div.tab-pane {
+		display: none;
+	}
+
+	div.tab-pane.active {
+		display: block;
+	}
+}

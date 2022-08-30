@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/tab-content",
+	"version": "1.0.0",
+	"title": "Tab Content",
+	"category": "bootstrap-blocks",
+	"icon": "slides",
+	"description": "A button available in a variety of styles. When clicked, opens the configured link.",
+	"supports": {
+		"html": true
+	},
+	"textdomain": "mayflower-blocks",
+	"parent": [
+		"mayflower-blocks/tabs"
+	],
+	"attributes": {},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

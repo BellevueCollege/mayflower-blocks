@@ -1,0 +1,26 @@
+.wp-block-mayflower-blocks-tablepress {
+	.card {
+		padding: 0;
+		max-width: 100%;
+
+		.card-body {
+			.components-base-control {
+				.components-base-control__field {
+					display: flex;
+					flex-flow: row wrap;
+					justify-content: space-between;
+				}
+			}
+
+		}
+	}
+
+	.editor-only {
+		margin-top: 1em;
+		display: block;
+	}
+}
+
+.tablepress-select-table {
+	padding: .5rem 1rem 0 1rem !important;
+}

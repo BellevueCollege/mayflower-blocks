@@ -1,0 +1,25 @@
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
+
+ [data-type="mayflower-blocks/collapsibles"] {
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+
+
+}
+
+.wp-block-mayflower-blocks-collapsibles {
+	.block-list-appender.wp-block {
+		position: inherit;
+	}
+	p.placeholder {
+		margin: 1em .5em;
+		color: #555;
+		font-style: italic;
+	}
+}
