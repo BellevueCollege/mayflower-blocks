@@ -7,11 +7,7 @@ variables:
 pool:
   vmImage: "ubuntu-latest"
 steps:
-- task: NodeTool@0
-  displayName: 'Use Node 14'
-  inputs:
-    versionSpec: 14.x
-- task: replacetokens@3
+- task: qetza.replacetokens.replacetokens-task.replacetokens@3
   displayName: 'Replace tokens in **/plugin.php'
   inputs:
     targetFiles: '**/plugin.php'
@@ -25,14 +21,11 @@ steps:
     command: custom
     verbose: false
     customCommand: 'run build'
-- task: DeleteFiles@1
-  displayName: 'Delete NPM Stuff'
+- task: Npm@1
   inputs:
-    Contents: |
-     node_modules
-     package*
-     gulpfile*
-     readme*
+    command: custom
+    verbose: false
+    customCommand: 'install --omit=dev'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: mayflower-blocks'
   inputs:
