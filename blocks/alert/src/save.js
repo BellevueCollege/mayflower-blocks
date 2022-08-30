@@ -12,8 +12,11 @@ export default function save( props ) {
 		alertClass,
 		activeAlert,
 	} } = props;
+	const blockProps = useBlockProps.save({
+		className: `alert alert-${ alertClass }`
+	});
 	return (
-		<div className={ `alert alert-${ alertClass }` }>
+		<div { ...blockProps } >
 			{ alertText !== null && alertText !== '' && alertText !== undefined ?
 				<RichText.Content
 					tagName="div"
