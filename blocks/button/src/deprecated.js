@@ -26,6 +26,10 @@ const deprecated = [
 			buttonAlign: {
 				type: 'string',
 			},
+			buttonDisplay: {
+				type: 'string',
+				default: 'inline',
+			},
 			buttonBlock: {
 				type: 'boolean',
 				default: false,
@@ -37,12 +41,14 @@ const deprecated = [
 		},
 
 		migrate( { buttonText, buttonLink, buttonType, buttonAlign, buttonSize, buttonBlock } ) {
+			const display = buttonBlock ? 'block' : 'inline';
 			return {
 				buttonType: buttonType = 'default' === buttonType ? 'light' : buttonType,
 				buttonSize: buttonSize = 'btn-xs' === buttonType ? 'btn-sm' : buttonSize,
 				buttonText: buttonText,
 				buttonLink: buttonLink,
 				buttonAlign: buttonAlign,
+				buttonDisplay: display,
 				buttonBlock: buttonBlock,
 			};
 		},
@@ -79,7 +85,11 @@ const deprecated = [
 			},
 			buttonType: {
 				type: 'string',
-				default: 'default',
+				default: 'primary',
+			},
+			activeButtonType: {
+				type: 'string',
+				default: 'primary',
 			},
 			buttonAlign: {
 				type: 'string',
@@ -93,26 +103,23 @@ const deprecated = [
 				default: '',
 			},
 		},
-		save: function ( props ) {
-			const { attributes: {
-				buttonText,
-				buttonLink,
-				buttonType,
-				activeButtonType,
-				buttonAlign,
-				buttonBlock,
-				buttonSize
-			} } = props;
+		migrate( attributes ) {
+			const display = attributes.buttonBlock ? 'block' : 'inline';
+			return {
+				buttonDisplay: display,
+				...attributes
+			};
+		},
+		save: function( { attributes } ) {
 			return (
 				<RichText.Content
 					tagName="a"
-					className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
-					href={ buttonLink }
-					value={ buttonText }
+					className={ `btn btn-${ attributes.buttonType } ${ attributes.buttonBlock ? 'btn-block' : '' } ${ attributes.buttonSize }` }
+					href={ attributes.buttonLink }
+					value={ attributes.buttonText }
 				/>
 			);
-		}
-
+		},
 	}
 ]
 export default deprecated;

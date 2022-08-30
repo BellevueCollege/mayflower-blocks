@@ -10,6 +10,7 @@ import {
 	ToolbarButton,
 	Popover,
 	ToolbarDropdownMenu,
+	ToolbarGroup,
 	SVG,
 	Path,
 	G,
@@ -45,6 +46,7 @@ export default function Edit( props ) {
 		buttonType,
 		activeButtonType,
 		buttonAlign,
+		buttonDisplay,
 		buttonBlock,
 		buttonSize
 	}, setAttributes, isSelected } = props;
@@ -120,26 +122,50 @@ export default function Edit( props ) {
 				] } />
 		);
 	}
+
 	return (
 		<>
 			<BlockControls>
-				<ToolbarBootstrapColorSelector
-					values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
-					active={ buttonType }
-					onClick={ ( value ) => setAttributes( {
-						buttonType: value,
-						activeButtonType: value
-					} ) }
-				/>
-				<ButtonSizeControl />
+				<ToolbarGroup>
+					<ToolbarBootstrapColorSelector
+						values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
+						active={ buttonType }
+						onClick={ ( value ) => setAttributes( {
+							buttonType: value,
+							activeButtonType: value
+						} ) }
+					/>
+					<ButtonSizeControl />
 
-				<ToolbarButton
-					name="full-width"
-					icon="align-wide"
-					title={ __( 'Display Full-Width' ) }
-					isActive={ buttonBlock ?? false }
-					onClick={ () => setAttributes( { buttonBlock: ! buttonBlock } ) }
-				/>
+					<ToolbarButton
+						name="full-width"
+						icon="align-wide"
+						title={ __( 'Display Full-Width' ) }
+						isActive={ buttonBlock ?? false }
+						onClick={ () => {
+							if ( ! buttonBlock ) {
+								setAttributes( { buttonDisplay: 'block' } )
+							}
+							setAttributes( { buttonBlock: ! buttonBlock } )
+						} }
+					/>
+					{ ! buttonBlock && (
+						<ToolbarButton
+							name="inline"
+							icon="text"
+							title={ __( 'Display Inline' ) }
+							isActive={ buttonDisplay === 'inline' }
+							onClick={ () => {
+								if ( buttonDisplay === 'inline' ) {
+									setAttributes( { buttonDisplay: 'block' } );
+								} else {
+									setAttributes( { buttonDisplay: 'inline' } );
+								}
+							} }
+						/>
+					) }
+				</ToolbarGroup>
+				<ToolbarGroup>
 
 				{ ! isURLSet && (
 					<ToolbarButton
@@ -160,6 +186,8 @@ export default function Edit( props ) {
 						isActive={ true }
 					/>
 				) }
+				</ToolbarGroup>
+
 			</BlockControls>
 			{ isSelected && ( isEditingURL || isURLSet ) && (
 				<Popover
@@ -242,7 +270,7 @@ export default function Edit( props ) {
 					ref={ richTextRef }
 					tagName="span"
 					className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
-					allowedFormats={ [ 'bold', 'italic' ] }
+					allowedFormats={ [ 'core/bold', 'core/italic' ] }
 					value={ buttonText }
 					onChange={ ( buttonText ) => setAttributes( { buttonText } ) }
 				/>
@@ -250,7 +278,6 @@ export default function Edit( props ) {
 					<p><strong>Warning! This button has no link!</strong></p>
 				) }
 			</div>
-
 		</>
 	);
 

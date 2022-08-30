@@ -4,8 +4,8 @@
 	"name": "mayflower-blocks/button",
 	"version": "1.0.0",
 	"title": "Button",
-	"category": "common",
-	"icon": "slides",
+	"category": "bootstrap-blocks",
+	"icon": "button",
 	"description": "A button available in a variety of styles. When clicked, opens the configured link.",
 	"supports": {
 		"html": true
@@ -44,6 +44,10 @@
 		},
 		"buttonAlign" : {
 			"type": "string"
+		},
+		"buttonDisplay" : {
+			"type": "string",
+			"default": "block"
 		},
 		"buttonBlock" : {
 			"type": "boolean",

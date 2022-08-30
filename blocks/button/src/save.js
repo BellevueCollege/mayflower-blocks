@@ -22,19 +22,24 @@ export default function save( props ) {
 		buttonType,
 		activeButtonType,
 		buttonAlign,
+		buttonDisplay,
 		buttonBlock,
 		buttonSize
 	} } = props;
+	const blockProps = useBlockProps.save();
 	const disabled = buttonLink === undefined || buttonLink === '' ? true : false;
+	const Tag = buttonDisplay === 'block' ? 'div' : 'span';
 	return (
-		<RichText.Content
-			tagName="a"
-			className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize } ${ disabled ? 'disabled' : '' }` }
-			target= { linkTarget }
-			rel= { rel }
-			href={ buttonLink }
-			value={ buttonText }
-			aria-disabled={ disabled }
-		/>
+		<Tag classNam="wp-block-mayflower-blocks-button">
+			<RichText.Content
+				tagName="a"
+				className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize } ${ disabled ? 'disabled' : '' }` }
+				target= { linkTarget }
+				rel= { rel }
+				href={ buttonLink }
+				value={ buttonText }
+				aria-disabled={ disabled }
+			/>
+		</Tag>
 	);
 }
