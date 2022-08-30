@@ -22,6 +22,8 @@ npm start
 npm run build
 ```
 
+You can also `cd` into a submodule (e.g. `cd blocks/alert`) and run the same commands for a specific block.
+
 ## Block Structure
 
 ### Registration
@@ -35,6 +37,11 @@ Each block has a `src/` folder that contains the block's source code, and a `bui
 Within the `src/` folder, there is a `block.json` file that contains the block's metadata, and defines its attributes. There is also an `index.js` file that contains the block's implementation. This draws in the other .js files in the `src/` folder.
 
 There are also two Sass files: `style.scss` and `editor.scss`. These are the styles for the block in the front-end and the editor, respectively.
+
+Any PHP files are included in the Source file.
+
+## CI/CD Status:
+**Dev:** [![Build Status](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_apis/build/status/Mayflower%20Blocks?branchName=dev)](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_build/latest?definitionId=31&branchName=dev)
 
 
 
