@@ -5,7 +5,7 @@
  * Description: Companion Gutenberg Blocks for BC Mayflower Theme
  * Author: BC Integration (Thanks to mrahmadawais, maedahbatool)
  * Author URI: https://www.bellevuecollege.edu
- * Version: 3.0.0-dev2 #{versionStamp}#
+ * Version: 3.0.0-dev3 #{versionStamp}#
  * License: GPL2+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  *
@@ -26,7 +26,7 @@ if ( 'Mayflower G4' === $theme->name || 'Mayflower G4' === $theme->parent_theme 
 	 * Block Initializer.
 	 */
 	add_action( 'init', 'mg4_blocks_init' );
-	add_filter( 'block_categories_all', 'mayflower_block_categories', 10, 2 );
+	add_filter( 'block_categories_all', 'mbg4_block_categories', 10, 2 );
 }
 
 /**
@@ -115,7 +115,7 @@ function mbg4_register_block( $block_name, $dynamic = false ) {
  * Create a 'Bootstrap Blocks' category
  */
 
-function mayflower_block_categories( $categories, $post ) {
+function mbg4_block_categories( $categories, $post ) {
 	return array_merge(
 		$categories,
 		array(
