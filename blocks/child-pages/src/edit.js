@@ -8,7 +8,9 @@ import { __ } from '@wordpress/i18n';
 import {
 	RadioControl,
 	PanelBody,
-	PanelRow
+	PanelRow,
+	Disabled,
+	Spinner
 } from '@wordpress/components';
 
 import {
@@ -38,8 +40,15 @@ export default function Edit( props ) {
 		 * Get Child Pages
 		 */
 
-	 function ChildPagesBase( { pages } ) {
+	function ChildPagesBase( { pages } ) {
 		if ( Array.isArray( pages ) ) {
+			if ( pages.length === 0 ) {
+				return (
+					<div className="no-child-pages">
+						<p><strong>No child pages found.</strong> This block displays any children of the current page. You can set a page as a child of the current page in the <a href="https://wordpress.org/support/article/settings-sidebar/#page-attributes" target="_blank">Page Attributes</a> of that child page.</p>
+					</div>
+				);
+			}
 			// sort by menu_order or title if there is no menu_order
 			const childPagesMenuSort = pages.sort( ( a, b ) => {
 				//if no 2 values are the same, return menu_order
@@ -104,19 +113,19 @@ export default function Edit( props ) {
 					)
 					)
 				);
-				return ( <section className="nav-page"> { grid } </section> );
+				return ( <Disabled><section className="nav-page"> { grid } </section></Disabled> );
 			}
 
 			if ( template === 'list' ) {
-				return ( <section className="content-padding nav-page nav-page-list"> { showTemplate } </section> );
+				return ( <Disabled><section className="content-padding nav-page nav-page-list"> { showTemplate } </section></Disabled> );
 			}
 
 			if ( template === 'fluid-grid' ) {
-				return ( <FluidGridMasonry pages={ showTemplate } /> );
+				return ( <Disabled><FluidGridMasonry pages={ showTemplate } /></Disabled> );
 			}
 		} else {
 			return (
-				<p>Loading...</p>
+				<p><Spinner /> Loading...</p>
 			);
 		}
 	}

@@ -9,18 +9,8 @@
 
 
 .wp-block-mayflower-blocks-child-pages {
-	pointer-events: none;
 	border: 1px solid #eee;
 	padding: 1rem;
-
-
-	.loading-msg {
-		background: #fff;
-		border: 3px solid #ccc;
-		border-radius: 10px;
-		padding: 1em;
-		text-align: center;
-	}
 
 	/* ####################################### */
 	/* ----- Page template overrides ----- */
@@ -56,11 +46,9 @@
 	.child-pages.fluid-grid {
 		div {
 			padding: 0 1em 1em 1em;
-			border: 1px solid #ccc;
 		}
 
 		div.hasimage {
-			border-top: 1px solid #fff0;
 		}
 
 		div.grid-sizer,
