@@ -93,9 +93,9 @@
 /**
 * Tab Content
 */
-.wp-block-mayflower-blocks-tab-content {
-	margin: .1rem 1rem !important;
-
+.wp-block.wp-block-mayflower-blocks-tab-content {
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
 
 	div.tab-pane {
 		display: none;
@@ -104,4 +104,9 @@
 	div.tab-pane.active {
 		display: block;
 	}
+}
+.wp-block-mayflower-blocks-tab-content-panel {
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+	padding: .5rem 1rem;
 }

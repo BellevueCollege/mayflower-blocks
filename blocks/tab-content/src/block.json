@@ -6,9 +6,11 @@
 	"title": "Tab Content",
 	"category": "bootstrap-blocks",
 	"icon": "slides",
-	"description": "A button available in a variety of styles. When clicked, opens the configured link.",
+	"description": "Content Area- contains a Content Panel for each Tab",
 	"supports": {
-		"html": true
+		"html": false,
+		"inserter": false,
+		"lock": false
 	},
 	"textdomain": "mayflower-blocks",
 	"parent": [

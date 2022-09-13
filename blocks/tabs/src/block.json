@@ -8,7 +8,8 @@
 	"icon": "category",
 	"description": "Organize content with a number of clickable tabs. Don't use too many tabs, as they will wrap on narrow screens!",
 	"supports": {
-		"html": false
+		"html": false,
+		"lock": false
 	},
 	"textdomain": "mayflower-blocks",
 	"attributes": {},
