@@ -38,7 +38,6 @@ import './style.scss';
 
 export default function Edit( props ) {
 	const blockProps = useBlockProps({
-		className: 'row',
 	});
 	const { attributes: {
 
