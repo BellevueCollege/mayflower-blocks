@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Mayflower Blocks (G4)
- * Plugin URI: https://github.com/ahmadawais/create-guten-block/
+ * Plugin URI: https://github.com/bellevuecollege/mayflower-blocks
  * Description: Companion Gutenberg Blocks for BC Mayflower Theme
- * Author: BC Integration (Thanks to mrahmadawais, maedahbatool)
+ * Author: BC Integration (Taija, Angela, Elizabeth)
  * Author URI: https://www.bellevuecollege.edu
- * Version: 3.0.0-dev3 #{versionStamp}#
+ * Version: 3 #{versionStamp}#
  * License: GPL2+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  *
