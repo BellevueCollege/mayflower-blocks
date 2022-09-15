@@ -1,17 +1,16 @@
 {
   "name": "mayflower-blocks",
-  "version": "2.4.2",
+  "version": "3.0.0",
   "private": true,
-  "scripts": {
-    "start": "cgb-scripts start --mode dev",
-    "build": "cgb-scripts build",
-    "eject": "cgb-scripts eject"
-  },
-  "dependencies": {
-    "cgb-scripts": "^1.23.1",
-    "imagesloaded": "^4.1.4",
-    "masonry-layout": "^4.2.2",
-    "node-gyp": "^8.4.1",
-    "npm": "^8.5.1"
+  "workspaces": [
+    "blocks/*"
+  ],
+	"scripts": {
+		"build" : "npx lerna run build",
+		"start" : "npx lerna run start"
+	},
+  "devDependencies": {
+    "lerna": "^5.4.3",
+    "nx": "^14.5.8"
   }
 }

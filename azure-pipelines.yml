@@ -1,0 +1,33 @@
+trigger:
+- trunk
+- dev
+variables:
+- name: versionStamp
+  value: '[Build: $(Build.BuildNumber). Commit: $(Build.SourceVersion)]'
+pool:
+  vmImage: "ubuntu-latest"
+steps:
+- task: qetza.replacetokens.replacetokens-task.replacetokens@3
+  displayName: 'Replace tokens in **/plugin.php'
+  inputs:
+    targetFiles: '**/plugin.php'
+    escapeType: none
+- task: Npm@1
+  inputs:
+    command: 'install'
+- task: Npm@1
+  displayName: 'npm run build'
+  inputs:
+    command: custom
+    verbose: false
+    customCommand: 'run build'
+- task: Npm@1
+  inputs:
+    command: custom
+    verbose: false
+    customCommand: 'install --omit=dev'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: mayflower-blocks'
+  inputs:
+    PathtoPublish: ./
+    ArtifactName: 'mayflower-blocks'

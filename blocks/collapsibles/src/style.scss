@@ -1,0 +1,31 @@
+.wp-block-mayflower-blocks-collapsibles > .card {
+	margin-bottom: 0;
+
+	& > .card-header {
+		padding-left: .5em;
+		padding-right: .5em;
+	}
+	& > .card-header .btn {
+		width: 100%;
+		text-align: left;
+		padding-left: .5em;
+	}
+	& > .card-header .btn:after {
+		font-family: "Font Awesome 6 Free";
+		font-weight: light;
+		content: "\f068";
+		font-style: normal;
+		font-variant: normal;
+		text-rendering: auto;
+		-webkit-font-smoothing: antialiased;
+		float:right;
+
+	}
+	& > .card-header .btn.collapsed:after {
+		/* symbol for "collapsed" panels */
+		content: "\f078";
+	}
+}
+.wp-block-mayflower-blocks-collapsibles .card-body > *:last-child {
+	margin-bottom: 0;
+}

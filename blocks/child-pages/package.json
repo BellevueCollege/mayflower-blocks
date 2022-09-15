@@ -1,0 +1,20 @@
+{
+  "name": "mayflower-blocks--child-pages",
+  "version": "1.0.0",
+  "description": "Child Pages Block",
+  "main": "index.js",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "readme": "grunt readme",
+    "i18n": "grunt i18n"
+  },
+  "author": "Taija Tevia-Clark",
+	"devDependencies": {
+    "@wordpress/scripts": "^22.2.1"
+  },
+	"dependencies": {
+    "masonry-layout": "^4.2.2",
+		"imagesloaded": "^5.0.0"
+  }
+}

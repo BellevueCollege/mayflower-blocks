@@ -1,0 +1,10 @@
+{
+  "name": "mayflower-blocks--shared-elements",
+  "version": "1.0.0",
+  "description": "Common Elements used by multiple Mayflower Blocks",
+  "main": "index.js",
+  "author": "Taija Tevia-Clark",
+	"devDependencies": {
+    "@wordpress/scripts": "^22.2.1"
+  }
+}

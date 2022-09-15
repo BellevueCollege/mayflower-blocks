@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/tablepress",
+	"version": "1.0.0",
+	"title": "TablePress",
+	"category": "common",
+	"icon": "media-spreadsheet",
+	"description": "Insert a Table created in TablePress. Note: This block was created by Bellevue College, and is not officially affiliated with TablePress!",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+			"postId": {
+				"type": "string",
+				"default": "select"
+			},
+			"tableId": {
+				"type": "string"
+			},
+			"select": {
+				"type": "boolean",
+				"default": false
+			}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+  }

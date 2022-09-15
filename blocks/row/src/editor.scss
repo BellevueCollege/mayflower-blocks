@@ -1,0 +1,13 @@
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
+
+.wp-block-mayflower-blocks-row {
+	border: 1px solid #ccc;
+	.column-starter {
+		width: 100%;
+	}
+}

@@ -1,2 +1,50 @@
-# mayflower-blocks
-Plugin to facilitate Gutenberg Editor blocks in BC's Mayflower theme
+# Mayflower Blocks
+
+This plugin contains block editor blocks for the Mayflower G4 Theme. 
+Most of these are implementations of Bootstrap 4 components.
+
+## Project Structure
+Each block is a separate NPM package, found in a top-level folder named after the block.
+
+You can install all NPM packages from the root level with the following command:
+
+```bash
+npm install
+```
+
+This project uses [Lerna](https://lerna.js.org/) to distribute commands to submodules. Run the following commands from the root directory to build or watch all submodules:
+
+```bash
+# Watch for changes:
+npm start
+
+# Build all blocks:
+npm run build
+```
+
+You can also `cd` into a submodule (e.g. `cd blocks/alert`) and run the same commands for a specific block.
+
+## Block Structure
+
+### Registration
+Each block is registered in the main `plugin.php` file. You can register a new block by adding the folder name to the array of registered blocks.
+
+### Block Structure
+Each block has a `package.json` file that contains the block's metadata and required packages.
+
+Each block has a `src/` folder that contains the block's source code, and a `build/` folder that contains the block's build artifacts (not committed to the repository).
+
+Within the `src/` folder, there is a `block.json` file that contains the block's metadata, and defines its attributes. There is also an `index.js` file that contains the block's implementation. This draws in the other .js files in the `src/` folder.
+
+There are also two Sass files: `style.scss` and `editor.scss`. These are the styles for the block in the front-end and the editor, respectively.
+
+Any PHP files are included in the Source file.
+
+## CI/CD Status:
+**Dev:** [![Build Status](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_apis/build/status/Mayflower%20Blocks?branchName=dev)](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_build/latest?definitionId=31&branchName=dev)
+**Trunk:** [![Build Status](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_apis/build/status/Mayflower%20Blocks?branchName=trunk)](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_build/latest?definitionId=31&branchName=trunk)
+
+## Suggested Commit Style
+[![emoji-log](https://cdn.rawgit.com/ahmadawais/stuff/ca97874/emoji-log/flat.svg)](https://github.com/ahmadawais/Emoji-Log/)
+
+

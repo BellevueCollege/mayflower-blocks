@@ -1,0 +1,65 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/row",
+	"version": "1.0.0",
+	"title": "Row",
+	"category": "bootstrap-blocks",
+	"icon": "schedule",
+	"description": "Rows contain Columns, and allow for creating responsive layouts.",
+	"keywords": [
+		"row",
+		"grid",
+		"column",
+		"columns"
+	],
+	"supports": {
+		"html": false
+	},
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+		"childIsEditing" : {
+			"type": "boolean",
+			"default": false
+		},
+		"childColumns" : {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"example": {
+		"innerBlocks":[
+			{
+				"name": "mayflower-blocks/column",
+				"attributes": {
+					"enableXs": true
+				},
+				"innerBlocks": [
+					{
+						"name": "core/paragraph",
+						"attributes": {
+							"content": "This is a column."
+						}
+					}
+				]
+			},
+			{
+				"name": "mayflower-blocks/column",
+				"attributes": {
+					"enableXs": true
+				},
+				"innerBlocks": [
+					{
+						"name": "core/paragraph",
+						"attributes": {
+							"content": "This is another column."
+						}
+					}
+				]
+			}
+		]
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/tabs",
+	"version": "1.0.0",
+	"title": "Tabs",
+	"category": "bootstrap-blocks",
+	"icon": "category",
+	"description": "Organize content with a number of clickable tabs. Don't use too many tabs, as they will wrap on narrow screens!",
+	"supports": {
+		"html": false,
+		"lock": false
+	},
+	"textdomain": "mayflower-blocks",
+	"attributes": {},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

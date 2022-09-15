@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/tab-list",
+	"version": "1.0.0",
+	"title": "Tab List",
+	"category": "bootstrap-blocks",
+	"icon": "slides",
+	"supports": {
+		"html": false,
+		"inserter": false,
+		"lock": false
+	},
+	"parent": [
+		"mayflower-blocks/tabs"
+	],
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

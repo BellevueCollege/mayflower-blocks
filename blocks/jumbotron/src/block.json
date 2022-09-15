@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/jumbotron",
+	"version": "1.0.0",
+	"title": "Jumbotron (deprecated)",
+	"category": "bootstrap-blocks",
+	"icon": "slides",
+	"description": "A button available in a variety of styles. When clicked, opens the configured link.",
+	"supports": {
+		"html": true,
+		"inserter": false
+	},
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+		"jumbotronText" : {
+			"type": "string"
+		},
+		"jumbotronTitle" : {
+			"type": "string"
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}
