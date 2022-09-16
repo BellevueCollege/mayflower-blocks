@@ -248,7 +248,7 @@ export default function Edit( props ) {
 							{ ( ! autoXs && enableXs ) && (
 								<PanelRow>
 									<RangeControl
-										label="Columns"
+										label="Column Width (1-12 Units)"
 										value={ columnsXs }
 										onChange={ ( value ) => setAttributes( { columnsXs: value } ) }
 										min={ 1 }
@@ -278,7 +278,7 @@ export default function Edit( props ) {
 							{ ( ! autoSm && enableSm ) && (
 								<PanelRow>
 									<RangeControl
-										label="Columns"
+										label="Column Width (1-12 Units)"
 										value={ columnsSm }
 										onChange={ ( value ) => setAttributes( { columnsSm: value } ) }
 										min={ 1 }
@@ -308,7 +308,7 @@ export default function Edit( props ) {
 							{ ( ! autoMd && enableMd ) && (
 								<PanelRow>
 									<RangeControl
-										label="Columns"
+										label="Column Width (1-12 Units)"
 										value={ columnsMd }
 										onChange={ ( value ) => setAttributes( { columnsMd: value } ) }
 										min={ 1 }
@@ -338,7 +338,7 @@ export default function Edit( props ) {
 							{ ( ! autoLg && enableLg ) && (
 								<PanelRow>
 									<RangeControl
-										label="Columns"
+										label="Column Width (1-12 Units)"
 										value={ columnsLg }
 										onChange={ ( value ) => setAttributes( { columnsLg: value } ) }
 										min={ 1 }
