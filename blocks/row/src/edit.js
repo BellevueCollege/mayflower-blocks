@@ -5,7 +5,7 @@
 import { __ } from '@wordpress/i18n';
 
 
-import { useEffect, useState, useRef } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 
 import {
 	ToolbarButton,

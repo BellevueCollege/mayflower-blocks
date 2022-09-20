@@ -6,8 +6,27 @@
  */
 
 .wp-block-mayflower-blocks-row {
-	border: 1px solid #ccc;
-	.column-starter {
-		width: 100%;
+	border-radius: 5px;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	&.wp-block {
+		margin-top: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	.row-info {
+		border-radius: 3px 3px 0 0;
+		border-bottom: 1px solid #ddd;
+		margin-bottom: .5rem;
+		p {
+			margin: 0;
+			padding: 0;
+		}
+	}
+	& > .block-editor-inner-blocks > .block-editor-block-list__layout {
+		& > .components-card {
+			width: 100%;
+		}
+		display: flex;
+		flex-wrap: wrap;
 	}
 }
