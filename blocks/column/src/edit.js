@@ -67,6 +67,7 @@ export default function Edit( props ) {
 	 * Delete Block
 	 */
 	const [ deleteModalOpen, setDeleteModalOpen ] = useState( false );
+
 	const DeleteModal = ( ) => {
 		const cancelDelete = () => setDeleteModalOpen( false );
 		const confirmDelete = () => {
@@ -253,6 +254,7 @@ export default function Edit( props ) {
 			<BlockControls>
 				<ColumnToolBarControl />
 			</BlockControls>
+			<DeleteModal />
 			<div { ...blockProps }>
 				<InnerBlocks
 					renderAppender={
