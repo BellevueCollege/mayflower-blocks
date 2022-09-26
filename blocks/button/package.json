@@ -1,6 +1,6 @@
 {
   "name": "mayflower-blocks--button",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Button Block",
   "main": "index.js",
   "scripts": {
