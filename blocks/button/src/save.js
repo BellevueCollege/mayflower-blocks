@@ -30,7 +30,7 @@ export default function save( props ) {
 	const disabled = buttonLink === undefined || buttonLink === '' ? true : false;
 	const Tag = buttonDisplay === 'block' ? 'div' : 'span';
 	return (
-		<Tag classNam="wp-block-mayflower-blocks-button">
+		<Tag { ...blockProps }>
 			<RichText.Content
 				tagName="a"
 				className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize } ${ disabled ? 'disabled' : '' }` }
