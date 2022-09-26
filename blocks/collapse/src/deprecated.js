@@ -5,6 +5,10 @@ import {
 	InnerBlocks,
 } from '@wordpress/block-editor';
 
+import React from 'react';
+import { select } from '@wordpress/data';
+import {omit} from 'lodash';
+
 import { __ } from '@wordpress/i18n';
 
 const deprecated = [
@@ -119,6 +123,162 @@ const deprecated = [
 			};
 		},
 	},
+	{
+		attributes: {
+			collapseText: {
+				type: 'string',
+			},
+			collapseHeadingText: {
+				type: 'string',
+				source: 'html',
+				selector: 'button',
+			},
+			collapseClass: {
+				type: 'string',
+				default: 'default',
+			},
+			collapseLightBg: {
+				type: 'boolean',
+				default: false,
+			},
+			expanded: {
+				type: 'boolean',
+				default: false,
+			},
+			currentBlockClientId: {
+				type: 'string',
+				default: '',
+			},
+			parentBlockClientId: {
+				type: 'string',
+				default: '',
+			},
+			headingTag: {
+				type: 'string',
+				default: 'h3',
+			},
+			/* Deprecated Atts */
+			collapseIn: {
+				type: 'string',
+				default: '',
+			},
+
+		},
+		save: function( { attributes } ) {
+			const HeadingTag = attributes.headingTag;
+			return (
+				<React.Fragment>
+					<div className={ 'card bg-' + attributes.collapseClass + (
+						attributes.collapseClass !== 'default' &&
+						attributes.collapseClass !== 'light' &&
+						attributes.collapseClass !== 'info' ? ' text-white' : '' ) }>
+						<div className="card-header" id={ `heading_${ attributes.currentBlockClientId }` }>
+							<HeadingTag className="mb-0">
+								<button className={ `btn${ ( ! attributes.expanded ? ' collapsed' : '' ) }${ (
+									attributes.collapseClass !== 'default' &&
+									attributes.collapseClass !== 'light' &&
+									attributes.collapseClass !== 'info' ? ' text-white' : '' ) }` } type="button" data-toggle="collapse" data-target={ `#collapse_${ attributes.currentBlockClientId }` } aria-expanded={ attributes.expanded } aria-controls={ `collapse_${ attributes.currentBlockClientId }` }>
+									<RichText.Content
+										value={ attributes.collapseHeadingText }
+									/>
+								</button>
+							</HeadingTag>
+						</div>
+
+						<div id={ `collapse_${ attributes.currentBlockClientId }` } className={ `collapse${ ( attributes.expanded ? ' show' : '' ) }` } aria-labelledby={ `heading_${ attributes.currentBlockClientId }` } data-parent={ `#accordion_${ attributes.parentBlockClientId }` }>
+							<div className={ 'card-body' + ( attributes.collapseLightBg === true ? ' bg-light text-dark' : '' ) }>
+								{ attributes.collapseText !== null && attributes.collapseText !== '' && attributes.collapseText !== undefined ?
+									<RichText.Content
+										tagName="div"
+										value={ attributes.collapseText }
+									/> : '' }
+								<InnerBlocks.Content />
+							</div>
+						</div>
+
+					</div>
+				</React.Fragment>
+			);
+		},
+	},
+	{
+		attributes: {
+			collapseText: {
+				type: 'string',
+			},
+			collapseHeadingText: {
+				type: 'string',
+				source: 'html',
+				selector: 'button',
+			},
+			collapseClass: {
+				type: 'string',
+				default: 'default',
+			},
+			collapseLightBg: {
+				type: 'boolean',
+				default: false,
+			},
+			expanded: {
+				type: 'boolean',
+				default: false,
+			},
+			currentBlockClientId: {
+				type: 'string',
+				default: '',
+			},
+			parentBlockClientId: {
+				type: 'string',
+				default: '',
+			},
+			headingTag: {
+				type: 'string',
+				default: 'h3',
+			},
+			/* Deprecated Atts */
+			collapseIn: {
+				type: 'string',
+				default: '',
+			},
+
+		},
+		save: function( { attributes } ) {
+			const HeadingTag = attributes.headingTag;
+			return (
+				<React.Fragment>
+					<div className={ 'card bg-' + attributes.collapseClass + (
+						attributes.collapseClass !== 'default' &&
+						attributes.collapseClass !== 'light' &&
+						attributes.collapseClass !== 'info' ? ' text-white' : '' ) }>
+						<div className="card-header" id={ `heading_${ attributes.currentBlockClientId }` }>
+							<HeadingTag className="mb-0">
+								<button className={ `btn${ ( ! attributes.expanded ? ' collapsed' : '' ) }${ (
+									attributes.collapseClass !== 'default' &&
+									attributes.collapseClass !== 'light' &&
+									attributes.collapseClass !== 'info' ? ' text-white' : '' ) }` } type="button" data-toggle="collapse" data-target={ `#collapse_${ attributes.currentBlockClientId }` }>
+									<RichText.Content
+										value={ attributes.collapseHeadingText }
+									/>
+								</button>
+							</HeadingTag>
+						</div>
+
+						<div id={ `collapse_${ attributes.currentBlockClientId }` } className={ `collapse${ ( attributes.expanded ? ' show' : '' ) }` } aria-labelledby={ `heading_${ attributes.currentBlockClientId }` } data-parent={ `#accordion_${ attributes.parentBlockClientId }` }>
+							<div className={ 'card-body' + ( attributes.collapseLightBg === true ? ' bg-light text-dark' : '' ) }>
+								{ attributes.collapseText !== null && attributes.collapseText !== '' && attributes.collapseText !== undefined ?
+									<RichText.Content
+										tagName="div"
+										value={ attributes.collapseText }
+									/> : '' }
+								<InnerBlocks.Content />
+							</div>
+						</div>
+
+					</div>
+				</React.Fragment>
+			);
+		},
+	}
 
 ]
 export default deprecated;

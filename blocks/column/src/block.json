@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2,
 	"name": "mayflower-blocks/column",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"title": "Column",
 	"category": "bootstrap-blocks",
 	"icon": "columns",

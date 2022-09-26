@@ -120,6 +120,58 @@ const deprecated = [
 				/>
 			);
 		},
+	},
+	{
+		attributes: {
+			buttonText: {
+				type: 'string',
+				selector: 'a',
+			},
+			buttonLink: {
+				type: 'string',
+				source: 'attribute',
+				selector: 'a',
+				attribute: 'href',
+			},
+			buttonType: {
+				type: 'string',
+				default: 'primary',
+			},
+			activeButtonType: {
+				type: 'string',
+				default: 'primary',
+			},
+			buttonAlign: {
+				type: 'string',
+			},
+			buttonBlock: {
+				type: 'boolean',
+				default: false,
+			},
+			buttonSize: {
+				type: 'string',
+				default: '',
+			},
+		},
+		migrate( attributes ) {
+			const display = attributes.buttonBlock ? 'block' : 'inline';
+			return {
+				buttonDisplay: display,
+				...attributes
+			};
+		},
+		save: function( { attributes } ) {
+			return (
+				<span>
+					<RichText.Content
+						tagName="a"
+						className={ `btn btn-${ attributes.buttonType } ${ attributes.buttonBlock ? 'btn-block' : '' } ${ attributes.buttonSize }` }
+						href={ attributes.buttonLink }
+						value={ attributes.buttonText }
+					/>
+				</span>
+			);
+		},
 	}
 ]
 export default deprecated;
