@@ -1,4 +1,5 @@
-.wp-block-mayflower-blocks-collapsibles > .card {
+.wp-block-mayflower-blocks-collapsibles > .card
+.wp-block-mayflower-blocks-collapsibles > .accordion-item {
 	margin-bottom: 0;
 
 	& > .card-header {
@@ -10,7 +11,7 @@
 		text-align: left;
 		padding-left: .5em;
 	}
-	& > .card-header .btn:after {
+	& > .card-header .btn::-webkit-textfield-decoration-container {
 		font-family: "Font Awesome 6 Free";
 		font-weight: light;
 		content: "\f068";

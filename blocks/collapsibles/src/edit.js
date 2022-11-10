@@ -55,8 +55,19 @@ export default function Edit( props ) {
 		return select( 'core' ).getCurrentTheme();
 	}, [] );
 
+	// Set bootstrap version flag
+	const isBootstrap5 = ( t ) => {
+		if ( theme && 'Mayflower G4' !== theme.name.rendered ) {
+			return true;
+		}
+		return false;
+	}
+
 	// Only display the block if the theme has been detected.
 	if ( theme ) {
+
+		setAttributes( { isBootstrap5: isBootstrap5( theme ) } );
+
 		return (
 			<>
 				<div {...blockProps}>
