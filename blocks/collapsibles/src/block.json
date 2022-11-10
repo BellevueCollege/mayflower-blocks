@@ -13,9 +13,17 @@
 	"textdomain": "mayflower-blocks",
 	"attributes": {
 		"currentBlockClientId": {
-		"type": "string",
-		"default": ""
+			"type": "string",
+			"default": ""
+		},
+		"isBootstrap5": {
+			"type": "boolean",
+			"default": false
 		}
+	},
+	"providesContext": {
+		"mayflower-blocks/isBootstrap5": "isBootstrap5",
+		"mayflower-blocks/currentBlockClientId": "currentBlockClientId"
 	},
 	"example": {
 		"innerBlocks":[

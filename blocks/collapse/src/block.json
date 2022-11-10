@@ -16,42 +16,50 @@
 	"textdomain": "mayflower-blocks",
 	"attributes": {
 		"collapseText": {
-		"type": "string"
+			"type": "string"
 		},
-		"collapseHeadingText": {
-		"type": "string",
-		"source": "html",
-		"selector": "button"
+			"collapseHeadingText": {
+			"type": "string",
+			"source": "html",
+			"selector": "button"
 		},
 		"collapseClass": {
-		"type": "string",
-		"default": "default"
+			"type": "string",
+			"default": "default"
 		},
 		"collapseLightBg": {
-		"type": "boolean",
-		"default": false
+			"type": "boolean",
+			"default": false
 		},
 		"expanded": {
-		"type": "boolean",
-		"default": false
+			"type": "boolean",
+			"default": false
 		},
 		"currentBlockClientId": {
-		"type": "string",
-		"default": ""
+			"type": "string",
+			"default": ""
 		},
 		"parentBlockClientId": {
-		"type": "string",
-		"default": ""
+			"type": "string",
+			"default": ""
 		},
 		"headingTag": {
-		"type": "string",
-		"default": "h3"
+			"type": "string",
+			"default": "h3"
 		},
 		"collapseIn": {
-		"type": "string",
-		"default": ""
+			"type": "string",
+			"default": ""
+		},
+		"isBootstrap5": {
+			"type": "boolean",
+			"default": false
 		}
 	},
+	"usesContext": [
+		"mayflower-blocks/isBootstrap5",
+		"mayflower-blocks/currentBlockClientId"
+	],
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css"
