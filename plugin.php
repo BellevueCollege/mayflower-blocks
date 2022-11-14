@@ -21,7 +21,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Only load if Mayflower G4 is active.
  */
 $theme = wp_get_theme(); // gets the current theme!
-if ( 'Mayflower G4' === $theme->name || 'Mayflower G4' === $theme->parent_theme ) {
+if (
+	'Mayflower G4' === $theme->name ||
+	'Mayflower G4' === $theme->parent_theme ||
+	'Mayflower G5' === $theme->name ||
+	'Mayflower G5' === $theme->parent_theme ||
+	'Bellevue 2022' === $theme->name ||
+	'Bellevue 2022' === $theme->parent_theme
+	) {
 	/**
 	 * Block Initializer.
 	 */
