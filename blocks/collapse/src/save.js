@@ -41,11 +41,11 @@ export default function save( props ) {
 
 	// Block Classes for Bootstrap 5 and Non-Bootstrap 5 versions
 	const blockClasses = {
-		'container': isBootstrap5 ? 'accordion-item' : 'card',
-		'heading': isBootstrap5 ? 'accordion-header' : 'card-header',
+		'container': isBootstrap5 ? 'accordion-item' : `card ${ colorClass }`,
+		'heading': isBootstrap5 ? 'accordion-header mb-0' : 'card-header',
 		'headingButton': isBootstrap5 ? `accordion-button ${ colorClass }` : 'btn btn-link',
 		'collapse': isBootstrap5 ? 'accordion-collapse collapse' : 'collapse',
-		'body': ( isBootstrap5 ? 'accordion-body' : 'card-body' ) + ( !collapseLightBg ? ` ${ colorClass }` : '' ),
+		'body': isBootstrap5 ? `accordion-body ${ !collapseLightBg ? colorClass : '' }` : 'card-body' + ( collapseLightBg === true ? ' bg-light text-dark' : '' ),
 	}
 
 	const blockProps = useBlockProps.save({

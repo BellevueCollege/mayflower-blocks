@@ -66,15 +66,15 @@ export default function Edit( props ) {
 
 	// Block Classes for Bootstrap 5 and Non-Bootstrap 5 versions
 	const blockClasses = {
-		'container': isBootstrap5 ? 'accordion-item' : 'card',
+		'container': isBootstrap5 ? 'accordion-item' : `card ${ colorClass }`,
 		'heading': isBootstrap5 ? 'accordion-header mb-0' : 'card-header',
 		'headingButton': isBootstrap5 ? `accordion-button ${ colorClass }` : 'btn btn-link',
 		'collapse': isBootstrap5 ? 'accordion-collapse collapse' : 'collapse',
-		'body': isBootstrap5 ? `accordion-body ${ !collapseLightBg ? colorClass : '' }` : 'card-body',
+		'body': isBootstrap5 ? `accordion-body ${ !collapseLightBg ? colorClass : '' }` : 'card-body' + ( collapseLightBg === true ? ' bg-light text-dark' : '' ),
 	}
 
 	const blockProps = useBlockProps({
-		className: blockClasses.container
+		className: `${ blockClasses.container }`,
 	});
 
 	const HeadingTag = headingTag;
