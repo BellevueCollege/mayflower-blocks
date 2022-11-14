@@ -12,6 +12,93 @@ import {omit} from 'lodash';
 import { __ } from '@wordpress/i18n';
 
 const deprecated = [
+
+	{
+		attributes: {
+			collapseText: {
+				type: 'string',
+			},
+			collapseHeadingText: {
+				type: 'string',
+			},
+			collapseClass: {
+				type: 'string',
+				default: 'default',
+			},
+			collapseLightBg: {
+				type: 'boolean',
+				default: false,
+			},
+			expanded: {
+				type: 'boolean',
+				default: false,
+			},
+			currentBlockClientId: {
+				type: 'string',
+				default: '',
+			},
+			parentBlockClientId: {
+				type: 'string',
+				default: '',
+			},
+			headingTag: {
+				type: 'string',
+				default: 'h3',
+			},
+			collapseIn: {
+				type: 'string',
+				default: '',
+			},
+
+
+		},
+		save: function( props ) {
+			const { attributes: {
+				collapseHeadingText,
+				collapseText,
+				collapseClass,
+				currentBlockClientId,
+				expanded,
+				parentBlockClientId,
+				collapseLightBg,
+				headingTag,
+			} } = props;
+			const HeadingTag = headingTag;
+			return (
+				<>
+					<div className={ 'card bg-' + collapseClass + (
+						collapseClass !== 'default' &&
+						collapseClass !== 'light' &&
+						collapseClass !== 'info' ? ' text-white' : '' ) }>
+						<div className="card-header" id={ `heading_${ currentBlockClientId }` }>
+							<HeadingTag className="mb-0">
+								<button className={ `btn${ ( ! expanded ? ' collapsed' : '' ) }${ (
+									collapseClass !== 'default' &&
+									collapseClass !== 'light' &&
+									collapseClass !== 'info' ? ' text-white' : '' ) }` } type="button" data-toggle="collapse" data-target={ `#collapse_${ currentBlockClientId }` } aria-expanded={ expanded } aria-controls={ `collapse_${ currentBlockClientId }` }>
+									<RichText.Content
+										value={ collapseHeadingText }
+									/>
+								</button>
+							</HeadingTag>
+						</div>
+
+						<div id={ `collapse_${ currentBlockClientId }` } className={ `collapse${ ( expanded ? ' show' : '' ) }` } aria-labelledby={ `heading_${ currentBlockClientId }` } data-parent={ `#accordion_${ parentBlockClientId ? parentBlockClientId : 'undefined'}` }>
+							<div className={ 'card-body' + ( collapseLightBg === true ? ' bg-light text-dark' : '' ) }>
+								{ collapseText !== null && collapseText !== '' && collapseText !== undefined ?
+									<RichText.Content
+										tagName="div"
+										value={ collapseText }
+									/> : '' }
+								<InnerBlocks.Content />
+							</div>
+						</div>
+
+					</div>
+				</>
+			);
+		}
+	},
 	{
 		attributes: {
 			collapseText: {

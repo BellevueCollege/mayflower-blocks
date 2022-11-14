@@ -3,7 +3,7 @@
 	"apiVersion": 2,
 	"name": "mayflower-blocks/collapsibles",
 	"version": "1.0.0",
-	"title": "Collapsibles (Accordion)",
+	"title": "Accordion (Collapsibles)",
 	"category": "bootstrap-blocks",
 	"icon": "editor-contract",
 	"description": "Create accordion-style collapsing modules in a variety of colors.",
@@ -13,9 +13,17 @@
 	"textdomain": "mayflower-blocks",
 	"attributes": {
 		"currentBlockClientId": {
-		"type": "string",
-		"default": ""
+			"type": "string",
+			"default": ""
+		},
+		"isBootstrap5": {
+			"type": "boolean",
+			"default": false
 		}
+	},
+	"providesContext": {
+		"mayflower-blocks/isBootstrap5": "isBootstrap5",
+		"mayflower-blocks/currentBlockClientId": "currentBlockClientId"
 	},
 	"example": {
 		"innerBlocks":[

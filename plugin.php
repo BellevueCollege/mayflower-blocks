@@ -20,8 +20,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Only load if Mayflower G4 is active.
  */
-$theme = wp_get_theme(); // gets the current theme
-if ( 'Mayflower G4' === $theme->name || 'Mayflower G4' === $theme->parent_theme ) {
+$theme = wp_get_theme(); // gets the current theme!
+if (
+	'Mayflower G4' === $theme->name ||
+	'Mayflower G4' === $theme->parent_theme ||
+	'Mayflower G5' === $theme->name ||
+	'Mayflower G5' === $theme->parent_theme ||
+	'Bellevue 2022' === $theme->name ||
+	'Bellevue 2022' === $theme->parent_theme
+	) {
 	/**
 	 * Block Initializer.
 	 */
@@ -33,6 +40,8 @@ if ( 'Mayflower G4' === $theme->name || 'Mayflower G4' === $theme->parent_theme 
  * Load the blocks!
  *
  * Note- all blocks must be registered here.
+ *
+ * @return void
  */
 function mg4_blocks_init() {
 	/** List of blocks - should match folder names */
@@ -49,23 +58,24 @@ function mg4_blocks_init() {
 	mbg4_register_block( 'lead' );
 	mbg4_register_block( 'well' );
 
-	//Multi-Block Structures
-	// Blocks for Row/Columns
+	// Multi-Block Structures
+	// Blocks for Row/Columns.
 	mbg4_register_block( 'row' );
 	mbg4_register_block( 'column' );
 
- 	// All the blocks for the Tab block
+	// All the blocks for the Tab block.
 	mbg4_register_block( 'tab-content-panel' );
 	mbg4_register_block( 'tab-content' );
 	mbg4_register_block( 'tab-list-tab' );
 	mbg4_register_block( 'tab-list' );
 	mbg4_register_block( 'tabs' );
 
-	// Blocks for the Collapse block
+	// Blocks for the Collapse block.
 	mbg4_register_block( 'collapse' );
 	mbg4_register_block( 'collapsibles' );
 
-	// Specialized Blocks
+	// Specialized Blocks.
+
 	/**
 	 * Register Staff List block if Mayflower is active and Staff List is enabled.
 	 */
@@ -89,8 +99,8 @@ function mg4_blocks_init() {
 /**
  * Register blocks
  *
- * @param string $block_name
- * @peram boolean $dynamic
+ * @param string  $block_name Name of the block.
+ * @param boolean $dynamic Is the block dynamic?
  * @return void
  *
  * Registers static and dynamic blocks
@@ -113,18 +123,20 @@ function mbg4_register_block( $block_name, $dynamic = false ) {
 
 /**
  * Create a 'Bootstrap Blocks' category
+ *
+ * @param array  $categories Array of categories.
+ * @param object $post Post object.
+ * @return string
  */
-
 function mbg4_block_categories( $categories, $post ) {
 	return array_merge(
 		$categories,
 		array(
 			array(
-				'slug' => 'bootstrap-blocks',
+				'slug'  => 'bootstrap-blocks',
 				'title' => __( 'Bootstrap Blocks', 'bootstrap-blocks' ),
 				'icon'  => 'editor-bold',
 			),
 		)
 	);
 }
-
