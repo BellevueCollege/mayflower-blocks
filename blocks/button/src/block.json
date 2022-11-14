@@ -56,6 +56,10 @@
 		"buttonSize" : {
 			"type": "string",
 			"default": ""
+		},
+		"isBootstrap5": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"example": {
