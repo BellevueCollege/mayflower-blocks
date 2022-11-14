@@ -4,35 +4,31 @@
 
 import { __ } from '@wordpress/i18n';
 
-import { useSelect } from '@wordpress/data';
+import { useSelect, select, dispatch } from '@wordpress/data';
 
-import { useEffect, useState, useRef } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 
 import {
-	TextControl,
-	SelectControl,
-	ToggleControl,
-	ToolbarButton,
-	Popover,
-	ToolbarDropdownMenu,
-	SVG,
-	Path,
-	G,
-	PanelBody,
-	PanelRow,
 	Spinner
 } from '@wordpress/components';
 
 import {
 	useBlockProps,
-	RichText,
 	BlockControls,
-	InspectorControls,
-	AlignmentToolbar,
 	InnerBlocks,
-	__experimentalLinkControl as LinkControl,
-	__experimentalGetElementClassName,
+
 } from '@wordpress/block-editor';
+
+import {
+	ToolbarButton,
+	ToolbarGroup,
+	ToolbarItem,
+} from '@wordpress/components';
+
+import {
+	ToolbarBootstrapColorSelector,
+	ToolbarBootstrapHeadingLevelSelector,
+} from 'shared-elements/toolbar';
 
 
 import './editor.scss';
@@ -49,6 +45,24 @@ export default function Edit( props ) {
 		id: `accordion_${ clientId }`
 
 	});
+
+	const getAttributeFromFirstChild = ( attribute, fallback ) => {
+		const firstChild = select( 'core/block-editor' ).getBlock( clientId ).innerBlocks[0];
+		if ( firstChild ) {
+			return firstChild.attributes[ attribute ];
+		}
+		return fallback;
+	}
+
+	const broadcastToChildren = ( attribute, value ) => {
+		const children =  select( 'core/block-editor' ).getBlock( clientId ).innerBlocks;
+		const childIds = children.map( child => child.clientId );
+
+		dispatch( 'core/block-editor' ).updateBlockAttributes( childIds, { [attribute]: value } );
+
+		return null;
+
+	};
 
 
 	const theme = useSelect( ( select ) => {
@@ -70,11 +84,32 @@ export default function Edit( props ) {
 
 		return (
 			<>
+				<BlockControls>
+					<ToolbarGroup>
+						<ToolbarBootstrapHeadingLevelSelector
+							values = { [ 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6' ] }
+							active = { getAttributeFromFirstChild( 'headingTag', 'h3' ) }
+							onClick = { ( tag ) => broadcastToChildren( 'headingTag', tag ) }
+
+						/>
+						<ToolbarBootstrapColorSelector
+							values = { [ 'default', 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
+							active = { getAttributeFromFirstChild( 'collapseClass', 'default' ) }
+							onClick = { ( color ) => broadcastToChildren( 'collapseClass', color ) }
+						/>
+						<ToolbarButton
+							icon="lightbulb"
+							label="Light Background"
+							onClick={ () => broadcastToChildren( 'collapseLightBg', ! getAttributeFromFirstChild( 'collapseLightBg', false ) ) }
+							isActive={ getAttributeFromFirstChild( 'collapseLightBg', false ) }
+						/>
+					</ToolbarGroup>
+				</BlockControls>
 				<div {...blockProps}>
 					<InnerBlocks
 						allowedBlocks={ [ 'mayflower-blocks/collapse' ] }
 						renderAppender={ InnerBlocks.ButtonBlockAppender  }
-						placeholder={ <p className="placeholder">Click the + to add as many Collapse elements as you want to this Collapsibles block.</p> }
+						placeholder={ <p className="placeholder">{ __('Click the + to add as many Collapse elements as you want to this Accordion block.') } </p> }
 					/>
 				</div>
 			</>
@@ -83,7 +118,7 @@ export default function Edit( props ) {
 		// If theme hasn't returned yet, return a spinner
 		return (
 			<div {...blockProps}>
-				<Spinner /> Determining the current theme...
+				<Spinner /> { __( 'Determining the current theme...' ) }
 			</div>
 		);
 
