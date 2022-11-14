@@ -3,6 +3,9 @@ import { __ } from '@wordpress/i18n';
 
 import { useEffect, useState, useRef } from '@wordpress/element';
 
+import { useSelect } from '@wordpress/data';
+
+
 import {
 	TextControl,
 	SelectControl,
@@ -15,7 +18,8 @@ import {
 	Path,
 	G,
 	PanelBody,
-	PanelRow
+	PanelRow,
+	Spinner
 } from '@wordpress/components';
 
 import {
@@ -37,7 +41,6 @@ import './style.scss';
 export default function Edit( props ) {
 	const ref = useRef();
 	const richTextRef = useRef();
-	const blockProps = useBlockProps( { ref } );
 	const { attributes: {
 		buttonText,
 		buttonLink,
@@ -48,8 +51,25 @@ export default function Edit( props ) {
 		buttonAlign,
 		buttonDisplay,
 		buttonBlock,
-		buttonSize
+		buttonSize,
 	}, setAttributes, isSelected } = props;
+
+	const theme = useSelect( ( select ) => {
+		return select( 'core' ).getCurrentTheme();
+	}, [] );
+
+	// Set bootstrap version flag
+	const isBootstrap5 = ( t ) => {
+		if ( theme && 'Mayflower G4' !== theme.name.rendered ) {
+			return true;
+		}
+		return false;
+	}
+
+	const blockProps = useBlockProps( {
+		ref,
+		className: ( isBootstrap5 && buttonBlock ? 'd-grid' : '' ),
+	} );
 
 	/**
 	 * Link and Unlink Button
@@ -123,162 +143,174 @@ export default function Edit( props ) {
 		);
 	}
 
-	return (
-		<>
-			<BlockControls>
-				<ToolbarGroup>
-					<ToolbarBootstrapColorSelector
-						values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
-						active={ buttonType }
-						onClick={ ( value ) => setAttributes( {
-							buttonType: value,
-							activeButtonType: value
-						} ) }
-					/>
-					<ButtonSizeControl />
+	// Only display the block if the theme has been detected.
+	if ( theme ) {
 
-					<ToolbarButton
-						name="full-width"
-						icon="align-wide"
-						title={ __( 'Display Full-Width' ) }
-						isActive={ buttonBlock ?? false }
-						onClick={ () => {
-							if ( ! buttonBlock ) {
-								setAttributes( { buttonDisplay: 'block' } )
-							}
-							setAttributes( { buttonBlock: ! buttonBlock } )
-						} }
-					/>
-					{ ! buttonBlock && (
+		setAttributes( { isBootstrap5: isBootstrap5( theme ) } );
+		return (
+			<>
+				<BlockControls>
+					<ToolbarGroup>
+						<ToolbarBootstrapColorSelector
+							values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
+							active={ buttonType }
+							onClick={ ( value ) => setAttributes( {
+								buttonType: value,
+								activeButtonType: value
+							} ) }
+						/>
+						<ButtonSizeControl />
+
 						<ToolbarButton
-							name="inline"
-							icon="text"
-							title={ __( 'Display Inline' ) }
-							isActive={ buttonDisplay === 'inline' }
+							name="full-width"
+							icon="align-wide"
+							title={ __( 'Display Full-Width' ) }
+							isActive={ buttonBlock ?? false }
 							onClick={ () => {
-								if ( buttonDisplay === 'inline' ) {
-									setAttributes( { buttonDisplay: 'block' } );
-								} else {
-									setAttributes( { buttonDisplay: 'inline' } );
+								if ( ! buttonBlock ) {
+									setAttributes( { buttonDisplay: 'block' } )
 								}
+								setAttributes( { buttonBlock: ! buttonBlock } )
 							} }
+						/>
+						{ ! buttonBlock && (
+							<ToolbarButton
+								name="inline"
+								icon="text"
+								title={ __( 'Display Inline' ) }
+								isActive={ buttonDisplay === 'inline' }
+								onClick={ () => {
+									if ( buttonDisplay === 'inline' ) {
+										setAttributes( { buttonDisplay: 'block' } );
+									} else {
+										setAttributes( { buttonDisplay: 'inline' } );
+									}
+								} }
+							/>
+						) }
+					</ToolbarGroup>
+					<ToolbarGroup>
+
+					{ ! isURLSet && (
+						<ToolbarButton
+							name="link"
+							icon="admin-links"
+							title={ __( 'Link' ) }
+							//shortcut={ displayShortcut.primary( 'k' ) }
+							onClick={ startEditing }
 						/>
 					) }
-				</ToolbarGroup>
-				<ToolbarGroup>
+					{ isURLSet && (
+						<ToolbarButton
+							name="link"
+							icon="editor-unlink"
+							title={ __( 'Unlink' ) }
+							//shortcut={ displayShortcut.primaryShift( 'k' ) }
+							onClick={ unlink }
+							isActive={ true }
+						/>
+					) }
+					</ToolbarGroup>
 
-				{ ! isURLSet && (
-					<ToolbarButton
-						name="link"
-						icon="admin-links"
-						title={ __( 'Link' ) }
-						//shortcut={ displayShortcut.primary( 'k' ) }
-						onClick={ startEditing }
-					/>
-				) }
-				{ isURLSet && (
-					<ToolbarButton
-						name="link"
-						icon="editor-unlink"
-						title={ __( 'Unlink' ) }
-						//shortcut={ displayShortcut.primaryShift( 'k' ) }
-						onClick={ unlink }
-						isActive={ true }
-					/>
-				) }
-				</ToolbarGroup>
-
-			</BlockControls>
-			{ isSelected && ( isEditingURL || isURLSet ) && (
-				<Popover
-					position="bottom center"
-					onClose={ () => {
-						setIsEditingURL( false );
-						richTextRef.current?.focus();
-					} }
-					anchorRef={ ref?.current }
-					focusOnMount={ isEditingURL ? 'firstElement' : false }
-				>
-					<LinkControl
-						className="wp-block-navigation-link__inline-link-input"
-						value={ { url: buttonLink, opensInNewTab } }
-						onChange={ ( {
-							url: newButtonLink = '',
-							opensInNewTab: newOpensInNewTab,
-						} ) => {
-							setAttributes( { buttonLink: newButtonLink } );
-
-							if ( opensInNewTab !== newOpensInNewTab ) {
-								onToggleOpenInNewTab( newOpensInNewTab );
-							}
-						} }
-						onRemove={ () => {
-							unlink();
+				</BlockControls>
+				{ isSelected && ( isEditingURL || isURLSet ) && (
+					<Popover
+						position="bottom center"
+						onClose={ () => {
+							setIsEditingURL( false );
 							richTextRef.current?.focus();
 						} }
-						forceIsEditingLink={ isEditingURL }
-					/>
+						anchorRef={ ref?.current }
+						focusOnMount={ isEditingURL ? 'firstElement' : false }
+					>
+						<LinkControl
+							className="wp-block-navigation-link__inline-link-input"
+							value={ { url: buttonLink, opensInNewTab } }
+							onChange={ ( {
+								url: newButtonLink = '',
+								opensInNewTab: newOpensInNewTab,
+							} ) => {
+								setAttributes( { buttonLink: newButtonLink } );
 
-				</Popover>
-			) }
-			<InspectorControls>
-				<PanelBody title="Button Style" >
-					<PanelRow>
-						<SelectControl
-							label="Button Style"
-							value={ buttonType }
-							options={ [
-								{ label: 'Primary (BC Blue)', value: 'primary' },
-								{ label: 'Secondary (Gray)', value: 'secondary' },
-								{ label: 'Info (Light Blue)', value: 'info' },
-								{ label: 'Success (Green)', value: 'success' },
-								{ label: 'Warning (Orange)', value: 'warning' },
-								{ label: 'Danger (Red)', value: 'danger' },
-								{ label: 'Light', value: 'light' },
-								{ label: 'Dark', value: 'dark' },
-							] }
-							onChange={ ( buttonType ) => {
-								setAttributes( { buttonType } );
+								if ( opensInNewTab !== newOpensInNewTab ) {
+									onToggleOpenInNewTab( newOpensInNewTab );
+								}
 							} }
-						/>
-					</PanelRow>
-					<PanelRow>
-						<SelectControl
-							label="Button Size"
-							value={ buttonSize }
-							options={ [
-								{ label: 'Small', value: 'btn-sm' },
-								{ label: 'Standard', value: '' },
-								{ label: 'Large', value: 'btn-lg' },
-							] }
-							onChange={ ( buttonSize ) => {
-								setAttributes( { buttonSize } );
+							onRemove={ () => {
+								unlink();
+								richTextRef.current?.focus();
 							} }
+							forceIsEditingLink={ isEditingURL }
 						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Display as Block (Full-Width)"
-							checked={ buttonBlock }
-							onChange={ ( buttonBlock ) => setAttributes( { buttonBlock } ) }
-						/>
-					</PanelRow>
-				</PanelBody>
-			</InspectorControls>
-			<div { ...blockProps }>
-				<RichText
-					ref={ richTextRef }
-					tagName="span"
-					className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
-					allowedFormats={ [ 'core/bold', 'core/italic' ] }
-					value={ buttonText }
-					onChange={ ( buttonText ) => setAttributes( { buttonText } ) }
-				/>
-				{ ! isSelected && ! isEditingURL && ! isURLSet  && (
-					<p><strong>Warning! This button has no link!</strong></p>
+
+					</Popover>
 				) }
+				<InspectorControls>
+					<PanelBody title="Button Style" >
+						<PanelRow>
+							<SelectControl
+								label="Button Style"
+								value={ buttonType }
+								options={ [
+									{ label: 'Primary (BC Blue)', value: 'primary' },
+									{ label: 'Secondary (Gray)', value: 'secondary' },
+									{ label: 'Info (Light Blue)', value: 'info' },
+									{ label: 'Success (Green)', value: 'success' },
+									{ label: 'Warning (Orange)', value: 'warning' },
+									{ label: 'Danger (Red)', value: 'danger' },
+									{ label: 'Light', value: 'light' },
+									{ label: 'Dark', value: 'dark' },
+								] }
+								onChange={ ( buttonType ) => {
+									setAttributes( { buttonType } );
+								} }
+							/>
+						</PanelRow>
+						<PanelRow>
+							<SelectControl
+								label="Button Size"
+								value={ buttonSize }
+								options={ [
+									{ label: 'Small', value: 'btn-sm' },
+									{ label: 'Standard', value: '' },
+									{ label: 'Large', value: 'btn-lg' },
+								] }
+								onChange={ ( buttonSize ) => {
+									setAttributes( { buttonSize } );
+								} }
+							/>
+						</PanelRow>
+						<PanelRow>
+							<ToggleControl
+								label="Display as Block (Full-Width)"
+								checked={ buttonBlock }
+								onChange={ ( buttonBlock ) => setAttributes( { buttonBlock } ) }
+							/>
+						</PanelRow>
+					</PanelBody>
+				</InspectorControls>
+				<div { ...blockProps }>
+					<RichText
+						ref={ richTextRef }
+						tagName="span"
+						className={ `btn btn-${ buttonType } ${ isBootstrap5 && buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
+						allowedFormats={ [ 'core/bold', 'core/italic' ] }
+						value={ buttonText }
+						onChange={ ( buttonText ) => setAttributes( { buttonText } ) }
+					/>
+					{ ! isSelected && ! isEditingURL && ! isURLSet  && (
+						<p><strong>Warning! This button has no link!</strong></p>
+					) }
+				</div>
+			</>
+		);
+	} else {
+		// If theme hasn't returned yet, return a spinner
+		return (
+			<div {...blockProps}>
+				<p className='btn btn-light'><Spinner /> { __( 'Determining the current theme...' ) }</p>
 			</div>
-		</>
-	);
+		);
 
+	}
 }

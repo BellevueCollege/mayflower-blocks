@@ -24,16 +24,19 @@ export default function save( props ) {
 		buttonAlign,
 		buttonDisplay,
 		buttonBlock,
-		buttonSize
+		buttonSize,
+		isBootstrap5,
 	} } = props;
-	const blockProps = useBlockProps.save();
+	const blockProps = useBlockProps.save({
+		className: ( isBootstrap5 && buttonBlock ) ? 'd-grid' : '',
+	});
 	const disabled = buttonLink === undefined || buttonLink === '' ? true : false;
 	const Tag = buttonDisplay === 'block' ? 'div' : 'span';
 	return (
 		<Tag { ...blockProps }>
 			<RichText.Content
 				tagName="a"
-				className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize } ${ disabled ? 'disabled' : '' }` }
+				className={ `btn btn-${ buttonType } ${ buttonBlock && isBootstrap5 ? 'btn-block' : '' } ${ buttonSize } ${ disabled ? 'disabled' : '' }` }
 				target= { linkTarget }
 				rel= { rel }
 				href={ buttonLink }
