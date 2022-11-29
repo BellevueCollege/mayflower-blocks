@@ -1,6 +1,6 @@
 {
   "name": "mayflower-blocks--collapse",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "collapse Block",
   "main": "index.js",
   "scripts": {

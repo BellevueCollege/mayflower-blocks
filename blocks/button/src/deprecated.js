@@ -172,6 +172,88 @@ const deprecated = [
 				</span>
 			);
 		},
+	},
+	{
+		attributes: {
+			buttonText: {
+				type: 'string',
+				selector: 'a',
+			},
+			buttonLink: {
+				type: 'string',
+				source: 'attribute',
+				selector: 'a',
+				attribute: 'href',
+			},
+			linkTarget: {
+				type: 'string',
+				source: 'attribute',
+				attribute: 'target',
+				selector: 'a',
+			},
+			rel: {
+				type: 'string',
+				source: 'attribute',
+				attribute: 'rel',
+				selector: 'rel',
+			},
+			buttonType: {
+				type: 'string',
+				default: 'primary',
+			},
+			activeButtonType: {
+				type: 'string',
+				default: 'primary',
+			},
+			buttonAlign: {
+				type: 'string',
+			},
+			buttonDisplay: {
+				type: 'string',
+				default: 'block',
+			},
+			buttonBlock: {
+				type: 'boolean',
+				default: false,
+			},
+			buttonSize: {
+				type: 'string',
+				default: '',
+			},
+		},
+		save: function( props ) {
+			const { attributes: {
+				buttonText,
+				buttonLink,
+				linkTarget,
+				rel,
+				buttonType,
+				activeButtonType,
+				buttonAlign,
+				buttonDisplay,
+				buttonBlock,
+				buttonSize,
+				isBootstrap5,
+			} } = props;
+			const blockProps = useBlockProps.save({
+				className: ( isBootstrap5 && buttonBlock ) ? 'd-grid' : '',
+			});
+			const disabled = buttonLink === undefined || buttonLink === '' ? true : false;
+			const Tag = buttonDisplay === 'block' ? 'div' : 'span';
+			return (
+				<Tag { ...blockProps }>
+					<RichText.Content
+						tagName="a"
+						classnam={ `btn btn-${ buttonType } ${ buttonBlock && isBootstrap5 ? 'btn-block' : '' } ${ buttonSize } ${ disabled ? 'disabled' : '' }` }
+						target= { linkTarget }
+						rel= { rel }
+						href={ buttonLink }
+						value={ buttonText }
+						aria-disabled={ disabled }
+					/>
+				</Tag>
+			);
+		}
 	}
 ]
 export default deprecated;

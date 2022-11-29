@@ -48,19 +48,35 @@ export default function Edit( props ) {
 		parentBlockClientId,
 		collapseLightBg,
 		headingTag,
-	}, setAttributes, isSelected, clientId } = props;
+	}, setAttributes, isSelected, clientId, context } = props;
 
-	const blockProps = useBlockProps({
-		className: 'card bg-' + collapseClass + (
-			collapseClass !== 'default' &&
-			collapseClass !== 'light' &&
-			collapseClass !== 'info' ? ' text-white' : '' )
-	});
+	const isBootstrap5 = context['mayflower-blocks/isBootstrap5'];
+	const parentClientId = context['mayflower-blocks/currentBlockClientId'];
 
-	const parentClientId = select('core/block-editor').getBlockRootClientId( clientId );
-	// set the clientId attributes so save() can access the clientId and parent clientId
+	setAttributes( { isBootstrap5: isBootstrap5 } );
 	setAttributes( { currentBlockClientId: clientId } );
 	setAttributes( { parentBlockClientId: parentClientId } );
+
+
+	const colorClass = 'bg-' + collapseClass + (
+		collapseClass !== 'default' &&
+		collapseClass !== 'light' &&
+		collapseClass !== 'warning' &&
+		collapseClass !== 'info' ? ' text-white' : '' );
+
+	// Block Classes for Bootstrap 5 and Non-Bootstrap 5 versions
+	const blockClasses = {
+		'container': isBootstrap5 ? 'accordion-item' : `card ${ colorClass }`,
+		'heading': isBootstrap5 ? 'accordion-header mb-0' : 'card-header',
+		'headingButton': isBootstrap5 ? `accordion-button ${ colorClass }` : 'btn btn-link',
+		'collapse': isBootstrap5 ? 'accordion-collapse collapse' : 'collapse',
+		'body': isBootstrap5 ? `accordion-body ${ !collapseLightBg ? colorClass : '' }` : 'card-body' + ( collapseLightBg === true ? ' bg-light text-dark' : '' ),
+	}
+
+	const blockProps = useBlockProps({
+		className: `${ blockClasses.container }`,
+	});
+
 	const HeadingTag = headingTag;
 
 	/**
@@ -99,6 +115,7 @@ export default function Edit( props ) {
 					onClick={ () => setAttributes( { collapseLightBg: ! collapseLightBg } ) }
 					isActive={ collapseLightBg }
 				/>
+
 				<ToolbarButton
 					icon="editor-expand"
 					label="Start Expanded"
@@ -151,30 +168,52 @@ export default function Edit( props ) {
 				</PanelBody>
 			</InspectorControls>
 			<div {...blockProps}>
-				<div className="card-header" id={ `heading_${ currentBlockClientId }` }>
-					<HeadingTag className="mb-0 h6">
-						<RichText
-							tagName="span"
-							allowedFormats={ [ 'bold', 'italic', 'link' ] }
-							placeholder="Enter header text..."
-							keepPlaceholderOnFocus="true"
-							value={ collapseHeadingText }
-							onChange={ ( collapseHeadingText ) => setAttributes( { collapseHeadingText } ) }
-						/>
-						<Tooltip
-							text={ __( "The heading level of this collapse. Doesn't show on the front-end." ) }
-						>
-							<span className="badge badge-info float-right">{ headingTag.toUpperCase() }</span>
-						</Tooltip>
-					</HeadingTag>
-				</div>
+				<>
+					{ isBootstrap5 ? (
+						<HeadingTag className={ blockClasses.heading } id={ `heading_${ currentBlockClientId }` }>
+							<div className={ blockClasses.headingButton } >
+								<RichText
+									tagName="span"
+									allowedFormats= { [] }
+									placeholder="Enter header text..."
+									keepPlaceholderOnFocus="true"
+									value={ collapseHeadingText }
+									onChange={ ( collapseHeadingText ) => setAttributes( { collapseHeadingText } ) }
+								/>
+								<Tooltip
+									text={ __( "The heading level of this collapse. Doesn't show on the front-end." ) }
+								>
+									<span className="badge bg-secondary ms-2">{ headingTag.toUpperCase() }</span>
+								</Tooltip>
+							</div>
+						</HeadingTag>
+					) : (
+						<div className={ blockClasses.heading } id={ `heading_${ currentBlockClientId }` }>
+							<HeadingTag className="mb-0 h6">
+								<RichText
+									tagName="span"
+									allowedFormats= { [] }
+									placeholder="Enter header text..."
+									keepPlaceholderOnFocus="true"
+									value={ collapseHeadingText }
+									onChange={ ( collapseHeadingText ) => setAttributes( { collapseHeadingText } ) }
+								/>
+								<Tooltip
+									text={ __( "The heading level of this collapse. Doesn't show on the front-end." ) }
+								>
+									<span className="badge badge-info float-right">{ headingTag.toUpperCase() }</span>
+								</Tooltip>
+							</HeadingTag>
+						</div>
+					) }
+				</>
 				<div
 					id={ `collapse_${ currentBlockClientId }` }
-					className={ `collapse ${ expanded || isSelected || hasSelectedChild( props ) ? 'show' : '' }` }
+					className={ `${ blockClasses.collapse } ${ expanded || isSelected || hasSelectedChild( props ) ? 'show' : '' }` }
 					aria-labelledby={ `heading_${ currentBlockClientId }` }
 					data-parent={ `#accordion_${ parentClientId }` }
 				>
-					<div className={ 'card-body' + ( collapseLightBg === true ? ' bg-light text-dark' : '' ) }>
+					<div className={ blockClasses.body }>
 						<InnerBlocks />
 					</div>
 				</div>
