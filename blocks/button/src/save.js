@@ -36,7 +36,7 @@ export default function save( props ) {
 		<Tag { ...blockProps }>
 			<RichText.Content
 				tagName="a"
-				className={ `btn btn-${ buttonType } ${ buttonBlock && isBootstrap5 ? 'btn-block' : '' } ${ buttonSize } ${ disabled ? 'disabled' : '' }` }
+				className={ `btn btn-${ buttonType } ${ buttonBlock && ( ! isBootstrap5 ) ? 'btn-block' : '' } ${ buttonSize } ${ disabled ? 'disabled' : '' }` }
 				target= { linkTarget }
 				rel= { rel }
 				href={ buttonLink }
