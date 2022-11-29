@@ -11,6 +11,6 @@
   },
   "author": "Taija Tevia-Clark",
 	"devDependencies": {
-    "@wordpress/scripts": "^22.2.1"
+    "@wordpress/scripts": "^24.6.0"
   }
 }
