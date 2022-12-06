@@ -9,7 +9,9 @@ import {
 	SelectControl,
 	ToolbarGroup,
 	ToolbarItem,
-	ToolbarButton
+	ToolbarButton,
+	Modal,
+	Button
 } from '@wordpress/components';
 
 import {
@@ -116,19 +118,12 @@ export default function Edit( props ) {
 		if ( ( tableId === undefined || tableId === '' ) || select === true ) {
 			return (
 				<ToolbarGroup>
-					<ToolbarItem>
-						{ ( toolbarItemHTMLProps ) => (
-							<SelectControl
-								label="Table:"
-								className="tablepress-select-table"
-								labelPosition="side"
-								value={ postId }
-								options={ tableList }
-								onChange={ ( postId ) => setAttributes( { postId, tableId: undefined } ) }
-								__nextHasNoMarginBottom
-							/>
-						) }
-					</ToolbarItem>
+					<ToolbarButton
+						onClick={ () => setIsModalOpen( true ) }
+						icon="edit"
+					>
+						Select Table
+					</ToolbarButton>
 				</ToolbarGroup>
 
 			);
@@ -136,6 +131,38 @@ export default function Edit( props ) {
 		return '';
 
 	};
+
+	const [ isModalOpen, setIsModalOpen ] = useState( false );
+	const TableSelectorModal = () => {
+		if ( isModalOpen ) {
+			return (
+					<Modal
+						title="Select a Table"
+						onRequestClose={ () => setIsModalOpen( false ) }
+						className="tablepress-select-table-modal"
+					>
+						<SelectControl
+							label="Table:"
+							className="tablepress-select-table"
+							value={ postId }
+							options={ tableList }
+							onChange={ ( postId ) => setAttributes( { postId, tableId: undefined } ) }
+							hideLabelFromVision={ true }
+						/>
+						<Button
+							isPrimary
+							onClick={ () => setIsModalOpen( false ) }
+						>
+							Exit
+						</Button>
+					</Modal>
+				);
+		} else {
+			return '';
+		}
+	};
+
+
 
 	// Message to display if nothing is returned from ServerSideRender API
 	const noTableOutput = () => {
@@ -154,6 +181,7 @@ export default function Edit( props ) {
 			<BlockControls>
 				<TableSelector />
 			</BlockControls>
+			<TableSelectorModal />
 			<div {...blockProps }>
 				<TableError />
 				<ServerSideRender
