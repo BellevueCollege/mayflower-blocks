@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2,
 	"name": "mayflower-blocks/collapse",
-	"version": "1.0.1",
+	"version": "1.1.1",
 	"title": "Collapse",
 	"category": "bootstrap-blocks",
 	"icon": "block-default",
