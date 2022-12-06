@@ -1,6 +1,6 @@
 {
   "name": "mayflower-blocks--tablepress",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TablePress Block (Unofficial)",
   "main": "index.js",
   "scripts": {
