@@ -5,7 +5,7 @@
  * Description: Companion Gutenberg Blocks for BC Mayflower Theme
  * Author: BC Integration (Taija, Angela, Elizabeth)
  * Author URI: https://www.bellevuecollege.edu
- * Version: 3.2.2 #{versionStamp}#
+ * Version: 3.2.3 #{versionStamp}#
  * License: GPL2+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  *
@@ -140,3 +140,24 @@ function mbg4_block_categories( $categories, $post ) {
 		)
 	);
 }
+
+/**
+ * Filter WP KSES to allow required ARIA attributes.
+ *
+ * Allow aria-controls in post content
+ *
+ * @param array  $tags Array of allowed tags.
+ * @param string $context Context of the tags.
+ * @return array
+ */
+function mbg4_allow_aria_attributes( $tags, $context ) {
+	$tags['a']['aria-controls'] = true;
+	$tags['a']['aria-expanded'] = true;
+	$tags['a']['aria-disabled'] = true;
+
+	$tags['button']['aria-controls'] = true;
+	$tags['button']['aria-expanded'] = true;
+	$tags['button']['aria-disabled'] = true;
+	return $tags;
+}
+add_filter( 'wp_kses_allowed_html', 'mbg4_allow_aria_attributes', 10, 2 );
