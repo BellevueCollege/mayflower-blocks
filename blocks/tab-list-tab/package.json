@@ -1,6 +1,6 @@
 {
   "name": "mayflower-blocks--tab-list-tab",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tabs: Tab List Tab Block",
   "main": "index.js",
   "scripts": {
