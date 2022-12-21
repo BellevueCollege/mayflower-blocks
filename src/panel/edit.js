@@ -31,7 +31,7 @@ import {
 
 import { useEffect, useState, useRef } from '@wordpress/element';
 
-import { ToolbarBootstrapColorSelector, ToolbarBootstrapHeadingLevelSelector } from 'shared-elements/toolbar';
+import { ToolbarBootstrapColorSelector, ToolbarBootstrapHeadingLevelSelector } from '../shared-elements/toolbar';
 
 
 import './editor.scss';

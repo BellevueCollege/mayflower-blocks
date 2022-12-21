@@ -41,7 +41,7 @@ import { select } from '@wordpress/data';
 import ClassSubjectSelect from './ClassSubjectSelect';
 import ClassItemSelect from './ClassItemSelect';
 
-import { ToolbarBootstrapHeadingLevelSelector } from 'shared-elements/toolbar';
+import { ToolbarBootstrapHeadingLevelSelector } from '../shared-elements/toolbar';
 
 import './editor.scss';
 import './style.scss';

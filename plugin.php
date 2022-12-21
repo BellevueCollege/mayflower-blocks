@@ -108,17 +108,17 @@ function mg4_blocks_init() {
  * Registers static and dynamic blocks
  */
 function mbg4_register_block( $block_name, $dynamic = false ) {
-	$path = dirname( __FILE__ ) . "/blocks/$block_name";
+	$path = dirname( __FILE__ ) . "/build/$block_name";
 	if ( $dynamic ) {
-		require "$path/src/block.php";
+		require "src/$block_name/block.php";
 		register_block_type(
-			"$path/build/block.json",
+			"$path/block.json",
 			array(
 				'render_callback' => 'mbg4_' . str_replace( '-', '_', $block_name ) . '_callback',
 			)
 		);
 	} else {
-		register_block_type( "$path/build/block.json" );
+		register_block_type( "$path/block.json" );
 	}
 }
 

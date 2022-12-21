@@ -32,7 +32,7 @@ import {
 	__experimentalGetElementClassName,
 } from '@wordpress/block-editor';
 
-import { ToolbarBootstrapColorSelector } from 'shared-elements/toolbar';
+import { ToolbarBootstrapColorSelector } from '../shared-elements/toolbar';
 
 
 import './editor.scss';
