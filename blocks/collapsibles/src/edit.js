@@ -71,7 +71,10 @@ export default function Edit( props ) {
 
 	// Set bootstrap version flag
 	const isBootstrap5 = ( t ) => {
-		if ( theme && 'Mayflower G4' !== theme.name.rendered ) {
+		if ( theme && (
+				'Mayflower G4' !== theme.name.rendered ||
+				'BC "Douglas Fir" Theme' !== theme.name.rendered
+			)) {
 			return true;
 		}
 		return false;

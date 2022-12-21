@@ -27,7 +27,9 @@ if (
 	'Mayflower G5' === $theme->name ||
 	'Mayflower G5' === $theme->parent_theme ||
 	'Bellevue 2022' === $theme->name ||
-	'Bellevue 2022' === $theme->parent_theme
+	'Bellevue 2022' === $theme->parent_theme ||
+	'BC "Douglas Fir" Theme' === $theme->name ||
+	'BC "Douglas Fir" Theme' === $theme->parent_theme
 	) {
 	/**
 	 * Block Initializer.
