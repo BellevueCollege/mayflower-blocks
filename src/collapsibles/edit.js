@@ -28,7 +28,7 @@ import {
 import {
 	ToolbarBootstrapColorSelector,
 	ToolbarBootstrapHeadingLevelSelector,
-} from 'shared-elements/toolbar';
+} from '../shared-elements/toolbar';
 
 
 import './editor.scss';
