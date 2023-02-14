@@ -102,6 +102,47 @@ const deprecated = [
 			);
 		},
 	},
+	{
+		attributes: {
+			tabActive: {
+				type: 'boolean',
+				default: false,
+			},
+			tabId: {
+				type: 'string',
+			},
+			tabTitle: {
+				type: 'string',
+				default: '',
+			},
+			tabDefault: {
+				type: 'boolean',
+				default: false,
+			},
+		},
+		save: function( props ) {
+			const { attributes: {
+				tabActive,
+				tabId,
+				tabTitle,
+				tabDefault,
+			} } = props;
+
+			const blockProps = useBlockProps.save({
+				role: 'presentation',
+				className: 'nav-item',
+			});
+			return (
+				<li { ...blockProps }>
+					<a className={ `nav-link ${ tabDefault ? ' active' : '' }` } id={ `tab_link_${ tabId }` } href={ `#tab_${ tabId }` } aria-controls={ `tab_${ tabId }` } role="tab" data-toggle="tab">
+						<RichText.Content
+							value={ tabTitle }
+						/>
+					</a>
+				</li>
+			);
+		}
+	}
 
 ]
 export default deprecated;

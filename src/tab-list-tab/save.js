@@ -24,7 +24,16 @@ export default function save( props ) {
 
 	return (
 		<li { ...blockProps }>
-			<a className={ `nav-link ${ tabDefault ? ' active' : '' }` } id={ `tab_link_${ tabId }` } href={ `#tab_${ tabId }` } aria-controls={ `tab_${ tabId }` } role="tab" data-toggle="tab">
+			<a
+				className={ `nav-link ${ tabDefault ? ' active' : '' }` }
+				id={ `tab_link_${ tabId }` }
+				href={ `#tab_${ tabId }` }
+				aria-controls={ `tab_${ tabId }` }
+				role="tab"
+				data-toggle="tab"
+				data-bs-toggle="tab"
+				data-bs-target={ `#tab_${ tabId }` }
+			>
 				<RichText.Content
 					value={ tabTitle }
 				/>
