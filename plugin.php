@@ -5,11 +5,10 @@
  * Description: Companion Gutenberg Blocks for BC Mayflower Theme
  * Author: BC Integration (Taija, Angela, Elizabeth)
  * Author URI: https://www.bellevuecollege.edu
- * Version: 3.2.3 #{versionStamp}#
+ * Version: 3.3-dev2 #{versionStamp}#
  * License: GPL2+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  *
- * @package CGB
  */
 
 // Exit if accessed directly.
@@ -18,24 +17,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Only load if Mayflower G4 is active.
+ * Theme Names that are supported by this plugin.
  */
-$theme = wp_get_theme(); // gets the current theme!
-if (
-	'Mayflower G4' === $theme->name ||
-	'Mayflower G4' === $theme->parent_theme ||
-	'Mayflower G5' === $theme->name ||
-	'Mayflower G5' === $theme->parent_theme ||
-	'Bellevue 2022' === $theme->name ||
-	'Bellevue 2022' === $theme->parent_theme ||
-	'BC "Douglas Fir" Theme' === $theme->name ||
-	'BC "Douglas Fir" Theme' === $theme->parent_theme
-	) {
-	/**
-	 * Block Initializer.
-	 */
-	add_action( 'init', 'mg4_blocks_init' );
-	add_filter( 'block_categories_all', 'mbg4_block_categories', 10, 2 );
+$mbg4_enabled_themes = array(
+	'Mayflower G4',
+	'Mayflower G5',
+	'Bellevue 2022',
+	'BC "Douglas Fir" Theme',
+);
+
+/**
+ * Enable this plugin for supported themes only.
+ */
+$mbg4_current_theme = wp_get_theme(); // gets the current theme!
+foreach ( $mbg4_enabled_themes as $mbg4_enabled_theme ) {
+	if ( $mbg4_enabled_theme === $mbg4_current_theme->name || $mbg4_enabled_theme === $mbg4_current_theme->parent_theme ) {
+		/**
+		 * Block Initializer.
+		 */
+		add_action( 'init', 'mg4_blocks_init' );
+		add_filter( 'block_categories_all', 'mbg4_block_categories', 10, 2 );
+		// Exit loop
+		break;
+	}
 }
 
 /**
