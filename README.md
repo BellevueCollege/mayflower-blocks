@@ -1,18 +1,23 @@
 # Mayflower Blocks
 
-This plugin contains block editor blocks for the Mayflower G4 Theme. 
-Most of these are implementations of Bootstrap 4 components.
+This plugin contains block editor blocks for the following Bellevue College themes:
+1. Mayflower G4 - *Globals 4*
+2. BC "Douglas Fir" theme (in development) - *Globals 4*
+3. Bellevue College OHO theme (in development) - *Bootstrap 5*
+
+Most of these are implementations of Bootstrap 4 or 5 components.
 
 ## Project Structure
-Each block is a separate NPM package, found in a top-level folder named after the block.
 
-You can install all NPM packages from the root level with the following command:
+All blocks are in folders under the `src` directory. Each block has its own folder, and each folder contains the block's source code.
+
+NPM is used for package management. To install all dependencies, run the following command from the root directory:
 
 ```bash
 npm install
 ```
 
-This project uses [Lerna](https://lerna.js.org/) to distribute commands to submodules. Run the following commands from the root directory to build or watch all submodules:
+This project uses [wordpress-scripts](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-scripts/) compile/transpile code and build blocks. To watch for changes and build blocks, run the following commands from the root directory:
 
 ```bash
 # Watch for changes:
@@ -22,7 +27,6 @@ npm start
 npm run build
 ```
 
-You can also `cd` into a submodule (e.g. `cd blocks/alert`) and run the same commands for a specific block.
 
 ## Block Structure
 
@@ -30,11 +34,10 @@ You can also `cd` into a submodule (e.g. `cd blocks/alert`) and run the same com
 Each block is registered in the main `plugin.php` file. You can register a new block by adding the folder name to the array of registered blocks.
 
 ### Block Structure
-Each block has a `package.json` file that contains the block's metadata and required packages.
 
-Each block has a `src/` folder that contains the block's source code, and a `build/` folder that contains the block's build artifacts (not committed to the repository).
+Each block has a folder within `src/` that contains the block's source code, and a folder within `build/` that contains the block's build artifacts (not committed to the repository).
 
-Within the `src/` folder, there is a `block.json` file that contains the block's metadata, and defines its attributes. There is also an `index.js` file that contains the block's implementation. This draws in the other .js files in the `src/` folder.
+Within the block folder, there is a `block.json` file that contains the block's metadata, and defines its attributes. There is also an `index.js` file that contains the block's implementation. This draws in the other .js files in the `src/` folder.
 
 There are also two Sass files: `style.scss` and `editor.scss`. These are the styles for the block in the front-end and the editor, respectively.
 
