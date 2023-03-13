@@ -5,7 +5,7 @@
  * Description: Companion Gutenberg Blocks for BC Mayflower Theme
  * Author: BC Integration (Taija, Angela, Elizabeth)
  * Author URI: https://www.bellevuecollege.edu
- * Version: 3.3 #{versionStamp}#
+ * Version: 3.3.1 #{versionStamp}#
  * License: GPL2+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  *
@@ -53,7 +53,9 @@ function mg4_blocks_init() {
 	/** List of blocks - should match folder names */
 
 	// Dynamic Blocks.
-	mbg4_register_block( 'child-pages', true );
+	if ( wp_get_theme()->name !== 'Bellevue 2022' ) {
+		mbg4_register_block( 'child-pages', true );
+	}
 	mbg4_register_block( 'course', true );
 
 	// Static Blocks.
