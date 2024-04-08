@@ -18,7 +18,7 @@
     "test:unit": "wp-scripts test-unit-js"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^26.0.0"
+    "@wordpress/scripts": "^26.19.0"
   },
   "dependencies": {
     "imagesloaded": "^5.0.0",
