@@ -5,7 +5,7 @@
  * Description: Companion Gutenberg Blocks for BC Mayflower Theme
  * Author: BC Integration (Taija, Angela, Elizabeth)
  * Author URI: https://www.bellevuecollege.edu
- * Version: 3.5.0 #{versionStamp}#
+ * Version: 3.6.0-b1 #{versionStamp}#
  * License: GPL2+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  *
@@ -24,6 +24,7 @@ $mbg4_enabled_themes = array(
 	'Mayflower G5',
 	'Bellevue 2022',
 	'BC "Douglas Fir" Theme',
+	'BC "Sitka Spruce" Department Theme',
 );
 
 /**
