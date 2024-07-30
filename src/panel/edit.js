@@ -34,7 +34,7 @@ import './style.scss';
 export default function Edit( props ) {
 	const blockProps = useBlockProps();
 	const { attributes: {
-		limitations,
+		editable,
 		cardText,
 		cardType,
 		cardImage,
@@ -63,23 +63,26 @@ export default function Edit( props ) {
 		<>
 			<BlockControls group="block">
 				<ToolbarGroup>
-					{ cardHeading === true && (
+					{ (cardHeading === true && editable.cardHeadingTag ) && (
 						<ToolbarBootstrapHeadingLevelSelector
 							values= {  [ 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6', 'Paragraph' ] }
 							active = { cardHeadingTag }
 							onClick = { ( value ) => setAttributes( { cardHeadingTag: value, activeHeadingClass: value } ) }
 						/>
 					)}
-					<ToolbarBootstrapColorSelector
-						values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
-						active = { cardType }
-						onClick = { ( value ) => setAttributes( { cardType: value } ) }
-					/>
+					{ (editable.cardType ) && (
+						<ToolbarBootstrapColorSelector
+							values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
+							active = { cardType }
+							onClick = { ( value ) => setAttributes( { cardType: value } ) }
+						/>
+					)}
 					<ToolbarButton
 						icon="lightbulb"
 						label="Light Background"
 						onClick={ () => setAttributes( { cardLightBg: ! cardLightBg } ) }
 						isActive={ cardLightBg }
+						disabled = { ! editable.cardLightBg }
 					/>
 				</ToolbarGroup>
 				<ToolbarGroup>
@@ -109,6 +112,7 @@ export default function Edit( props ) {
 													setAttributes( { cardImage: !cardImage })
 													onClose();
 												}}
+												disabled={ ! editable.cardImage }
 											>
 												{ cardImage ? __( 'Disable Image Area', 'mayflower-blocks' ) : __( 'Enable Image Area', 'mayflower-blocks' ) }
 											</MenuItem>
@@ -149,12 +153,14 @@ export default function Edit( props ) {
 						label = { __( 'Display Card Header', 'mayflower-blocks' ) }
 						onClick={ () => setAttributes( { cardHeading: ! cardHeading } ) }
 						isActive={ cardHeading }
+						disabled = { ! editable.cardHeading }
 					/>
 					<ToolbarButton
 						icon="table-row-after"
 						label = { __( 'Display Card Footer', 'mayflower-blocks' ) }
 						onClick={ () => setAttributes( { cardFooter: ! cardFooter } ) }
 						isActive={ cardFooter }
+						disabled = { ! editable.cardFooter }
 					/>
 				</ToolbarGroup>
 

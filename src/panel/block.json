@@ -13,9 +13,16 @@
 	},
 	"textdomain": "mayflower-blocks",
 	"attributes": {
-		"limitations": {
-			"type": "string",
-			"default": "none"
+		"editable": {
+			"type": "object",
+			"default": {
+				"cardType": true,
+				"cardImage": true,
+				"cardHeading": true,
+				"cardHeadingTag": true,
+				"cardLightBg": true,
+				"cardFooter": true
+			}
 		},
 		"cardText": {
 			"type": "string"
