@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"apiVersion": 2,
+	"apiVersion": 3,
 	"name": "mayflower-blocks/panel",
 	"version": "1.1.0",
 	"title": "Card (Panel)",
@@ -13,12 +13,40 @@
 	},
 	"textdomain": "mayflower-blocks",
 	"attributes": {
+		"limitations": {
+			"type": "string",
+			"default": "none"
+		},
 		"cardText": {
 			"type": "string"
 		},
 		"cardType": {
 			"type": "string",
 			"default": "default"
+		},
+		"cardImage": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardImageId": {
+			"type": "number",
+			"default": 0
+		},
+		"cardImageUrl": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "img.card-img-top",
+			"attribute": "src"
+		},
+		"cardImageAlt": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "img.card-img-top",
+			"attribute": "alt"
+		},
+		"cardImageSize": {
+			"type": "string",
+			"default": "large"
 		},
 		"cardHeading": {
 			"type": "boolean",
