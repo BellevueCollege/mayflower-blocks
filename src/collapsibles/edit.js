@@ -70,9 +70,11 @@ export default function Edit( props ) {
 	}, [] );
 
 	// Set bootstrap version flag
+	// This is a double negitive :( will fix... eventually!
 	const isBootstrap5 = ( t ) => {
 		if ( t && (
 				'Mayflower G4' !== t.name.rendered &&
+				'BC Douglas Fir Landing Page Child' !== t.name.rendered &&
 				'BC \"Douglas Fir\" Theme' !== t.name.rendered
 			)) {
 				return true;
