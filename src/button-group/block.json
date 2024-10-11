@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "mayflower-blocks/button-group",
+	"version": "1.0",
+	"title": "Button Group",
+	"category": "bootstrap-blocks",
+	"icon": "ellipsis",
+	"description": "Display a group of buttons in a row.",
+	"supports": {
+		"html": true
+	},
+	"allowedBlocks": [
+		"mayflower-blocks/button"
+	],
+	"textdomain": "mayflower-blocks",
+	"attributes": {
+		"_btnDisableBlockInline": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"providesContext": {
+		"mayflower-blocks/_btnDisableBlockInline": "_btnDisableBlockInline"
+	},
+	"example": {
+		"attributes": {
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}
