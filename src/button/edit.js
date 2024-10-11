@@ -52,6 +52,7 @@ export default function Edit( props ) {
 		buttonDisplay,
 		buttonBlock,
 		buttonSize,
+		placeholder,
 	}, setAttributes, isSelected, context } = props;
 
 	const theme = useSelect( ( select ) => {
@@ -307,6 +308,7 @@ export default function Edit( props ) {
 						allowedFormats={ [ 'core/bold', 'core/italic' ] }
 						value={ buttonText }
 						onChange={ ( buttonText ) => setAttributes( { buttonText } ) }
+						placeholder={ placeholder }
 					/>
 				</div>
 			</>

@@ -60,6 +60,10 @@
 		"isBootstrap5": {
 			"type": "boolean",
 			"default": false
+		},
+		"placeholder": {
+			"type": "string",
+			"default": "Button Text"
 		}
 	},
 	"usesContext": [
