@@ -62,6 +62,9 @@
 			"default": false
 		}
 	},
+	"usesContext": [
+		"mayflower-blocks/_btnDisableBlockInline"
+	],
 	"example": {
 		"attributes": {
 			"buttonText": "Button Text",
