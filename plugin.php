@@ -24,6 +24,7 @@ $mbg4_enabled_themes = array(
 	'Mayflower G5',
 	'Bellevue 2022',
 	'BC "Douglas Fir" Theme',
+	'BC "Sitka Spruce" Department Theme'
 );
 
 /**
