@@ -60,8 +60,15 @@
 		"isBootstrap5": {
 			"type": "boolean",
 			"default": false
+		},
+		"placeholder": {
+			"type": "string",
+			"default": "Button Text"
 		}
 	},
+	"usesContext": [
+		"mayflower-blocks/_btnDisableBlockInline"
+	],
 	"example": {
 		"attributes": {
 			"buttonText": "Button Text",

@@ -24,6 +24,7 @@ $mbg4_enabled_themes = array(
 	'Mayflower G5',
 	'Bellevue 2022',
 	'BC "Douglas Fir" Theme',
+	'BC "Sitka Spruce" Department Theme'
 );
 
 /**
@@ -61,6 +62,7 @@ function mg4_blocks_init() {
 	// Static Blocks.
 	mbg4_register_block( 'alert' );
 	mbg4_register_block( 'button' );
+	mbg4_register_block( 'button-group' );
 	mbg4_register_block( 'panel' );
 	mbg4_register_block( 'jumbotron' );
 	mbg4_register_block( 'lead' );

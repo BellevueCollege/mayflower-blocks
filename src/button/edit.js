@@ -52,7 +52,8 @@ export default function Edit( props ) {
 		buttonDisplay,
 		buttonBlock,
 		buttonSize,
-	}, setAttributes, isSelected } = props;
+		placeholder,
+	}, setAttributes, isSelected, context } = props;
 
 	const theme = useSelect( ( select ) => {
 		return select( 'core' ).getCurrentTheme();
@@ -69,6 +70,9 @@ export default function Edit( props ) {
 		}
 		return false;
 	}
+
+	// Get context
+	const disableBlockInlineControls = context['mayflower-blocks/_btnDisableBlockInline'] || false;
 
 	const blockProps = useBlockProps( {
 		ref,
@@ -164,20 +168,21 @@ export default function Edit( props ) {
 							} ) }
 						/>
 						<ButtonSizeControl />
-
-						<ToolbarButton
-							name="full-width"
-							icon="align-wide"
-							title={ __( 'Display Full-Width' ) }
-							isActive={ buttonBlock ?? false }
-							onClick={ () => {
-								if ( ! buttonBlock ) {
-									setAttributes( { buttonDisplay: 'block' } )
-								}
-								setAttributes( { buttonBlock: ! buttonBlock } )
-							} }
-						/>
-						{ ! buttonBlock && (
+						{ ! disableBlockInlineControls && (
+							<ToolbarButton
+								name="full-width"
+								icon="align-wide"
+								title={ __( 'Display Full-Width' ) }
+								isActive={ buttonBlock ?? false }
+								onClick={ () => {
+									if ( ! buttonBlock ) {
+										setAttributes( { buttonDisplay: 'block' } )
+									}
+									setAttributes( { buttonBlock: ! buttonBlock } )
+								} }
+							/>
+						)}
+						{ ( ! buttonBlock && ! disableBlockInlineControls ) && (
 							<ToolbarButton
 								name="inline"
 								icon="text"
@@ -284,13 +289,15 @@ export default function Edit( props ) {
 								} }
 							/>
 						</PanelRow>
-						<PanelRow>
-							<ToggleControl
-								label="Display as Block (Full-Width)"
-								checked={ buttonBlock }
-								onChange={ ( buttonBlock ) => setAttributes( { buttonBlock } ) }
-							/>
-						</PanelRow>
+						{ ! disableBlockInlineControls && (
+							<PanelRow>
+								<ToggleControl
+									label="Display as Block (Full-Width)"
+									checked={ buttonBlock }
+									onChange={ ( buttonBlock ) => setAttributes( { buttonBlock } ) }
+								/>
+							</PanelRow>
+						)}
 					</PanelBody>
 				</InspectorControls>
 				<div { ...blockProps }>
@@ -301,10 +308,8 @@ export default function Edit( props ) {
 						allowedFormats={ [ 'core/bold', 'core/italic' ] }
 						value={ buttonText }
 						onChange={ ( buttonText ) => setAttributes( { buttonText } ) }
+						placeholder={ placeholder }
 					/>
-					{ ! isSelected && ! isEditingURL && ! isURLSet  && (
-						<p><strong>Warning! This button has no link!</strong></p>
-					) }
 				</div>
 			</>
 		);
