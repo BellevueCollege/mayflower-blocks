@@ -160,7 +160,7 @@ export default function Edit( props ) {
 				<BlockControls>
 					<ToolbarGroup>
 						<ToolbarBootstrapColorSelector
-							values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
+							values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark', 'link' ] }
 							active={ buttonType }
 							onClick={ ( value ) => setAttributes( {
 								buttonType: value,
@@ -269,6 +269,7 @@ export default function Edit( props ) {
 									{ label: 'Danger (Red)', value: 'danger' },
 									{ label: 'Light', value: 'light' },
 									{ label: 'Dark', value: 'dark' },
+									{ label: 'Link', value: 'link' },
 								] }
 								onChange={ ( buttonType ) => {
 									setAttributes( { buttonType } );
