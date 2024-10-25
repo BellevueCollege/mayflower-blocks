@@ -74,6 +74,11 @@ export default function Edit( props ) {
 	// Get context
 	const disableBlockInlineControls = context['mayflower-blocks/_btnDisableBlockInline'] || false;
 
+	if ( ! buttonType ) {
+		setAttributes( { buttonType: context['mayflower-blocks/_btnTypeDefault'] || 'primary' } );
+
+	}
+
 	const blockProps = useBlockProps( {
 		ref,
 		className: ( isBootstrap5 && buttonBlock ? 'd-grid' : '' ),
@@ -161,7 +166,7 @@ export default function Edit( props ) {
 					<ToolbarGroup>
 						<ToolbarBootstrapColorSelector
 							values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark', 'link' ] }
-							active={ buttonType }
+							active={ buttonType || 'primary' }
 							onClick={ ( value ) => setAttributes( {
 								buttonType: value,
 								activeButtonType: value
@@ -259,7 +264,7 @@ export default function Edit( props ) {
 						<PanelRow>
 							<SelectControl
 								label="Button Style"
-								value={ buttonType }
+								value={ buttonType || 'primary' }
 								options={ [
 									{ label: 'Primary (BC Blue)', value: 'primary' },
 									{ label: 'Secondary (Gray)', value: 'secondary' },
@@ -305,7 +310,7 @@ export default function Edit( props ) {
 					<RichText
 						ref={ richTextRef }
 						tagName="span"
-						className={ `btn btn-${ buttonType } ${ isBootstrap5 && buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
+						className={ `btn btn-${ buttonType || 'primary' } ${ isBootstrap5 && buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
 						allowedFormats={ [ 'core/bold', 'core/italic' ] }
 						value={ buttonText }
 						onChange={ ( buttonText ) => setAttributes( { buttonText } ) }

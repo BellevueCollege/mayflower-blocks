@@ -18,10 +18,14 @@
 		"_btnDisableBlockInline": {
 			"type": "boolean",
 			"default": true
+		},
+		"_btnTypeDefault": {
+			"type": "string"
 		}
 	},
 	"providesContext": {
-		"mayflower-blocks/_btnDisableBlockInline": "_btnDisableBlockInline"
+		"mayflower-blocks/_btnDisableBlockInline": "_btnDisableBlockInline",
+		"mayflower-blocks/_btnTypeDefault": "_btnTypeDefault"
 	},
 	"example": {
 		"attributes": {

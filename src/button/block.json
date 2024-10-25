@@ -35,12 +35,10 @@
 			"attribute": "rel"
 		},
 		"buttonType" : {
-			"type": "string",
-			"default": "primary"
+			"type": "string"
 		},
 		"activeButtonType" : {
-			"type": "string",
-			"default": "primary"
+			"type": "string"
 		},
 		"buttonAlign" : {
 			"type": "string"
@@ -67,7 +65,8 @@
 		}
 	},
 	"usesContext": [
-		"mayflower-blocks/_btnDisableBlockInline"
+		"mayflower-blocks/_btnDisableBlockInline",
+		"mayflower-blocks/_btnTypeDefault"
 	],
 	"example": {
 		"attributes": {
