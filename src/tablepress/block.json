@@ -2,13 +2,14 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2,
 	"name": "mayflower-blocks/tablepress",
-	"version": "1.0.1",
-	"title": "TablePress",
+	"version": "2.0.0",
+	"title": "TablePress (legacy)",
 	"category": "common",
 	"icon": "media-spreadsheet",
-	"description": "Insert a Table created in TablePress. Note: This block was created by Bellevue College, and is not officially affiliated with TablePress!",
+	"description": "Insert a Table created in TablePress. Note: This block was created by Bellevue College, and is not officially affiliated with TablePress! This block is no longer recommended, as there is a native TablePress block available.",
 	"supports": {
-		"html": false
+		"html": false,
+		"inserter": false
 	},
 	"textdomain": "mayflower-blocks",
 	"attributes": {
