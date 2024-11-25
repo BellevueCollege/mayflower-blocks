@@ -52,7 +52,8 @@ export default function Edit( props ) {
 		buttonDisplay,
 		buttonBlock,
 		buttonSize,
-	}, setAttributes, isSelected } = props;
+		placeholder,
+	}, setAttributes, isSelected, context } = props;
 
 	const theme = useSelect( ( select ) => {
 		return select( 'core' ).getCurrentTheme();
@@ -62,11 +63,20 @@ export default function Edit( props ) {
 	const isBootstrap5 = ( t ) => {
 		if ( t && (
 				'Mayflower G4' !== t.name.rendered &&
+				'BC Douglas Fir Landing Page Child' !== t.name.rendered &&
 				'BC \"Douglas Fir\" Theme' !== t.name.rendered
 			)) {
 				return true;
 		}
 		return false;
+	}
+
+	// Get context
+	const disableBlockInlineControls = context['mayflower-blocks/_btnDisableBlockInline'] || false;
+
+	if ( ! buttonType ) {
+		setAttributes( { buttonType: context['mayflower-blocks/_btnTypeDefault'] || 'primary' } );
+
 	}
 
 	const blockProps = useBlockProps( {
@@ -155,28 +165,29 @@ export default function Edit( props ) {
 				<BlockControls>
 					<ToolbarGroup>
 						<ToolbarBootstrapColorSelector
-							values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
-							active={ buttonType }
+							values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark', 'link' ] }
+							active={ buttonType || 'primary' }
 							onClick={ ( value ) => setAttributes( {
 								buttonType: value,
 								activeButtonType: value
 							} ) }
 						/>
 						<ButtonSizeControl />
-
-						<ToolbarButton
-							name="full-width"
-							icon="align-wide"
-							title={ __( 'Display Full-Width' ) }
-							isActive={ buttonBlock ?? false }
-							onClick={ () => {
-								if ( ! buttonBlock ) {
-									setAttributes( { buttonDisplay: 'block' } )
-								}
-								setAttributes( { buttonBlock: ! buttonBlock } )
-							} }
-						/>
-						{ ! buttonBlock && (
+						{ ! disableBlockInlineControls && (
+							<ToolbarButton
+								name="full-width"
+								icon="align-wide"
+								title={ __( 'Display Full-Width' ) }
+								isActive={ buttonBlock ?? false }
+								onClick={ () => {
+									if ( ! buttonBlock ) {
+										setAttributes( { buttonDisplay: 'block' } )
+									}
+									setAttributes( { buttonBlock: ! buttonBlock } )
+								} }
+							/>
+						)}
+						{ ( ! buttonBlock && ! disableBlockInlineControls ) && (
 							<ToolbarButton
 								name="inline"
 								icon="text"
@@ -253,7 +264,7 @@ export default function Edit( props ) {
 						<PanelRow>
 							<SelectControl
 								label="Button Style"
-								value={ buttonType }
+								value={ buttonType || 'primary' }
 								options={ [
 									{ label: 'Primary (BC Blue)', value: 'primary' },
 									{ label: 'Secondary (Gray)', value: 'secondary' },
@@ -263,6 +274,7 @@ export default function Edit( props ) {
 									{ label: 'Danger (Red)', value: 'danger' },
 									{ label: 'Light', value: 'light' },
 									{ label: 'Dark', value: 'dark' },
+									{ label: 'Link', value: 'link' },
 								] }
 								onChange={ ( buttonType ) => {
 									setAttributes( { buttonType } );
@@ -283,27 +295,27 @@ export default function Edit( props ) {
 								} }
 							/>
 						</PanelRow>
-						<PanelRow>
-							<ToggleControl
-								label="Display as Block (Full-Width)"
-								checked={ buttonBlock }
-								onChange={ ( buttonBlock ) => setAttributes( { buttonBlock } ) }
-							/>
-						</PanelRow>
+						{ ! disableBlockInlineControls && (
+							<PanelRow>
+								<ToggleControl
+									label="Display as Block (Full-Width)"
+									checked={ buttonBlock }
+									onChange={ ( buttonBlock ) => setAttributes( { buttonBlock } ) }
+								/>
+							</PanelRow>
+						)}
 					</PanelBody>
 				</InspectorControls>
 				<div { ...blockProps }>
 					<RichText
 						ref={ richTextRef }
 						tagName="span"
-						className={ `btn btn-${ buttonType } ${ isBootstrap5 && buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
+						className={ `btn btn-${ buttonType || 'primary' } ${ isBootstrap5 && buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
 						allowedFormats={ [ 'core/bold', 'core/italic' ] }
 						value={ buttonText }
 						onChange={ ( buttonText ) => setAttributes( { buttonText } ) }
+						placeholder={ placeholder }
 					/>
-					{ ! isSelected && ! isEditingURL && ! isURLSet  && (
-						<p><strong>Warning! This button has no link!</strong></p>
-					) }
 				</div>
 			</>
 		);

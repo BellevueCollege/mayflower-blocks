@@ -4,32 +4,26 @@
 
 import { __ } from '@wordpress/i18n';
 
-import { registerBlockType, createBlock } from '@wordpress/blocks';
-
 import {
 	BlockControls,
 	RichText,
-	InspectorControls,
 	InnerBlocks,
 	useBlockProps,
+	MediaUpload,
+	MediaUploadCheck
 } from '@wordpress/block-editor';
 
 import {
-	SelectControl,
-	ToggleControl,
-	Toolbar,
 	ToolbarButton,
 	ToolbarGroup,
-	Panel,
-	PanelBody,
-	PanelRow,
-	SVG,
-	Path,
-	G
+	ToolbarDropdownMenu,
+	MenuItem,
+	Button,
+	Card,
+	CardBody,
 } from '@wordpress/components';
 
-
-import { useEffect, useState, useRef } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
 
 import { ToolbarBootstrapColorSelector, ToolbarBootstrapHeadingLevelSelector } from '../shared-elements/toolbar';
 
@@ -40,8 +34,14 @@ import './style.scss';
 export default function Edit( props ) {
 	const blockProps = useBlockProps();
 	const { attributes: {
+		editable,
 		cardText,
 		cardType,
+		cardImage,
+		cardImageId,
+		cardImageUrl,
+		cardImageAlt,
+		cardImageSize,
 		cardHeading,
 		cardHeadingText,
 		cardHeadingTag,
@@ -52,96 +52,119 @@ export default function Edit( props ) {
 	}, setAttributes, isSelected } = props;
 
 
+	// Load Card Image
+	const { media } =  useSelect( ( select ) => {
+		return {
+			media: select('core').getMedia( cardImageId ),
+		}
+	})
+
 	return (
 		<>
 			<BlockControls group="block">
 				<ToolbarGroup>
-					{ cardHeading === true && (
+					{ (cardHeading === true && editable.cardHeadingTag ) && (
 						<ToolbarBootstrapHeadingLevelSelector
 							values= {  [ 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6', 'Paragraph' ] }
 							active = { cardHeadingTag }
 							onClick = { ( value ) => setAttributes( { cardHeadingTag: value, activeHeadingClass: value } ) }
 						/>
 					)}
-					<ToolbarBootstrapColorSelector
-						values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
-						active = { cardType }
-						onClick = { ( value ) => setAttributes( { cardType: value } ) }
-					/>
+					{ (editable.cardType ) && (
+						<ToolbarBootstrapColorSelector
+							values={ [ 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark' ] }
+							active = { cardType }
+							onClick = { ( value ) => setAttributes( { cardType: value } ) }
+						/>
+					)}
 					<ToolbarButton
 						icon="lightbulb"
 						label="Light Background"
 						onClick={ () => setAttributes( { cardLightBg: ! cardLightBg } ) }
 						isActive={ cardLightBg }
+						disabled = { ! editable.cardLightBg }
 					/>
 				</ToolbarGroup>
 				<ToolbarGroup>
+					<MediaUploadCheck>
+						<MediaUpload
+							allowedTypes={ [ 'image' ] }
+							value={ cardImageId }
+							onSelect={ ( value ) => {
+								setAttributes( {
+									cardImageId: value.id,
+									cardImageUrl: value.sizes[ cardImageSize ].url,
+									cardImageAlt: value.alt,
+								} );
+								onClose();
+							} }
+							render={ ( { open } ) => (
+
+								<ToolbarDropdownMenu
+									icon="cover-image"
+									label={ __( 'Card Image', 'mayflower-blocks' ) }
+								>
+									{ ( { onClose } ) => (
+										<>
+											<MenuItem
+												icon={ cardImage ? 'hidden' : 'visibility' }
+												onClick={ () => {
+													setAttributes( { cardImage: !cardImage })
+													onClose();
+												}}
+												disabled={ ! editable.cardImage }
+											>
+												{ cardImage ? __( 'Disable Image Area', 'mayflower-blocks' ) : __( 'Enable Image Area', 'mayflower-blocks' ) }
+											</MenuItem>
+											<MenuItem
+												onClick={ () => {
+													onClose();
+													open();
+												} }
+												disabled={ !cardImage }
+												icon="format-image"
+											>
+												{ cardImageId === 0 ? __( 'Choose Image', 'mayflower-blocks' ) : __( 'Replace Image', 'mayflower-blocks' ) }
+											</MenuItem>
+											<MenuItem
+												icon="trash"
+												onClick={ () => {
+													setAttributes( {
+														cardImageId: 0,
+														cardImageUrl: '',
+														cardImageAlt: ''
+													} );
+													onClose();
+												}}
+												isDestructive={ true }
+												disabled={ cardImageId === 0 || !cardImage }
+											>
+												{ __( 'Remove Image', 'mayflower-blocks' ) }
+											</MenuItem>
+										</>
+									) }
+								</ToolbarDropdownMenu>
+							) }
+						/>
+					</MediaUploadCheck>
+
 					<ToolbarButton
 						icon="table-row-before"
-						label = "Display Card Header"
+						label = { __( 'Display Card Header', 'mayflower-blocks' ) }
 						onClick={ () => setAttributes( { cardHeading: ! cardHeading } ) }
 						isActive={ cardHeading }
+						disabled = { ! editable.cardHeading }
 					/>
 					<ToolbarButton
 						icon="table-row-after"
-						label = "Display Card Footer"
+						label = { __( 'Display Card Footer', 'mayflower-blocks' ) }
 						onClick={ () => setAttributes( { cardFooter: ! cardFooter } ) }
 						isActive={ cardFooter }
+						disabled = { ! editable.cardFooter }
 					/>
 				</ToolbarGroup>
 
 			</BlockControls>
-
-			<InspectorControls>
-				<Panel>
-					<PanelBody
-						title="Card Style"
-						initialOpen={ false }
-					>
-						<PanelRow>
-							<SelectControl
-								label="Theme Style"
-								value={ cardType }
-								options={ [
-									{ label: 'Default', value: 'default' },
-									{ label: 'Primary (BC Blue)', value: 'primary' },
-									{ label: 'Secondary (Gray)', value: 'secondary' },
-									{ label: 'Info (Light Blue)', value: 'info' },
-									{ label: 'Success (Green)', value: 'success' },
-									{ label: 'Warning (Yellow)', value: 'warning' },
-									{ label: 'Danger (Red)', value: 'danger' },
-									{ label: 'Light', value: 'light' },
-									{ label: 'Dark', value: 'dark' },
-								] }
-								onChange={ ( cardType ) => {
-									setAttributes( { cardType } );
-								} }
-							/>
-						</PanelRow>
-						<PanelRow>
-							<ToggleControl
-								label="Use Light Background for Card Body"
-								checked={ cardLightBg }
-								onChange={ ( cardLightBg ) => setAttributes( { cardLightBg } ) }
-							/>
-						</PanelRow>
-						<PanelRow>
-							<ToggleControl
-								label="Show Card Header"
-								checked={ cardHeading }
-								onChange={ ( cardHeading ) => setAttributes( { cardHeading } ) }
-							/>
-						</PanelRow>
-						<PanelRow>
-							<ToggleControl
-								label="Show Card Footer"
-								checked={ cardFooter }
-								onChange={ ( cardFooter ) => setAttributes( { cardFooter } ) }
-							/>
-						</PanelRow>
-					</PanelBody>
-				</Panel>
-			</InspectorControls>
 
 			<div { ...blockProps }>
 				<div className={ 'card bg-' + cardType + (
@@ -150,6 +173,43 @@ export default function Edit( props ) {
 					cardType !== 'info' &&
 					cardType !== 'warning' ?
 						' text-white' : '' ) }>
+					{ ( cardImage ) && (
+						<div className='card-img-top'>
+							{ ( cardImageId === 0 ) && (
+								<MediaUploadCheck>
+									<MediaUpload
+										allowedTypes={ [ 'image' ] }
+										value={ cardImageId }
+										onSelect={ ( value ) => setAttributes( {
+											cardImageId: value.id,
+											cardImageUrl: value.sizes[ cardImageSize ].url,
+											cardImageAlt: value.alt,
+										} ) }
+										render= { ( { open } ) => (
+											<Card>
+												<CardBody>
+													<Button
+														className="button button-large"
+														onClick={ open }
+													>
+														{ __( 'Add an Image', 'mayflower-blocks' ) }
+													</Button>
+												</CardBody>
+											</Card>
+										)}
+									/>
+								</MediaUploadCheck>
+							)}
+
+							{ ( media !== undefined ) && (
+								<img
+									src={ cardImageUrl }
+									alt={ cardImageAlt }
+									className="card-img-top"
+								/>
+							) }
+						</div>
+					) }
 
 					{ cardHeading == true ?
 						<RichText
