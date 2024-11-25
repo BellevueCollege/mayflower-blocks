@@ -62,6 +62,7 @@ function mg4_blocks_init() {
 	// Static Blocks.
 	mbg4_register_block( 'alert' );
 	mbg4_register_block( 'button' );
+	mbg4_register_block( 'button-group' );
 	mbg4_register_block( 'panel' );
 	mbg4_register_block( 'jumbotron' );
 	mbg4_register_block( 'lead' );
@@ -170,3 +171,45 @@ function mbg4_allow_aria_attributes( $tags, $context ) {
 	return $tags;
 }
 add_filter( 'wp_kses_allowed_html', 'mbg4_allow_aria_attributes', 10, 2 );
+
+// Make the `tablepress_tables option available via REST api to allow table lookup by post ID
+add_action( 'rest_api_init', function () {
+	register_rest_route( 'mayflower-blocks/v1', '/tableid-by-postid/(?P<id>\d+)', array(
+		'methods' => 'GET',
+		'callback' => 'mbg4_table_callback',
+		'args' => array(
+			'id' => array(
+				'required' => true,
+				'type' => 'integer',
+			),
+		),
+
+
+		'permission_callback' => function () {
+			return current_user_can( 'edit_posts' );
+		}
+	) );
+} );
+
+/**
+ * Callback function for retrieving a TablePress table ID by post ID via REST API.
+ *
+ * @param array $request The REST API request data, should contain 'postid'.
+ * @return mixed The TablePress table ID corresponding to the given post ID, or null if not found.
+ */
+function mbg4_table_callback( $request  ) {
+	$id = $request['id'];
+	if ( ! $id ) {
+		return null;
+	}
+
+	$table_option = json_decode( get_option( 'tablepress_tables' ) );
+	foreach ( $table_option->table_post as $key => $value ) {
+		if ( $value == $id ) {
+			return array( 'tableId' => $key );
+		}
+	}
+
+	return array( 'tableId' => false );
+
+}
