@@ -61,7 +61,14 @@ export default function Edit( props ) {
 		return tableArray;
 	});
 
-
+	// Set Table ID if it's missing
+	if ( ! tableId ) {
+		apiFetch( { path: '/mayflower-blocks/v1/tableid-by-postid/' + postId } ).then( result => {
+			if ( result.tableId ) {
+				setAttributes( { tableId: result.tableId } );
+			}
+		} );
+	}
 
 	const TableError = () => {
 		if ( ! tableFetched ) {
@@ -104,7 +111,7 @@ export default function Edit( props ) {
 
 		// If this table was converted from a shortcode `tableId` is set but not `postId`.
 		// Display a different interface to select the table.
-		if ( tableId && false === select ) {
+		if ( ! postId && false === select ) {
 			return (
 				<ToolbarButton
 					onClick={ () => setSelect( true ) }
@@ -115,7 +122,7 @@ export default function Edit( props ) {
 
 
 		// Checks to make sure a tableId isn't defined or the user doesn't want to select a new table
-		if ( ( tableId === undefined || tableId === '' ) || select === true ) {
+		if ( ! ( postId === undefined || postId === '' ) || select === true ) {
 			return (
 				<ToolbarGroup>
 					<ToolbarButton
