@@ -1,0 +1,28 @@
+.btn-group {
+	margin: 1rem 0;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	flex-wrap: wrap;
+
+	// Below 'medium' breakpoint
+	@media screen and (max-width: 768px) {
+
+		// Make buttons fill container
+		.wp-block-mayflower-blocks-button {
+			flex: 1 1 auto;
+			display: flex;
+
+			.btn {
+				flex: 1 1 auto;
+			}
+		}
+	}
+
+	// Above 'medium' breakpoint
+	@media screen and (min-width: 769px) {
+		flex-direction: row;
+		align-items: center;
+	}
+
+}
