@@ -58,11 +58,8 @@ export default function Edit( props ) {
 	setAttributes( { parentBlockClientId: parentClientId } );
 
 
-	const colorClass = 'bg-' + collapseClass + (
-		collapseClass !== 'default' &&
-		collapseClass !== 'light' &&
-		collapseClass !== 'warning' &&
-		collapseClass !== 'info' ? ' text-white' : '' );
+	const colorClass = `bg-${ collapseClass } text-bg-${ collapseClass }
+		${ collapseClass !== 'default' && collapseClass !== 'light' && collapseClass !== 'warning' && collapseClass !== 'info' ? ' text-white' : '' }`;
 
 	// Block Classes for Bootstrap 5 and Non-Bootstrap 5 versions
 	const blockClasses = {
@@ -170,8 +167,8 @@ export default function Edit( props ) {
 			<div {...blockProps}>
 				<>
 					{ isBootstrap5 ? (
-						<HeadingTag className={ blockClasses.heading } id={ `heading_${ currentBlockClientId }` }>
-							<div className={ blockClasses.headingButton } >
+						<HeadingTag className={ `${blockClasses.heading }` } id={ `heading_${ currentBlockClientId }` }>
+							<div className={ `${ blockClasses.headingButton } ${ isSelected ? 'active' : 'collapsed' }` } >
 								<RichText
 									tagName="span"
 									allowedFormats= { [] }

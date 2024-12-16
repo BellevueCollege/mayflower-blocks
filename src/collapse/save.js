@@ -33,11 +33,8 @@ export default function save( props ) {
 
 
 
-	const colorClass = 'bg-' + collapseClass + (
-		collapseClass !== 'default' &&
-		collapseClass !== 'light' &&
-		collapseClass !== 'warning' &&
-		collapseClass !== 'info' ? ' text-white' : '' );
+	const colorClass = `bg-${ collapseClass } text-bg-${ collapseClass }
+		${ collapseClass !== 'default' && collapseClass !== 'light' && collapseClass !== 'warning' && collapseClass !== 'info' ? ' text-white' : '' }`;
 
 	// Block Classes for Bootstrap 5 and Non-Bootstrap 5 versions
 	const blockClasses = {
