@@ -22,13 +22,13 @@ export default function Edit( props ) {
 	return (
 		<div {...blockProps}>
 			<RichText
-				tagName="div"
+				tagName="p"
 				className="lead"
-				allowedFormats={ [ 'bold', 'italic', 'link' ] }
-				placeholder="Enter text..."
-				keepPlaceholderOnFocus="true"
+				placeholder="Enter lead text..."
 				value={ leadText }
 				onChange={ ( leadText ) => setAttributes( { leadText } ) }
+				disableLineBreaks={ true }
+				identifier='leadText'
 			/>
 		</div>
 	);
