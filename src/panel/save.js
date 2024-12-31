@@ -13,6 +13,11 @@ export default function save( props ) {
 	const { attributes: {
 		cardText,
 		cardType,
+		cardImage,
+		cardImageId,
+		cardImageUrl,
+		cardImageAlt,
+		cardImageSize,
 		cardHeading,
 		cardHeadingText,
 		cardHeadingTag,
@@ -32,7 +37,14 @@ export default function save( props ) {
 	});
 	return (
 		<div { ...blockProps } >
-
+			{ ( cardImage === true && cardImageId !== 0 ) && (
+				<img
+					className="card-img-top"
+					src={ cardImageUrl }
+					alt={ cardImageAlt }
+					loading="lazy"
+				/>
+			)}
 			{ cardHeading == true ?
 				cardHeadingText == null || cardHeadingText == '' ? '' :
 				<RichText.Content

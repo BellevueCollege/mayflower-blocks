@@ -19,7 +19,7 @@ export default function save( props ) {
 	});
 	return (
 		<RichText.Content
-			tagName="div"
+			tagName="p"
 			value={ leadText }
 			{ ...blockProps }
 		/>

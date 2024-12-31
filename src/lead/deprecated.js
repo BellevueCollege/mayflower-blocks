@@ -9,110 +9,27 @@ const { __ } = wp.i18n;
 const deprecated = [
 	{
 		attributes: {
-			buttonText: {
-				type: 'string',
-				selector: 'a',
-			},
-			buttonLink: {
-				type: 'string',
-				source: 'attribute',
-				selector: 'a',
-				attribute: 'href',
-			},
-			buttonType: {
-				type: 'string',
-				default: 'default',
-			},
-			buttonAlign: {
-				type: 'string',
-			},
-			buttonBlock: {
-				type: 'boolean',
-				default: false,
-			},
-			buttonSize: {
-				type: 'string',
-				default: '',
-			},
-		},
-
-		migrate( { buttonText, buttonLink, buttonType, buttonAlign, buttonSize, buttonBlock } ) {
-			return {
-				buttonType: buttonType = 'default' === buttonType ? 'light' : buttonType,
-				buttonSize: buttonSize = 'btn-xs' === buttonType ? 'btn-sm' : buttonSize,
-				buttonText: buttonText,
-				buttonLink: buttonLink,
-				buttonAlign: buttonAlign,
-				buttonBlock: buttonBlock,
-			};
-		},
-
-		isEligible( attributes, innerBlocks ) {
-			if ( 'btn-xs' === attributes.buttonSize || 'default' === attributes.buttonType ) {
-				return true;
+			leadText: {
+				type: "string",
+				default: ""
 			}
-			return false;
 		},
 
-		save: function( { attributes } ) {
-			return (
-				<RichText.Content
-					tagName="a"
-					className={ `btn btn-${ attributes.buttonType } ${ attributes.buttonBlock ? 'btn-block' : '' } ${ attributes.buttonSize }` }
-					href={ attributes.buttonLink }
-					value={ attributes.buttonText }
-				/>
-			);
-		},
-	},
-	{
-		attributes: {
-			buttonText: {
-				type: 'string',
-				selector: 'a',
-			},
-			buttonLink: {
-				type: 'string',
-				source: 'attribute',
-				selector: 'a',
-				attribute: 'href',
-			},
-			buttonType: {
-				type: 'string',
-				default: 'default',
-			},
-			buttonAlign: {
-				type: 'string',
-			},
-			buttonBlock: {
-				type: 'boolean',
-				default: false,
-			},
-			buttonSize: {
-				type: 'string',
-				default: '',
-			},
-		},
-		save: function ( props ) {
+		save: function( props ) {
 			const { attributes: {
-				buttonText,
-				buttonLink,
-				buttonType,
-				activeButtonType,
-				buttonAlign,
-				buttonBlock,
-				buttonSize
+				leadText
 			} } = props;
+			const blockProps = useBlockProps.save({
+				className: 'lead'
+			});
 			return (
 				<RichText.Content
-					tagName="a"
-					className={ `btn btn-${ buttonType } ${ buttonBlock ? 'btn-block' : '' } ${ buttonSize }` }
-					href={ buttonLink }
-					value={ buttonText }
+					tagName="div"
+					value={ leadText }
+					{ ...blockProps }
 				/>
 			);
-		}
-
+		},
 	}
 ]
 export default deprecated;
