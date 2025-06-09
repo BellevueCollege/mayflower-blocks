@@ -73,6 +73,7 @@ export default function save( props ) {
 							<button className={ `btn${ ( ! expanded ? ' collapsed' : '' ) }${ (
 								collapseClass !== 'default' &&
 								collapseClass !== 'light' &&
+								collapseClass !== 'warning' &&
 								collapseClass !== 'info' ? ' text-white' : '' ) }` } type="button" data-toggle="collapse" data-target={ `#collapse_${ currentBlockClientId }` } aria-expanded={ expanded } aria-controls={ `collapse_${ currentBlockClientId }` }>
 								<RichText.Content
 									value={ collapseHeadingText }
