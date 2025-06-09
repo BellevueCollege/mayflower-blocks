@@ -93,7 +93,7 @@ export default function Edit( props ) {
 							onSelect={ ( value ) => {
 								setAttributes( {
 									cardImageId: value.id,
-									cardImageUrl: value.sizes[ cardImageSize ].url,
+									cardImageUrl: (value.sizes && value.sizes[cardImageSize]?.url) || value.url,
 									cardImageAlt: value.alt,
 								} );
 								onClose();
@@ -182,7 +182,7 @@ export default function Edit( props ) {
 										value={ cardImageId }
 										onSelect={ ( value ) => setAttributes( {
 											cardImageId: value.id,
-											cardImageUrl: value.sizes[ cardImageSize ].url,
+											cardImageUrl: (value.sizes && value.sizes[cardImageSize]?.url) || value.url,
 											cardImageAlt: value.alt,
 										} ) }
 										render= { ( { open } ) => (
