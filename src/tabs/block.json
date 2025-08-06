@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2,
 	"name": "mayflower-blocks/tabs",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"title": "Tabs",
 	"category": "bootstrap-blocks",
 	"icon": "category",
@@ -10,7 +10,8 @@
 	"supports": {
 		"html": false,
 		"lock": false,
-		"align": ["wide"]
+		"align": ["wide"],
+		"anchor": true
 	},
 	"textdomain": "mayflower-blocks",
 	"attributes": {},
