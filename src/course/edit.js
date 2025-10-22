@@ -51,7 +51,6 @@ export default function Edit( props ) {
 	const { attributes: {
 		subject,
 		item,
-		description,
 		headingTag,
 	}, setAttributes, isSelected } = props;
 
@@ -109,20 +108,6 @@ export default function Edit( props ) {
 		);
 	}
 
-	/**
-	 * Render the Display Course Description button
-	 */
-	const DisplayCourseDescriptionButton = () => {
-		return(
-			<ToolbarButton
-				icon='text'
-				label='Display Course Description'
-				onClick={ () => { setAttributes( { description: ! description } ) } }
-				isActive={ description }
-			/>
-		);
-	}
-
 	// Update attributes from within children components
 	const handleSubjectUpdate = ( newSubject ) => {
 		setAttributes( { subject: newSubject, item: 'select' } );
@@ -169,7 +154,6 @@ export default function Edit( props ) {
 						active = { headingTag }
 						onClick = { ( newLevel ) => { setAttributes( { headingTag: newLevel } ) } }
 					/>
-					<DisplayCourseDescriptionButton />
 				</ToolbarGroup>
 				<ToolbarGroup>
 					<SelectCourseButton />
@@ -187,15 +171,6 @@ export default function Edit( props ) {
 						<ClassItemSelect
 							attributes={ props.attributes }
 							onItemUpdate={ handleItemUpdate }
-						/>
-					</PanelRow>
-				</PanelBody>
-				<PanelBody title="Display Options" initialOpen={ false }>
-					<PanelRow>
-						<ToggleControl
-							label="Display Course Description"
-							checked={ description }
-							onChange={ ( description ) => setAttributes( { description } ) }
 						/>
 					</PanelRow>
 				</PanelBody>

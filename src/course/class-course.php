@@ -158,8 +158,6 @@ class Mayflower_Blocks_Course {
 
 		$hcx_url = esc_url( "https://csprd.ctclink.us/psc/csprd/EMPLOYEE/SA/s/WEBLIB_HCX_CM.H_COURSE_CATALOG.FieldFormula.IScript_Main/subjects/{$this->subject}/" . '?institution=WA080');
 
-
-
 		$course_data = $this->dataapi_load_course();
 
 		if ( $course_data ) { //if there is course data, return course information
@@ -175,17 +173,22 @@ class Mayflower_Blocks_Course {
 			$catalog_text = 'View ' . $course_data['subject'] . ' '
 				. $course_data['number'] . ' in the Academic Catalog';
 
-			$catalog_link = $catalog_url ? "<a class='btn btn-primary btn-sm ms-1 ml-1 mb-1' href='$catalog_url'>$catalog_text</a>" : '';
+			$catalog_btn_class = "ms-1 ml-1 mb-1";
+			$hcx_btn_class = "ms-1 ml-1 mb-1";
+
+			if ( $this->headingTag !== 'p' ) {
+				$catalog_btn_class .= " btn btn-primary btn-sm";
+				$hcx_btn_class .= " btn btn-outline-dark btn-sm";
+			}
+
+			$catalog_link = $catalog_url ? "<a class='$catalog_btn_class' href='$catalog_url'>$catalog_text</a>" : '';
 
 			$hcx_text = 'Explore ' . $course_data['subject'] . ' courses in ctcLink';
 
-			$hcx_link = $hcx_url ? "<a class='btn btn-outline-dark btn-sm ms-1 ml-1 mb-1' href='$hcx_url'>$hcx_text</a>" : '';
+			$hcx_link = $hcx_url ? "<a class='$hcx_btn_class' href='$hcx_url'>$hcx_text</a>" : '';
 
-			if ( $this->description ) {
-				return "<$this->headingTag>$title</$this->headingTag><p>$description</p><p>$catalog_link $hcx_link</p><hr>";
-			} else {
-				return "<$this->headingTag>$title</$this->headingTag><p>$catalog_link $hcx_link</p>";
-			}
+			return "<$this->headingTag>$title</$this->headingTag><p>$description</p><ul class='list-inline'><li class='list-inline-item'>$catalog_link</li><li class='list-inline-item'>$hcx_link</li></ul><hr>";
+
 
 		} else {
 			return '<!-- Notice: courses are available. -->';
