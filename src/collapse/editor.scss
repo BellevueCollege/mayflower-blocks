@@ -5,15 +5,31 @@
  * which makes it higher in priority.
  */
 
-.wp-block-mayflower-blocks-collapse{
+.wp-block-mayflower-blocks-collapse {
+	margin: 0;
+	&.card {
+		padding: 0;
+		max-width: 100%;
 		margin: 0;
-        &.card {
-            padding: 0;
-			max-width: 100%;
-			margin: 0;
-			margin-bottom: 0 !important;
-        }
-        .card-body > *:last-child {
-			margin-bottom: 0;
-        }
-    }
+		margin-bottom: 0 !important;
+	}
+	.card-body > *:last-child {
+		margin-bottom: 0;
+	}
+
+	.accordion-button:after {
+		display: none;
+	}
+
+	.accordion-button, .card-header .h6 {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.accordion-editor-toggle {
+		order: 999; // Forces it to display last
+		margin-left: auto; // Pushes it to the right
+	}
+}
+
