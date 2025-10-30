@@ -8,7 +8,8 @@
 	"icon": "welcome-learn-more",
 	"description": "Display Bellevue College course information, including subject, number, title, credits, description, and a link to the class schedule and catalog.",
 	"supports": {
-		"html": false
+		"html": false,
+		"align": ["wide"]
 	},
 	"textdomain": "mayflower-blocks",
 	"attributes": {
