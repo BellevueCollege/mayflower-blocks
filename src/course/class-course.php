@@ -162,7 +162,7 @@ class Mayflower_Blocks_Course {
 
 		if ( $course_data ) { //if there is course data, return course information
 			$title = "<strong>{$course_data['subject']} {$course_data['number']}:</strong> {$course_data['title']} <span class='badge text-bg-secondary badge-secondary'>" .
-				( $course_data['variable'] ? 'variable' : $course_data['credits'] ) . ' cr.</span>';
+				( $course_data['variable'] ? 'variable' : $course_data['credits'] ) . ' <abbr title="'. __( 'credits', 'mayflower-blocks' ) .'">cr</abbr>.</span>';
 
 			$url = $this->link_base_url . str_replace( '&', '', $course_data['subject'] ) .
 				( $course_data['common'] ? '%26' : '' ) . '/' .
