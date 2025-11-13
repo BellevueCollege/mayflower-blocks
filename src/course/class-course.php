@@ -110,7 +110,7 @@ class Mayflower_Blocks_Course {
 		}
 		$transient_name = sanitize_key( 'mfblocks-catalog-course-id-'. base64_encode( $catalog . $course_subject . $course_number ) );
 
-		$course_id = get_transient( $transient_name );
+		$course_id = get_site_transient( $transient_name );
 
 		if ( $course_id ) {
 			return $course_id;
@@ -135,7 +135,7 @@ class Mayflower_Blocks_Course {
 
 			// If results, return the course ID after setting the transient
 			$course_id = (string)$xml->search->results->result->id;
-			set_transient( $transient_name, $course_id, ( 4 * HOUR_IN_SECONDS ) + rand( 0, 1 * HOUR_IN_SECONDS ) );
+			set_site_transient( $transient_name, $course_id, ( 4 * HOUR_IN_SECONDS ) + rand( 0, 1 * HOUR_IN_SECONDS ) );
 			return $course_id;
 
 		}
