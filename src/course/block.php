@@ -6,7 +6,7 @@ function mbg4_course_callback( $attributes ) {
 	$course = new Mayflower_Blocks_Course(
 		$attributes['subject'] ? wp_specialchars_decode( $attributes['subject'] ) : null,
 		$attributes['item'] ?? null,
-		$attributes['description'] ?? null,
+		true, // Always show description
 		$attributes['headingTag'] ?? 'h2',
 	);
 	return $course->output();

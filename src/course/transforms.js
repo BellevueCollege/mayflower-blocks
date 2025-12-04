@@ -16,12 +16,6 @@ const transforms = {
 						return item;
 					},
 				},
-				description: {
-					type: 'boolean',
-					shortcode: ( { named: { description } } ) => {
-						return description;
-					},
-				},
 				headingTag: {
 					type: 'string',
 					default: 'h2',

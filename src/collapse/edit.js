@@ -10,6 +10,7 @@ import {
 	Toolbar,
 	ToolbarDropdownMenu,
 	ToolbarButton,
+	Button,
 	SVG,
 	Path,
 	G,
@@ -26,7 +27,8 @@ import {
 	InnerBlocks,
 } from '@wordpress/block-editor';
 
-import {select,} from '@wordpress/data';
+import { select } from '@wordpress/data';
+import { useState, useEffect } from '@wordpress/element';
 
 import {
 	ToolbarBootstrapColorSelector,
@@ -57,6 +59,47 @@ export default function Edit( props ) {
 	setAttributes( { currentBlockClientId: clientId } );
 	setAttributes( { parentBlockClientId: parentClientId } );
 
+	// Local state to track editor display only (not saved to database)
+	const [ isOpen, setIsOpen ] = useState( false );
+
+	/**
+	 * Handle accordion behavior: close siblings when one opens
+	 */
+	useEffect( () => {
+		const handleCollapseToggle = ( event ) => {
+			const { collapseId, parentId } = event.detail;
+
+			// If another collapse in same parent opened, close this one
+			if ( parentId === parentClientId && collapseId !== clientId ) {
+				setIsOpen( false );
+			}
+		};
+
+		window.addEventListener( 'mayflower-collapse-toggle', handleCollapseToggle );
+
+		return () => {
+			window.removeEventListener( 'mayflower-collapse-toggle', handleCollapseToggle );
+		};
+	}, [ parentClientId, clientId ] );
+
+	/**
+	 * Toggle accordion open/closed state
+	 */
+	const toggleAccordion = () => {
+		setIsOpen( ! isOpen );
+
+		// Notify siblings to close
+		const event = new CustomEvent( 'mayflower-collapse-toggle', {
+			detail: { collapseId: clientId, parentId: parentClientId }
+		} );
+		window.dispatchEvent( event );
+	};
+
+	useEffect( () => {
+		if ( isSelected && ! isOpen ) {
+			toggleAccordion();
+		}
+	}, [ isSelected ] );
 
 	const colorClass = `bg-${ collapseClass } text-bg-${ collapseClass }
 		${ collapseClass !== 'default' && collapseClass !== 'light' && collapseClass !== 'warning' && collapseClass !== 'info' ? ' text-white' : '' }`;
@@ -76,22 +119,35 @@ export default function Edit( props ) {
 
 	const HeadingTag = headingTag;
 
+	const openIcon = (
+		<>
+			{ __( 'Expand +', 'mayflower-blocks') }
+		</>
+	);
+
+	const closeIcon = (
+		<>
+			{ __( 'Collapse –', 'mayflower-blocks') }
+		</>
+	);
+
 	/**
 	 * Check if ANY child block is currently selected
 	 *
 	 * Credit: https://stackoverflow.com/a/55955285
 	 */
-	function hasSelectedChild(props) {
-		const select = wp.data.select('core/block-editor');
+	function hasSelectedChild( props ) {
+		const select = wp.data.select( 'core/block-editor' );
 		const selected = select.getBlockSelectionStart();
-		const inner = select.getBlock(props.clientId).innerBlocks;
-		for (let i = 0; i < inner.length; i++) {
-			if (inner[i].clientId === selected || inner[i].innerBlocks.length && hasSelectedChild(inner[i])) {
+		const inner = select.getBlock( props.clientId ).innerBlocks;
+		for ( let i = 0; i < inner.length; i++ ) {
+			if ( inner[ i ].clientId === selected || inner[ i ].innerBlocks.length && hasSelectedChild( inner[ i ] ) ) {
 				return true;
 			}
 		}
 		return false;
-	};
+	}
+
 	return (
 		<>
 			<BlockControls>
@@ -168,7 +224,7 @@ export default function Edit( props ) {
 				<>
 					{ isBootstrap5 ? (
 						<HeadingTag className={ `${blockClasses.heading }` } id={ `heading_${ currentBlockClientId }` }>
-							<div className={ `${ blockClasses.headingButton } ${ isSelected ? 'active' : 'collapsed' }` } >
+							<div className={ `${ blockClasses.headingButton } ${ isOpen ? 'active' : 'collapsed' }` } >
 								<RichText
 									tagName="span"
 									allowedFormats= { [] }
@@ -182,6 +238,13 @@ export default function Edit( props ) {
 								>
 									<span className="badge bg-secondary ms-2">{ headingTag.toUpperCase() }</span>
 								</Tooltip>
+								<Button
+									onClick={ toggleAccordion }
+									className="accordion-editor-toggle"
+									variant="primary"
+								>
+									{ isOpen ? closeIcon : openIcon }
+								</Button>
 							</div>
 						</HeadingTag>
 					) : (
@@ -200,13 +263,20 @@ export default function Edit( props ) {
 								>
 									<span className="badge badge-info float-right">{ headingTag.toUpperCase() }</span>
 								</Tooltip>
+								<Button
+									onClick={ toggleAccordion }
+									className="accordion-editor-toggle"
+									variant="primary"
+								>
+									{ isOpen ? closeIcon : openIcon }
+								</Button>
 							</HeadingTag>
 						</div>
 					) }
 				</>
 				<div
 					id={ `collapse_${ currentBlockClientId }` }
-					className={ `${ blockClasses.collapse } ${ expanded || isSelected || hasSelectedChild( props ) ? 'show' : '' }` }
+					className={ `${ blockClasses.collapse } ${ isOpen || hasSelectedChild( props ) ? 'show' : '' }` }
 					aria-labelledby={ `heading_${ currentBlockClientId }` }
 					data-parent={ `#accordion_${ parentClientId }` }
 				>

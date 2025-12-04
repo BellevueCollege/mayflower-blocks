@@ -6,7 +6,7 @@ import { __ } from '@wordpress/i18n';
 
 import { useSelect, select, dispatch } from '@wordpress/data';
 
-import { useState } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
 
 import {
 	Spinner
@@ -38,7 +38,25 @@ export default function Edit( props ) {
 	const { attributes: {
 		currentBlockClientId,
 	}, setAttributes, isSelected, clientId } = props;
+
+	// Editor-only state - NOT saved
+	const [openCollapseId, setOpenCollapseId] = useState(null);
+
 	setAttributes( { currentBlockClientId: clientId } );
+
+	// Listen for custom events from children
+	useEffect(() => {
+		const handleCollapseToggle = (event) => {
+			const { collapseId } = event.detail;
+			setOpenCollapseId(prevId => prevId === collapseId ? null : collapseId);
+		};
+
+		window.addEventListener('mayflower-collapse-toggle', handleCollapseToggle);
+
+		return () => {
+			window.removeEventListener('mayflower-collapse-toggle', handleCollapseToggle);
+		};
+	}, []);
 
 	const blockProps = useBlockProps({
 		className: 'accordion',
