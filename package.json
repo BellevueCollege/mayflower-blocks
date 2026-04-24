@@ -1,6 +1,6 @@
 {
   "name": "mayflower-blocks",
-  "version": "3.9.0",
+  "version": "3.10.1",
   "private": true,
   "scripts": {
     "build": "wp-scripts build",
@@ -18,7 +18,7 @@
     "test:unit": "wp-scripts test-unit-js"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^30.12.0"
+    "@wordpress/scripts": "^32.0.0"
   },
   "dependencies": {
     "imagesloaded": "^5.0.0",
