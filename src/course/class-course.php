@@ -77,7 +77,6 @@ class Mayflower_Blocks_Course {
 	 * Determine Current Catalog ID
 	 */
 	private function catalog_current_id( $base_url, $key ) {
-		$url = $base_url . "/content?key=$key&format=xml&method=getCatalogs";
 
 		$catalog_id = get_site_transient( 'mfblocks-catalog-id' );
 
@@ -85,14 +84,39 @@ class Mayflower_Blocks_Course {
 			return $catalog_id;
 		}
 
-		$xml = simplexml_load_file( "$url" ) or die( "Error: Cannot create object" );
-		foreach ( $xml[0]->catalog  as $catalog ) {
+		$url      = $base_url . '/content?key=' . urlencode( $key ) . '&format=xml&method=getCatalogs';
+		$response = wp_safe_remote_get( $url );
+
+		if ( is_wp_error( $response ) ) {
+			error_log( 'mfblocks: catalog API error — ' . $response->get_error_message() );
+			return false;
+		}
+
+		$status = wp_remote_retrieve_response_code( $response );
+		if ( $status < 200 || $status >= 300 ) {
+			error_log( "mfblocks: catalog API returned HTTP $status" );
+			return false;
+		}
+
+		libxml_use_internal_errors( true );
+		$xml = simplexml_load_string( wp_remote_retrieve_body( $response ) );
+		libxml_clear_errors();
+
+		if ( $xml === false ) {
+			error_log( 'mfblocks: catalog XML parse failed' );
+			return false;
+		}
+
+		$catalog_id = false;
+		foreach ( $xml[0]->catalog as $catalog ) {
 			if ( $catalog->state->published == 'Yes' && $catalog->state->archived == 'No' ) {
-				$catalog_id = str_replace( 'acalog-catalog-', '', $catalog->attributes()->id );
+				$catalog_id = str_replace( 'acalog-catalog-', '', (string) $catalog->attributes()->id );
 			}
 		}
 
-		set_site_transient( 'mfblocks-catalog-id', $catalog_id, ( 4 * HOUR_IN_SECONDS ) + rand( 0, 1 * HOUR_IN_SECONDS ) );
+		if ( $catalog_id ) {
+			set_site_transient( 'mfblocks-catalog-id', $catalog_id, ( 4 * HOUR_IN_SECONDS ) + rand( 0, 1 * HOUR_IN_SECONDS ) );
+		}
 
 		return $catalog_id;
 	}
@@ -103,42 +127,49 @@ class Mayflower_Blocks_Course {
 
 	function catalog_course_id( $base_url, $key, $course_subject, $course_number, $catalog ) {
 		$course_subject = urlencode( '"' . $course_subject . '"' );
-		$course_number = urlencode( '"' . $course_number . '"' );
+		$course_number  = urlencode( '"' . $course_number . '"' );
 		if ( ! $course_subject || ! $course_number || ! $catalog ) {
-			error_log( 'MFBLOCKS: Missing course subject, course number, or catalog' . $course_subject . ' ' . $course_number . ' ' . $catalog );
+			error_log( 'mfblocks: missing course subject, number, or catalog — ' . urldecode( $course_subject ) . ' ' . urldecode( $course_number ) . ' ' . $catalog );
 			return false;
 		}
-		$transient_name = sanitize_key( 'mfblocks-catalog-course-id-'. base64_encode( $catalog . $course_subject . $course_number ) );
-
-		$course_id = get_site_transient( $transient_name );
+		$transient_name = sanitize_key( 'mfblocks-catalog-course-id-' . base64_encode( $catalog . $course_subject . $course_number ) );
+		$course_id      = get_site_transient( $transient_name );
 
 		if ( $course_id ) {
 			return $course_id;
-		} else {
-
-			$url = $base_url . '/search/courses?key=' .
-			$key . '&format=xml&method=search&catalog=' .
-			$catalog . '&query=' .
-			$course_subject . '%20' . $course_number . '&options[sort]=rank&options[limit]=1';
-
-			$request = wp_safe_remote_get( $url );
-			$request_body = wp_remote_retrieve_body( $request );
-			if ( is_wp_error( $request_body ) ) { return false; }
-
-			$xml = simplexml_load_string( $request_body );
-
-			// If no results, return false
-			if ( ! $xml->search->results->result->id ) {
-				error_log( 'CS2HCX: No results for course ' . urldecode($course_subject) . ' ' . urldecode($course_number) . ' (Catalog: ' . urldecode($catalog) . ')' );
-				return false;
-			}
-
-			// If results, return the course ID after setting the transient
-			$course_id = (string)$xml->search->results->result->id;
-			set_site_transient( $transient_name, $course_id, ( 4 * HOUR_IN_SECONDS ) + rand( 0, 1 * HOUR_IN_SECONDS ) );
-			return $course_id;
-
 		}
+
+		$url      = $base_url . '/search/courses?key=' . urlencode( $key ) . '&format=xml&method=search&catalog=' . $catalog . '&query=' . $course_subject . '%20' . $course_number . '&options[sort]=rank&options[limit]=1';
+		$response = wp_safe_remote_get( $url );
+
+		if ( is_wp_error( $response ) ) {
+			error_log( 'mfblocks: course API transport error — ' . $response->get_error_message() );
+			return false;
+		}
+
+		$status = wp_remote_retrieve_response_code( $response );
+		if ( $status < 200 || $status >= 300 ) {
+			error_log( "mfblocks: course API returned HTTP $status" );
+			return false;
+		}
+
+		libxml_use_internal_errors( true );
+		$xml = simplexml_load_string( wp_remote_retrieve_body( $response ) );
+		libxml_clear_errors();
+
+		if ( $xml === false ) {
+			error_log( 'mfblocks: course XML parse failed' );
+			return false;
+		}
+
+		if ( ! $xml->search->results->result->id ) {
+			error_log( 'mfblocks: no results for ' . urldecode( $course_subject ) . ' ' . urldecode( $course_number ) . ' (catalog: ' . $catalog . ')' );
+			return false;
+		}
+		$course_id = (string) $xml->search->results->result->id;
+		set_site_transient( $transient_name, $course_id, ( 4 * HOUR_IN_SECONDS ) + rand( 0, 1 * HOUR_IN_SECONDS ) );
+
+		return $course_id;
 	}
 	/**
 	 * Load and Output Data
