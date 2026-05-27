@@ -1,10 +1,18 @@
-const { registerBlockType, PlainText } = wp.blocks; // Import registerBlockType() from wp.blocks
-// const { RichText, BlockControls, InspectorControls, AlignmentToolbar } = wp.blockEditor;
-
-const { getCurrentPostId } = wp.data;
-import { useSelect, select } from '@wordpress/data';
-const { ServerSideRender, TextControl, SelectControl, ToggleControl, Toolbar, SVG, Path, G, PanelBody, PanelRow } = wp.components;
 import { __ } from '@wordpress/i18n';
+import { PlainText } from '@wordpress/block-editor';
+
+import {
+	ServerSideRender,
+	TextControl,
+	SelectControl,
+	ToggleControl,
+	Toolbar,
+	SVG,
+	Path,
+	G,
+	PanelBody,
+	PanelRow,
+} from '@wordpress/components';
 
 import {
 	useBlockProps,
