@@ -4,17 +4,37 @@ trigger:
 variables:
 - name: versionStamp
   value: '[Build: $(Build.BuildNumber). Commit: $(Build.SourceVersion)]'
+- name: npm_config_cache
+  value: $(Pipeline.Workspace)/.npm
 pool:
   vmImage: "ubuntu-latest"
 steps:
-- task: qetza.replacetokens.replacetokens-task.replacetokens@3
+- task: qetza.replacetokens.replacetokens-task.replacetokens@6
   displayName: 'Replace tokens in **/plugin.php'
   inputs:
     targetFiles: '**/plugin.php'
     escapeType: none
+- task: NodeTool@0
+  inputs:
+    versionSource: 'spec'
+    versionSpec: '24.x'
+- script: npm install -g npm@11.16.0
+  displayName: 'Force functinal NPM version'
+- script: |
+    node --version
+    npm --version
+  displayName: 'Check Node/npm versions'
+- task: Cache@2
+  inputs:
+    key: 'npm | "$(Agent.OS)" | package-lock.json'
+    restoreKeys: |
+      npm | "$(Agent.OS)"
+    path: $(npm_config_cache)
+    displayName: Cache npm
 - task: Npm@1
   inputs:
-    command: 'install'
+    command: 'ci'
+  displayName: 'NPM Clean Install'
 - task: Npm@1
   displayName: 'npm run build'
   inputs:
