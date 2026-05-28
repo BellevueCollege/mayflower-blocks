@@ -12,7 +12,7 @@ steps:
 - task: replacetokens@6
   inputs:
     sources: '**/plugin.php'
-- task: NodeTool@1
+- task: NodeTool@0
   inputs:
     versionSource: 'spec'
     versionSpec: '24.x'
