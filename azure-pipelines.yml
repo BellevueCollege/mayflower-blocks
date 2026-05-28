@@ -40,9 +40,8 @@ steps:
     customCommand: 'run build'
 - task: Npm@1
   inputs:
-    command: custom
-    verbose: false
-    customCommand: 'install --omit=dev'
+    command: 'custom'
+    customCommand: 'prune --omit=dev'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: mayflower-blocks'
   inputs:
