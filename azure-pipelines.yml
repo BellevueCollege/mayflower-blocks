@@ -12,10 +12,10 @@ steps:
 - task: replacetokens@6
   inputs:
     sources: '**/plugin.php'
-- task: NodeTool@0
+- task: UseNode@1
   inputs:
-    versionSource: 'spec'
-    versionSpec: '24.x'
+    version: '24.x'
+  displayName: 'Install Node.js 24'
 - script: npm install -g npm@11.16.0
   displayName: 'Force functinal NPM version'
 - script: |
