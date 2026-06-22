@@ -11,8 +11,7 @@ import { createBlock } from '@wordpress/blocks';
 
 
 import {
-	Button,
-	Dashicon
+	Button
 } from '@wordpress/components';
 
 import {
@@ -99,8 +98,8 @@ export default function Edit( props ) {
 			/>
 			<li role="presentation">
 				<Button onClick={ addTab } className="add-tab">
-					<Dashicon icon="insert" />
-					{ currentBlockData.innerBlocks.length === 0 ? <span>Add Tab</span> : '' }
+					<i className='fas fa-plus fa-solid add-tab-icon'></i>
+					{ currentBlockData.innerBlocks.length === 0 ? <span>Add Tab</span> : <span className='screen-reader-text'>Add Tab</span> }
 				</Button>
 			</li>
 		</ul>
