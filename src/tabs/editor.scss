@@ -11,6 +11,7 @@
 	border-radius: 5px;
 }
 
+
 /**
 * Tab List
 */
@@ -28,23 +29,17 @@
 		border: 1px solid transparent;
 
 		button.add-tab {
-			padding: 10px 15px;
-			color: #555555;
-			border-radius: 4px 4px 0 0;
+			padding: 10px 5px;
+			color: #222;
+			border-radius: var(--bs-border-radius, 5px);
 			align-items: center;
-			&:hover {
-				border: 1px solid #ddd;
-				border-bottom-color: transparent;
-				margin: -1px;
+			background-color: var(--white, #fff);
+			border: 2px solid var(--gray--light, #ccc);
+
+			&:hover, &:focus {
+				border: 2px solid var(--gray--medium, #999);
 			}
 
-			span {
-				margin-left: 10px;
-			}
-
-			span.dashicon {
-				margin-left: 0px;
-			}
 		}
 
 		a {
