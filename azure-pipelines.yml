@@ -10,8 +10,10 @@ pool:
   vmImage: "ubuntu-latest"
 steps:
 - task: replacetokens@6
+  displayName: 'Replace tokens in **/plugin.php'
   inputs:
     sources: '**/plugin.php'
+    escape: off
 - task: UseNode@1
   inputs:
     version: '24.x'
