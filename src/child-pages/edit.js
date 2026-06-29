@@ -4,22 +4,17 @@
 
 import { __ } from '@wordpress/i18n';
 
-
 import {
 	RadioControl,
 	PanelBody,
 	PanelRow,
 	Disabled,
-	Spinner
+	Spinner,
 } from '@wordpress/components';
 
-import {
-	useBlockProps,
-	InspectorControls
-} from '@wordpress/block-editor';
+import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 
-
-import { withSelect } from '@wordpress/data';
+import { useSelect } from '@wordpress/data';
 
 import './editor.scss';
 import './style.scss';
@@ -40,7 +35,7 @@ export default function Edit( props ) {
 		 * Get Child Pages
 		 */
 
-	function ChildPagesBase( { pages } ) {
+	function ChildPages( { pages } ) {
 		if ( Array.isArray( pages ) ) {
 			if ( pages.length === 0 ) {
 				return (
@@ -130,15 +125,18 @@ export default function Edit( props ) {
 		}
 	}
 
-	const ChildPages = withSelect( ( select ) => ( {
-		pages: select( 'core' ).getEntityRecords(
-			'postType',
-			'page',
-			{
-				parent: ( select( 'core/editor' ).getCurrentPostId() ),
-			}
-		),
-	} ) )( ChildPagesBase );
+	const { pages } = useSelect(
+		( select ) => ( {
+			pages: select( 'core' ).getEntityRecords(
+				'postType',
+				'page',
+				{
+					parent: ( select( 'core/editor' ).getCurrentPostId() ),
+				}
+			),
+		} ),
+		[]
+	);
 
 	return (
 		<>
@@ -159,7 +157,7 @@ export default function Edit( props ) {
 			</PanelBody>
 		</InspectorControls>
 		<div { ...blockProps } >
-			<ChildPages />
+			<ChildPages pages={ pages } />
 		</div>
 	</>
 	);

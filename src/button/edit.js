@@ -28,7 +28,7 @@ import {
 	BlockControls,
 	InspectorControls,
 	AlignmentToolbar,
-	__experimentalLinkControl as LinkControl,
+	LinkControl,
 	__experimentalGetElementClassName,
 } from '@wordpress/block-editor';
 
@@ -234,7 +234,7 @@ export default function Edit( props ) {
 							setIsEditingURL( false );
 							richTextRef.current?.focus();
 						} }
-						anchorRef={ ref?.current }
+						anchor={ ref?.current }
 						focusOnMount={ isEditingURL ? 'firstElement' : false }
 					>
 						<LinkControl

@@ -1,6 +1,5 @@
-const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType, PlainText } = wp.blocks; // Import registerBlockType() from wp.blocks
-// const { RichText, BlockControls, InspectorControls, AlignmentToolbar } = wp.blockEditor;
+import { __ } from '@wordpress/i18n';
+import { PlainText } from '@wordpress/block-editor';
 
 const { getCurrentPostId } = wp.data;
 const { ServerSideRender, TextControl, SelectControl, ToggleControl, Toolbar, SVG, Path, G, PanelBody, PanelRow } = wp.components;
