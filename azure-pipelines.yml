@@ -39,9 +39,10 @@ steps:
     verbose: false
     customCommand: 'run build'
 - task: Npm@1
+  displayName: 'Reinstall production dependencies only'
   inputs:
     command: 'custom'
-    customCommand: 'prune --omit=dev'
+    customCommand: 'ci --omit=dev'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: mayflower-blocks'
   inputs:
