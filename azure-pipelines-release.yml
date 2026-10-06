@@ -19,7 +19,8 @@ resources:
 extends:
   template: templates/release/plugin-release.yml@templates
   parameters:
-    pluginName: 'mayflower-blocks'
+    # WordPress plugins directory slug (not the GitHub repo name).
+    pluginName: 'mayflower-blocks-g4'
     githubRepo: 'mayflower-blocks'
     productionEnvironments:
       - name: KinstaProd

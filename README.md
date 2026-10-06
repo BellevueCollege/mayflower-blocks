@@ -48,6 +48,8 @@ Any PHP files are included in the Source file.
 
 Pipelines extend [bc-wordpress-devops-templates](https://github.com/BellevueCollege/bc-wordpress-devops-templates) in the **WordPress Pipelines (Unified)** Azure DevOps project.
 
+Deploy installs to **`wp-content/plugins/mayflower-blocks-g4`** (`pluginName` in pipeline YAML). Azure pipeline names stay `mayflower-blocks` / `mayflower-blocks.prod-release`; the GitHub repo is `mayflower-blocks`.
+
 | Pipeline | YAML | Purpose |
 |----------|------|---------|
 | `mayflower-blocks` | `azure-pipelines.yml` | Build; deploy to test on PR and `trunk`; build only on `v*` tags |

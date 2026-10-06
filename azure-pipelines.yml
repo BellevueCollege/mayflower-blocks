@@ -30,7 +30,8 @@ variables:
 extends:
   template: templates/ci/plugin-ci.yml@templates
   parameters:
-    pluginName: 'mayflower-blocks'
+    # WordPress plugins directory slug (not the GitHub repo name).
+    pluginName: 'mayflower-blocks-g4'
     runComposer: false
     testEnvironments:
       - name: KinstaCstage
