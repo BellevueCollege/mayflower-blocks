@@ -2,8 +2,9 @@
 
 This plugin contains block editor blocks for the following Bellevue College themes:
 1. Mayflower G4 - *Globals 4*
-2. BC "Douglas Fir" theme (in development) - *Globals 4*
-3. Bellevue College OHO theme (in development) - *Bootstrap 5*
+2. BC "Douglas Fir" theme - *Globals 4*
+3. Bellevue 2022 theme - *Bootstrap 5*
+4. BC "Sitka Spruce" Department theme - *Bootstrap 5*
 
 Most of these are implementations of Bootstrap 4 or 5 components.
 
@@ -43,11 +44,11 @@ There are also two Sass files: `style.scss` and `editor.scss`. These are the sty
 
 Any PHP files are included in the Source file.
 
-## CI/CD Status:
-**Dev:** [![Build Status](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_apis/build/status/Mayflower%20Blocks?branchName=dev)](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_build/latest?definitionId=31&branchName=dev)
-**Trunk:** [![Build Status](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_apis/build/status/Mayflower%20Blocks?branchName=trunk)](https://dev.azure.com/bcintegration/Mayflower%20Blocks/_build/latest?definitionId=31&branchName=trunk)
+## CI/CD
 
-## Suggested Commit Style
-[![emoji-log](https://cdn.rawgit.com/ahmadawais/stuff/ca97874/emoji-log/flat.svg)](https://github.com/ahmadawais/Emoji-Log/)
+Pipelines extend [bc-wordpress-devops-templates](https://github.com/BellevueCollege/bc-wordpress-devops-templates) in the **WordPress Pipelines (Unified)** Azure DevOps project.
 
-
+| Pipeline | YAML | Purpose |
+|----------|------|---------|
+| `mayflower-blocks` | `azure-pipelines.yml` | Build; deploy to test on PR and `trunk`; build only on `v*` tags |
+| `mayflower-blocks.prod-release` | `azure-pipelines-release.yml` | Attach zip to GitHub Release; deploy production after tag CI |
