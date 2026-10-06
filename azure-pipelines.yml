@@ -24,8 +24,8 @@ resources:
       name: BellevueCollege/bc-wordpress-devops-templates
       endpoint: github-service-connection
 
-variables:
-  versionStamp: '[Build: $(Build.BuildNumber). Commit: $(Build.SourceVersion)]'
+# versionStamp: set on the mayflower-blocks pipeline in Azure DevOps (Edit → Variables).
+# Value: [Build: $(Build.BuildNumber). Commit: $(Build.SourceVersion)]
 
 extends:
   template: templates/ci/plugin-ci.yml@templates
@@ -45,6 +45,8 @@ extends:
         inputs:
           sources: '**/plugin.php'
           escape: off
+          additionalVariables: |
+            versionStamp=$(versionStamp)
       - task: Npm@1
         displayName: 'NPM Build'
         inputs:
