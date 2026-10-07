@@ -31,6 +31,6 @@ extends:
       - name: FormsProdC
         displayName: 'On Site: Forms (formsprod-c)'
         environment: onprem-forms
-        sshServiceConnection: formsprod-c
+        sshServiceConnection: formsprod-c1
         variableGroup: onprem-forms
         agentPool: Default
